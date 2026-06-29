@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Despre | Overthink Film Fest</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    :root{
+      --red:#920404;
+      --red-bright:#d30707;
+      --bg:#000;
+      --card:rgba(255,255,255,0.045);
+      --border:rgba(255,255,255,0.08);
+      --text:#fff;
+      --muted:#d6d6d6;
+    }
+
+    html{
+      scroll-behavior:smooth;
+    }
+
+    body{
+      font-family:'Inter', Arial, sans-serif;
+      background:#000;
+      color:#fff;
+      overflow-x:hidden;
+    }
+
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
+
+    img{
+      max-width:100%;
+      display:block;
+    }
+
+    /* ---------- TOPBAR ---------- */
+    .topbar{
+      position:fixed;
+      top:0;
+      left:0;
+      width:100%;
+      min-height:62px;
+      padding:0 24px;
+      display:grid;
+      grid-template-columns:1fr auto 1fr;
+      align-items:center;
+      gap:18px;
+      z-index:1000;
+      background:rgba(10,10,10,0.82);
+      backdrop-filter:blur(14px);
+      border-bottom:1px solid rgba(255,255,255,0.08);
+    }
+
+    .topbar-logo{
+      width:max-content;
+      display:flex;
+      align-items:center;
+    }
+
+    .topbar-logo img{
+      height:39px;
+      width:auto;
+      filter:drop-shadow(0 0 12px rgba(146,4,4,0.25));
+      transition:0.3s ease;
+    }
+
+    .topbar-logo:hover img{
+      transform:scale(1.035);
+      opacity:0.88;
+    }
+
+    .topbar-title{
+      font-family:'Bebas Neue', Impact, sans-serif;
+      font-size:clamp(1.18rem, 2.4vw, 1.65rem);
+      letter-spacing:0.12em;
+      text-align:center;
+      white-space:nowrap;
+      text-shadow:0 0 18px rgba(146,4,4,0.42);
+    }
+
+    .menu-wrapper{
+      justify-self:end;
+      position:relative;
+    }
+
+    .menu-toggle{
+      border:none;
+      outline:none;
+      cursor:pointer;
+      color:white;
+      background:rgba(146,4,4,0.9);
+      font-family:'Inter', Arial, sans-serif;
+      font-weight:900;
+      font-size:0.92rem;
+      border-radius:999px;
+      padding:10px 19px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      transition:0.3s ease;
+      box-shadow:0 0 22px rgba(146,4,4,0.23);
+    }
+
+    .menu-toggle:hover{
+      background:#c00606;
+      transform:translateY(-2px);
+    }
+
+    .menu-arrow{
+      font-size:0.8rem;
+      transition:0.3s ease;
+    }
+
+    .menu-wrapper.open .menu-arrow{
+      transform:rotate(180deg);
+    }
+
+    .dropdown-menu{
+      position:absolute;
+      top:calc(100% + 13px);
+      right:0;
+      min-width:230px;
+      padding:10px;
+      border-radius:18px;
+      background:rgba(15,15,15,0.94);
+      backdrop-filter:blur(18px);
+      border:1px solid rgba(255,255,255,0.12);
+      box-shadow:
+        0 20px 60px rgba(0,0,0,0.55),
+        0 0 35px rgba(146,4,4,0.18);
+      opacity:0;
+      transform:translateY(-10px) scale(0.96);
+      pointer-events:none;
+      transition:0.25s ease;
+    }
+
+    .menu-wrapper.open .dropdown-menu{
+      opacity:1;
+      transform:translateY(0) scale(1);
+      pointer-events:auto;
+    }
+
+    .dropdown-menu a{
+      display:block;
+      color:white;
+      font-weight:800;
+      padding:12px 14px;
+      border-radius:12px;
+      transition:0.25s ease;
+    }
+
+    .dropdown-menu a:hover,
+    .dropdown-menu a.active{
+      background:rgba(146,4,4,0.78);
+      transform:translateX(3px);
+    }
+
+    /* ---------- HERO ---------- */
+    .hero{
+      position:relative;
+      min-height:48vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:120px 20px 64px;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at 50% 42%, rgba(146,4,4,0.34), transparent 30%),
+        radial-gradient(circle at 18% 75%, rgba(255,255,255,0.04), transparent 22%),
+        linear-gradient(180deg, rgba(0,0,0,0.68), rgba(0,0,0,0.95)),
+        #000;
+    }
+
+    .hero::before{
+      content:"";
+      position:absolute;
+      inset:-90px;
+      background:
+        linear-gradient(rgba(0,0,0,0.22), rgba(0,0,0,0.82)),
+        url("Foto/overthink-alb.svg") center/contain no-repeat;
+      opacity:0.11;
+      filter:saturate(0.9) contrast(1.08);
+      transform:scale(1.02);
+      z-index:0;
+      pointer-events:none;
+    }
+
+    .hero::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:radial-gradient(circle, transparent 36%, rgba(0,0,0,0.92) 78%);
+      z-index:1;
+      pointer-events:none;
+    }
+
+    .hero-content{
+      position:relative;
+      z-index:2;
+      max-width:980px;
+      animation:heroFadeUp 1.05s ease forwards;
+    }
+
+    .hero-label{
+      margin-bottom:18px;
+      color:#d8d8d8;
+      font-size:0.95rem;
+      font-weight:900;
+      letter-spacing:0.25em;
+      text-transform:uppercase;
+      text-shadow:0 0 14px rgba(146,4,4,0.35);
+    }
+
+    .hero h1{
+      font-family:'Bebas Neue', Impact, sans-serif;
+      font-size:clamp(4rem, 10vw, 7.5rem);
+      line-height:0.9;
+      letter-spacing:0.055em;
+      color:white;
+      text-transform:uppercase;
+      text-shadow:
+        0 0 16px rgba(255,255,255,0.12),
+        0 0 28px rgba(184,6,6,0.72),
+        0 0 60px rgba(184,6,6,0.28),
+        0 8px 40px rgba(0,0,0,0.95);
+    }
+
+    /* ---------- CONTENT ---------- */
+    .about-section{
+      padding:70px 0 96px;
+      background:
+        radial-gradient(circle at center, rgba(146,4,4,0.16), transparent 38%),
+        #000;
+    }
+
+    .section-shell{
+      max-width:1150px;
+      margin:0 auto;
+      padding:0 20px;
+      position:relative;
+      z-index:2;
+    }
+
+    .section-nav{
+      display:grid;
+      grid-template-columns:repeat(5, 1fr);
+      gap:14px;
+      margin-bottom:34px;
+    }
+
+    .section-nav a{
+      padding:15px 12px;
+      border-radius:18px;
+      text-align:center;
+      font-weight:900;
+      background:rgba(255,255,255,0.045);
+      border:1px solid rgba(255,255,255,0.08);
+      transition:0.25s ease;
+      font-size:0.92rem;
+    }
+
+    .section-nav a:hover{
+      background:rgba(146,4,4,0.22);
+      border-color:rgba(146,4,4,0.40);
+      transform:translateY(-3px);
+    }
+
+    .placeholder-section{
+      position:relative;
+      overflow:hidden;
+      border-radius:28px;
+      background:rgba(255,255,255,0.045);
+      border:1px solid rgba(255,255,255,0.08);
+      box-shadow:0 18px 55px rgba(0,0,0,0.38);
+      padding:34px;
+      margin-bottom:26px;
+      scroll-margin-top:96px;
+    }
+
+    .placeholder-section::before{
+      content:"";
+      position:absolute;
+      inset:-1px;
+      background:radial-gradient(circle at 50% 0%, rgba(146,4,4,0.22), transparent 46%);
+      pointer-events:none;
+    }
+
+    .placeholder-section > *{
+      position:relative;
+      z-index:2;
+    }
+
+    .section-eyebrow{
+      color:#d30707;
+      font-weight:900;
+      font-size:0.86rem;
+      letter-spacing:0.16em;
+      text-transform:uppercase;
+      margin-bottom:12px;
+    }
+
+    .placeholder-section h2{
+      font-family:'Bebas Neue', Impact, sans-serif;
+      font-size:clamp(2.4rem, 5vw, 3.6rem);
+      letter-spacing:0.06em;
+      line-height:1;
+      margin-bottom:16px;
+      text-transform:uppercase;
+      text-shadow:0 0 22px rgba(146,4,4,0.30);
+    }
+
+    .placeholder-box{
+      padding:22px;
+      border-radius:20px;
+      background:rgba(0,0,0,0.28);
+      border:1px dashed rgba(255,255,255,0.18);
+      color:#d5d5d5;
+      line-height:1.75;
+      margin-top:18px;
+    }
+
+    .placeholder-box strong{
+      display:block;
+      color:#fff;
+      margin-bottom:8px;
+      font-size:1.05rem;
+    }
+
+    .placeholder-grid{
+      margin-top:18px;
+      display:grid;
+      grid-template-columns:repeat(3, 1fr);
+      gap:14px;
+    }
+
+    .placeholder-card{
+      min-height:150px;
+      padding:18px;
+      border-radius:18px;
+      background:rgba(255,255,255,0.035);
+      border:1px solid rgba(255,255,255,0.07);
+    }
+
+    .placeholder-card span{
+      display:block;
+      color:#d30707;
+      font-weight:900;
+      letter-spacing:0.08em;
+      text-transform:uppercase;
+      font-size:0.78rem;
+      margin-bottom:8px;
+    }
+
+    .placeholder-card p{
+      color:#d6d6d6;
+      line-height:1.65;
+      font-size:0.94rem;
+    }
+
+    .logo-placeholder-grid{
+      margin-top:18px;
+      display:grid;
+      grid-template-columns:repeat(4, 1fr);
+      gap:14px;
+    }
+
+    .logo-placeholder{
+      min-height:120px;
+      border-radius:20px;
+      background:rgba(0,0,0,0.28);
+      border:1px dashed rgba(255,255,255,0.18);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:16px;
+      color:#cfcfcf;
+      font-weight:900;
+      letter-spacing:0.08em;
+      text-transform:uppercase;
+      font-size:0.78rem;
+    }
+
+    .notice{
+      margin-top:24px;
+      padding:18px 20px;
+      border-radius:18px;
+      background:rgba(146,4,4,0.12);
+      border:1px solid rgba(146,4,4,0.30);
+      color:#e6e6e6;
+      line-height:1.65;
+      font-size:0.95rem;
+    }
+
+    .reveal{
+      opacity:0;
+      transform:translateY(42px);
+      transition:opacity 0.85s ease, transform 0.85s ease;
+    }
+
+    .reveal.visible{
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    /* ---------- FOOTER ---------- */
+    footer{
+      background:#0d0d0d;
+      border-top:1px solid rgba(255,255,255,0.07);
+      padding:46px 20px 24px;
+    }
+
+    .footer-shell{
+      max-width:1250px;
+      margin:0 auto;
+      display:grid;
+      grid-template-columns:1.1fr 1fr 1fr;
+      gap:28px;
+      align-items:start;
+    }
+
+    .footer-brand img{
+      height:48px;
+      width:auto;
+      margin-bottom:14px;
+      filter:drop-shadow(0 0 18px rgba(146,4,4,0.25));
+    }
+
+    .footer-brand h3,
+    .footer-col h3{
+      font-family:'Bebas Neue', Impact, sans-serif;
+      font-size:1.6rem;
+      letter-spacing:0.08em;
+      margin-bottom:12px;
+    }
+
+    .footer-brand p,
+    .footer-col p,
+    .footer-col a{
+      color:#d0d0d0;
+      line-height:1.75;
+      font-size:0.95rem;
+    }
+
+    .footer-col a{
+      display:block;
+      transition:0.25s ease;
+    }
+
+    .footer-col a:hover{
+      color:#fff;
+      transform:translateX(3px);
+    }
+
+    .copyright{
+      max-width:1250px;
+      margin:28px auto 0;
+      padding-top:18px;
+      border-top:1px solid rgba(255,255,255,0.07);
+      text-align:center;
+      color:#a8a8a8;
+      font-size:0.88rem;
+    }
+
+    @keyframes heroFadeUp{
+      from{
+        opacity:0;
+        transform:translateY(28px) scale(0.98);
+      }
+      to{
+        opacity:1;
+        transform:translateY(0) scale(1);
+      }
+    }
+
+    @media(max-width:1050px){
+      .section-nav{
+        grid-template-columns:repeat(2, 1fr);
+      }
+
+      .placeholder-grid{
+        grid-template-columns:1fr;
+      }
+
+      .logo-placeholder-grid{
+        grid-template-columns:repeat(2, 1fr);
+      }
+
+      .footer-shell{
+        grid-template-columns:1fr 1fr;
+      }
+    }
+
+    @media(max-width:768px){
+      .topbar{
+        min-height:58px;
+        padding:8px 12px;
+        grid-template-columns:auto 1fr auto;
+        gap:10px;
+      }
+
+      .topbar-logo img{
+        height:33px;
+      }
+
+      .topbar-title{
+        font-size:1rem;
+        letter-spacing:0.08em;
+      }
+
+      .menu-toggle{
+        padding:8px 13px;
+        font-size:0.84rem;
+      }
+
+      .dropdown-menu{
+        min-width:205px;
+      }
+
+      .hero{
+        min-height:44vh;
+        padding:105px 16px 54px;
+      }
+
+      .hero-label{
+        font-size:0.72rem;
+        letter-spacing:0.18em;
+      }
+
+      .hero h1{
+        font-size:clamp(3.2rem, 16vw, 5rem);
+      }
+
+      .about-section{
+        padding:50px 0 70px;
+      }
+
+      .section-nav{
+        grid-template-columns:1fr;
+      }
+
+      .placeholder-section{
+        padding:24px 18px;
+        border-radius:24px;
+      }
+
+      .logo-placeholder-grid{
+        grid-template-columns:1fr;
+      }
+
+      .footer-shell{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media(max-width:520px){
+      .topbar-title{
+        max-width:145px;
+        white-space:normal;
+        line-height:1;
+      }
+
+      footer{
+        line-height:1.8;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header class="topbar">
+    <a href="index.html" class="topbar-logo" aria-label="Overthink Film Fest - pagina principală">
+      <img src="Foto/overthink-alb.svg" alt="Logo Overthink Film Fest">
+    </a>
+
+    <div class="topbar-title">OVERTHINK FILM FEST</div>
+
+    <div class="menu-wrapper" id="menuWrapper">
+      <button class="menu-toggle" id="menuToggle" type="button" aria-label="Deschide meniul">
+        Meniu <span class="menu-arrow">▾</span>
+      </button>
+
+      <nav class="dropdown-menu" id="dropdownMenu">
+        <a href="contact.html">Contact</a>
+        <a href="program.html">Program</a>
+        <a href="despre.html" class="active">Despre</a>
+        <a href="regulament.html">Regulament</a>
+        <a href="noutati.html">Noutăți</a>
+        <a href="cont.html">Cont</a>
+        <a href="inscriere.html">Înscrie-te</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-label">OVERTHINK FILM FEST</div>
+      <h1>Despre</h1>
+    </div>
+  </section>
+
+  <!-- CONTENT -->
+  <main class="about-section">
+    <div class="section-shell">
+
+      <nav class="section-nav reveal" aria-label="Navigare despre">
+        <a href="#festival">Festival</a>
+        <a href="#organizator">Organizator</a>
+        <a href="#echipa">Echipă</a>
+        <a href="#parteneri">Parteneri</a>
+        <a href="#invitati">Invitați</a>
+      </nav>
+
+      <!-- FESTIVAL -->
+      <section class="placeholder-section reveal" id="festival">
+        <div class="section-eyebrow">Secțiunea 1</div>
+        <h2>Despre festival</h2>
+
+        <div class="placeholder-box">
+          <strong>Placeholder text festival</strong>
+          Aici va fi introdus textul final despre Overthink Film Fest, conceptul festivalului,
+          scopul evenimentului, publicul țintă și ideea primei ediții.
+        </div>
+
+        <div class="placeholder-grid">
+          <article class="placeholder-card">
+            <span>Concept</span>
+            <p>Placeholder pentru descrierea conceptului festivalului.</p>
+          </article>
+
+          <article class="placeholder-card">
+            <span>Misiune</span>
+            <p>Placeholder pentru misiunea festivalului și impactul dorit asupra tinerilor.</p>
+          </article>
+
+          <article class="placeholder-card">
+            <span>Ediția 2026</span>
+            <p>Placeholder pentru detalii despre prima ediție, perioada și locația festivalului.</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- ORGANIZATOR -->
+      <section class="placeholder-section reveal" id="organizator">
+        <div class="section-eyebrow">Secțiunea 2</div>
+        <h2>Organizator</h2>
+
+        <div class="placeholder-box">
+          <strong>Placeholder text organizator</strong>
+          Aici va fi introdus textul despre Clubul de Film Overthink, istoricul clubului,
+          activitatea lui și rolul în organizarea festivalului.
+        </div>
+
+        <div class="placeholder-grid">
+          <article class="placeholder-card">
+            <span>Clubul Overthink</span>
+            <p>Placeholder pentru prezentarea organizației.</p>
+          </article>
+
+          <article class="placeholder-card">
+            <span>Activitate</span>
+            <p>Placeholder pentru proiecte, scurtmetraje și inițiative realizate.</p>
+          </article>
+
+          <article class="placeholder-card">
+            <span>Comunitate</span>
+            <p>Placeholder pentru rolul comunității de tineri pasionați de film.</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- ECHIPA -->
+      <section class="placeholder-section reveal" id="echipa">
+        <div class="section-eyebrow">Secțiunea 3</div>
+        <h2>Echipa</h2>
+
+        <div class="placeholder-box">
+          <strong>Placeholder text echipă</strong>
+          Aici va fi introdusă prezentarea echipei de organizare și, dacă va fi cazul,
+          structura pe departamente.
+        </div>
+
+        <div class="placeholder-grid">
+          <article class="placeholder-card">
+            <span>Coordonare</span>
+            <p>Placeholder pentru echipa de coordonare.</p>
+          </article>
+
+          <article class="placeholder-card">
+            <span>Departamente</span>
+            <p>Placeholder pentru departamentele implicate în organizare.</p>
+          </article>
+
+          <article class="placeholder-card">
+            <span>Voluntari</span>
+            <p>Placeholder pentru rolul voluntarilor în festival.</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- PARTENERI -->
+      <section class="placeholder-section reveal" id="parteneri">
+        <div class="section-eyebrow">Secțiunea 4</div>
+        <h2>Parteneri</h2>
+
+        <div class="placeholder-box">
+          <strong>Placeholder text parteneri</strong>
+          Aici vor fi introduși partenerii, sponsorii și colaboratorii Overthink Film Fest.
+          Secțiunea va putea include logo-uri, categorii de parteneriat și descrieri scurte.
+        </div>
+
+        <div class="logo-placeholder-grid">
+          <div class="logo-placeholder">Logo partener</div>
+          <div class="logo-placeholder">Logo partener</div>
+          <div class="logo-placeholder">Logo partener</div>
+          <div class="logo-placeholder">Logo partener</div>
+        </div>
+      </section>
+
+      <!-- INVITATI -->
+      <section class="placeholder-section reveal" id="invitati">
+        <div class="section-eyebrow">Secțiunea 5</div>
+        <h2>Invitați</h2>
+
+        <div class="placeholder-box">
+          <strong>Placeholder text invitați</strong>
+          Aici vor fi introduși invitații festivalului, speakerii, jurații sau colaboratorii speciali,
+          în funcție de programul final.
+        </div>
+
+        <div class="placeholder-grid">
+          <article class="placeholder-card">
+            <span>Invitat 1</span>
+            <p>Placeholder pentru nume, rol și scurtă prezentare.</p>
+          </article>
+
+          <article class="placeholder-card">
+            <span>Invitat 2</span>
+            <p>Placeholder pentru nume, rol și scurtă prezentare.</p>
+          </article>
+
+          <article class="placeholder-card">
+            <span>Invitat 3</span>
+            <p>Placeholder pentru nume, rol și scurtă prezentare.</p>
+          </article>
+        </div>
+
+        <div class="notice">
+          Această pagină este momentan o structură temporară. Textele, logo-urile și designul final vor fi completate ulterior.
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-shell">
+      <div class="footer-brand">
+        <img src="Foto/LOGO Overthink 2 (1).svg" alt="Logo Overthink Film Fest">
+
+        <h3>Overthink Film Fest</h3>
+
+        <p>
+          Festival de film independent organizat de Clubul de Film Overthink.
+          Prima ediție: 7–9 august 2026, Insula de Agrement Bacău.
+        </p>
+      </div>
+
+      <div class="footer-col">
+        <h3>Linkuri</h3>
+        <a href="regulament.html#gdpr">Politica GDPR</a>
+        <a href="regulament.html#cookies">Politica Cookies</a>
+        <a href="noutati.html">Noutăți</a>
+        <a href="program.html">Program</a>
+        <a href="inscriere.html">Înscrie-te</a>
+      </div>
+
+      <div class="footer-col">
+        <h3>Contact</h3>
+        <p>Email: staff@overthink-jr.com</p>
+        <p>Telefon: 0773 746 372</p>
+        <a href="https://www.instagram.com/overthink.jr" target="_blank">Instagram: @overthink.jr</a>
+      </div>
+    </div>
+
+    <div class="copyright">
+      © 2026 Overthink Film Fest. Toate drepturile rezervate.
+    </div>
+  </footer>
+
+  <script>
+    // DROPDOWN MENU
+    const menuWrapper = document.getElementById("menuWrapper");
+    const menuToggle = document.getElementById("menuToggle");
+
+    menuToggle.addEventListener("click", (event) => {
+      event.stopPropagation();
+      menuWrapper.classList.toggle("open");
+    });
+
+    document.addEventListener("click", (event) => {
+      if(!menuWrapper.contains(event.target)){
+        menuWrapper.classList.remove("open");
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if(event.key === "Escape"){
+        menuWrapper.classList.remove("open");
+      }
+    });
+
+    // REVEAL ON SCROLL
+    const revealElements = document.querySelectorAll(".reveal");
+
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          entry.target.classList.add("visible");
+        }
+      });
+    }, {
+      threshold:0.15
+    });
+
+    revealElements.forEach(el => revealObserver.observe(el));
+  </script>
+
+</body>
+</html>

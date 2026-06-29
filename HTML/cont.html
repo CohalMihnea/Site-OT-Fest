@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Cont | Overthink Film Fest</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    :root{
+      --red:#920404;
+      --red-bright:#d30707;
+      --bg:#000;
+      --card:rgba(255,255,255,0.045);
+      --border:rgba(255,255,255,0.08);
+      --text:#fff;
+      --muted:#d6d6d6;
+    }
+
+    html{
+      scroll-behavior:smooth;
+    }
+
+    body{
+      font-family:'Inter', Arial, sans-serif;
+      background:#000;
+      color:#fff;
+      overflow-x:hidden;
+      min-height:100vh;
+    }
+
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
+
+    img{
+      max-width:100%;
+      display:block;
+    }
+
+    /* ---------- TOPBAR ---------- */
+    .topbar{
+      position:fixed;
+      top:0;
+      left:0;
+      width:100%;
+      min-height:62px;
+      padding:0 24px;
+      display:grid;
+      grid-template-columns:1fr auto 1fr;
+      align-items:center;
+      gap:18px;
+      z-index:1000;
+      background:rgba(10,10,10,0.82);
+      backdrop-filter:blur(14px);
+      border-bottom:1px solid rgba(255,255,255,0.08);
+    }
+
+    .topbar-logo{
+      width:max-content;
+      display:flex;
+      align-items:center;
+    }
+
+    .topbar-logo img{
+      height:39px;
+      width:auto;
+      filter:drop-shadow(0 0 12px rgba(146,4,4,0.25));
+      transition:0.3s ease;
+    }
+
+    .topbar-logo:hover img{
+      transform:scale(1.035);
+      opacity:0.88;
+    }
+
+    .topbar-title{
+      font-family:'Bebas Neue', Impact, sans-serif;
+      font-size:clamp(1.18rem, 2.4vw, 1.65rem);
+      letter-spacing:0.12em;
+      text-align:center;
+      white-space:nowrap;
+      text-shadow:0 0 18px rgba(146,4,4,0.42);
+    }
+
+    .menu-wrapper{
+      justify-self:end;
+      position:relative;
+    }
+
+    .menu-toggle{
+      border:none;
+      outline:none;
+      cursor:pointer;
+      color:white;
+      background:rgba(146,4,4,0.9);
+      font-family:'Inter', Arial, sans-serif;
+      font-weight:900;
+      font-size:0.92rem;
+      border-radius:999px;
+      padding:10px 19px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      transition:0.3s ease;
+      box-shadow:0 0 22px rgba(146,4,4,0.23);
+    }
+
+    .menu-toggle:hover{
+      background:#c00606;
+      transform:translateY(-2px);
+    }
+
+    .menu-arrow{
+      font-size:0.8rem;
+      transition:0.3s ease;
+    }
+
+    .menu-wrapper.open .menu-arrow{
+      transform:rotate(180deg);
+    }
+
+    .dropdown-menu{
+      position:absolute;
+      top:calc(100% + 13px);
+      right:0;
+      min-width:230px;
+      padding:10px;
+      border-radius:18px;
+      background:rgba(15,15,15,0.94);
+      backdrop-filter:blur(18px);
+      border:1px solid rgba(255,255,255,0.12);
+      box-shadow:
+        0 20px 60px rgba(0,0,0,0.55),
+        0 0 35px rgba(146,4,4,0.18);
+      opacity:0;
+      transform:translateY(-10px) scale(0.96);
+      pointer-events:none;
+      transition:0.25s ease;
+    }
+
+    .menu-wrapper.open .dropdown-menu{
+      opacity:1;
+      transform:translateY(0) scale(1);
+      pointer-events:auto;
+    }
+
+    .dropdown-menu a{
+      display:block;
+      color:white;
+      font-weight:800;
+      padding:12px 14px;
+      border-radius:12px;
+      transition:0.25s ease;
+    }
+
+    .dropdown-menu a:hover,
+    .dropdown-menu a.active{
+      background:rgba(146,4,4,0.78);
+      transform:translateX(3px);
+    }
+
+    /* ---------- PAGE ---------- */
+    .account-page{
+      min-height:100vh;
+      padding:120px 20px 90px;
+      position:relative;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at 50% 20%, rgba(146,4,4,0.30), transparent 28%),
+        radial-gradient(circle at 18% 78%, rgba(255,255,255,0.035), transparent 22%),
+        linear-gradient(180deg, #000, #050505, #000);
+    }
+
+    .account-page::before{
+      content:"";
+      position:absolute;
+      inset:-120px;
+      background:
+        linear-gradient(rgba(0,0,0,0.24), rgba(0,0,0,0.88)),
+        url("Foto/overthink-alb.svg") center/contain no-repeat;
+      opacity:0.07;
+      filter:saturate(0.9) contrast(1.08);
+      transform:scale(1.02);
+      pointer-events:none;
+    }
+
+    .section-shell{
+      max-width:1250px;
+      margin:0 auto;
+      position:relative;
+      z-index:2;
+    }
+
+    .account-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-end;
+      gap:24px;
+      margin-bottom:34px;
+    }
+
+    .eyebrow{
+      color:#d30707;
+      font-weight:900;
+      font-size:0.9rem;
+      letter-spacing:0.16em;
+      text-transform:uppercase;
+      margin-bottom:10px;
+    }
+
+    .account-header h1{
+      font-family:'Bebas Neue', Impact, sans-serif;
+      font-size:clamp(3.4rem, 8vw, 6.2rem);
+      letter-spacing:0.055em;
+      line-height:0.92;
+      text-transform:uppercase;
+      text-shadow:
+        0 0 14px rgba(255,255,255,0.10),
+        0 0 28px rgba(146,4,4,0.48);
+    }
+
+    .account-header p{
+      max-width:680px;
+      color:#d5d5d5;
+      line-height:1.7;
+      margin-top:16px;
+    }
+
+    .header-actions{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:13px 21px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.14);
+      font-family:'Inter', Arial, sans-serif;
+      font-weight:900;
+      font-size:0.92rem;
+      cursor:pointer;
+      transition:0.3s ease;
+      color:#fff;
+      background:rgba(255,255,255,0.06);
+    }
+
+    .btn-primary{
+      background:rgba(146,4,4,0.95);
+      box-shadow:0 0 24px rgba(146,4,4,0.25);
+    }
+
+    .btn-primary:hover{
+      background:#c00606;
+      transform:translateY(-2px);
+    }
+
+    .btn-secondary:hover{
+      border-color:rgba(146,4,4,0.45);
+      transform:translateY(-2px);
+    }
+
+    .btn-danger{
+      background:rgba(184,6,6,0.18);
+      border-color:rgba(184,6,6,0.38);
+    }
+
+    .btn-danger:hover{
+      background:#b80606;
+      transform:translateY(-2px);
+    }
+
+    .account-grid{
+      display:grid;
+      grid-template-columns:0.85fr 1.15fr;
+      gap:26px;
+      align-items:start;
+    }
+
+    .panel{
+      position:relative;
+      overflow:hidden;
+      border-radius:28px;
+      background:rgba(255,255,255,0.045);
+      border:1px solid rgba(255,255,255,0.08);
+      box-shadow:0 18px 55px rgba(0,0,0,0.38);
+      padding:28px;
+    }
+
+    .panel::before{
+      content:"";
+      position:absolute;
+      inset:-1px;
+      background:radial-gradient(circle at 50% 0%, rgba(146,4,4,0.22), transparent 46%);
+      pointer-events:none;
+    }
+
+    .panel > *{
+      position:relative;
+      z-index:2;
+    }
+
+    .panel h2{
+      font-family:'Bebas Neue', Impact, sans-serif;
+      font-size:2.25rem;
+      letter-spacing:0.06em;
+      line-height:1;
+      margin-bottom:16px;
+      text-transform:uppercase;
+    }
+
+    .panel-note{
+      color:#cfcfcf;
+      line-height:1.65;
+      margin-bottom:20px;
+      font-size:0.94rem;
+    }
+
+    .profile-card{
+      text-align:center;
+    }
+
+    .profile-logo{
+      width:120px;
+      margin:0 auto 18px;
+      filter:
+        drop-shadow(0 0 12px rgba(255,255,255,0.10))
+        drop-shadow(0 0 34px rgba(146,4,4,0.38));
+    }
+
+    .profile-name{
+      font-family:'Bebas Neue', Impact, sans-serif;
+      font-size:2.4rem;
+      letter-spacing:0.05em;
+      line-height:1;
+      margin-bottom:8px;
+    }
+
+    .profile-email{
+      color:#d0d0d0;
+      word-break:break-word;
+      line-height:1.5;
+      font-weight:700;
+    }
+
+    .badge-row{
+      margin-top:18px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:center;
+    }
+
+    .badge{
+      display:inline-flex;
+      padding:8px 12px;
+      border-radius:999px;
+      font-size:0.78rem;
+      font-weight:900;
+      letter-spacing:0.06em;
+      text-transform:uppercase;
+      background:rgba(146,4,4,0.18);
+      border:1px solid rgba(146,4,4,0.34);
+      color:#fff;
+    }
+
+    .badge.admin{
+      background:rgba(211,7,7,0.28);
+      border-color:rgba(211,7,7,0.52);
+    }
+
+    .info-list{
+      margin-top:24px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      text-align:left;
+    }
+
+    .info-row{
+      padding:14px 15px;
+      border-radius:16px;
+      background:rgba(0,0,0,0.28);
+      border:1px solid rgba(255,255,255,0.08);
+    }
+
+    .info-row span{
+      display:block;
+      color:#a9a9a9;
+      font-size:0.78rem;
+      font-weight:900;
+      letter-spacing:0.08em;
+      text-transform:uppercase;
+      margin-bottom:5px;
+    }
+
+    .info-row strong{
+      display:block;
+      color:#fff;
+      font-size:0.98rem;
+      word-break:break-word;
+    }
+
+    .dashboard-stack{
+      display:flex;
+      flex-direction:column;
+      gap:24px;
+    }
+
+    .status-card{
+      display:flex;
+      gap:18px;
+      align-items:center;
+      padding:20px;
+      border-radius:22px;
+      background:rgba(0,0,0,0.26);
+      border:1px solid rgba(255,255,255,0.08);
+      margin-bottom:20px;
+    }
+
+    .status-icon{
+      width:58px;
+      height:58px;
+      border-radius:20px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-shrink:0;
+      background:rgba(146,4,4,0.18);
+      border:1px solid rgba(146,4,4,0.36);
+      font-size:1.4rem;
+      box-shadow:inset 0 0 24px rgba(146,4,4,0.08);
+    }
+
+    .status-content strong{
+      display:block;
+      font-size:1.1rem;
+      margin-bottom:5px;
+    }
+
+    .status-content span{
+      color:#cfcfcf;
+      line-height:1.55;
+      font-size:0.94rem;
+    }
+
+    .status-pill{
+      display:inline-flex;
+      margin-top:10px;
+      padding:8px 12px;
+      border-radius:999px;
+      font-size:0.78rem;
+      font-weight:900;
+      letter-spacing:0.06em;
+      text-transform:uppercase;
+      background:rgba(255,255,255,0.08);
+      border:1px solid rgba(255,255,255,0.12);
+      color:#fff;
+    }
+
+    .status-pill.neinscris{
+      background:rgba(255,255,255,0.08);
+    }
+
+    .status-pill.trimisa{
+      background:rgba(146,4,4,0.18);
+      border-color:rgba(146,4,4,0.36);
+    }
+
+    .status-pill.in_verificare{
+      background:rgba(255,170,0,0.12);
+      border-color:rgba(255,170,0,0.28);
+    }
+
+    .status-pill.necesita_modificari{
+      background:rgba(255,125,0,0.14);
+      border-color:rgba(255,125,0,0.34);
+    }
+
+    .status-pill.acceptata{
+      background:rgba(24,148,67,0.15);
+      border-color:rgba(24,148,67,0.35);
+    }
+
+    .status-pill.respinsa{
+      background:rgba(184,6,6,0.18);
+      border-color:rgba(184,6,6,0.42);
+    }
+
+    .submission-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      margin-top:12px;
+    }
+
+    .submission-item{
+      padding:15px;
+      border-radius:16px;
+      background:rgba(0,0,0,0.28);
+      border:1px solid rgba(255,255,255,0.08);
+    }
+
+    .submission-item.full{
+      grid-column:1 / -1;
+    }
+
+    .submission-item span{
+      display:block;
+      color:#a9a9a9;
+      font-size:0.78rem;
+      font-weight:900;
+      letter-spacing:0.08em;
+      text-transform:uppercase;
+      margin-bottom:6px;
+    }
+
+    .submission-item strong,
+    .submission-item p{
+      color:#fff;
+      line-height:1.55;
+      word-break:break-word;
+      font-size:0.95rem;
+    }
+
+    .feedback-box{
+      margin-top:14px;
+      padding:18px;
+      border-radius:18px;
+      background:rgba(146,4,4,0.10);
+      border:1px solid rgba(146,4,4,0.28);
+      color:#e6e6e6;
+      line-height:1.65;
+    }
+
+    .empty-state{
+      padding:24px;
+      border-radius:22px;
+      background:rgba(0,0,0,0.26);
+      border:1px solid rgba(255,255,255,0.08);
+      text-align:center;
+    }
+
+    .empty-state h3{
+      font-size:1.25rem;
+      margin-bottom:8px;
+    }
+
+    .empty-state p{
+      color:#cfcfcf;
+      line-height:1.65;
+      margin-bottom:18px;
+    }
+
+    .admin-panel-link{
+      display:none;
+      margin-top:18px;
+    }
+
+    .admin-panel-link.visible{
+      display:flex;
+      justify-content:center;
+    }
+
+    .login-required{
+      display:none;
+      max-width:720px;
+      margin:0 auto;
+      text-align:center;
+      padding:34px 28px;
+    }
+
+    .login-required.visible{
+      display:block;
+    }
+
+    .login-required h1{
+      font-family:'Bebas Neue', Impact, sans-serif;
+      font-size:clamp(3rem, 8vw, 5rem);
+      letter-spacing:0.06em;
+      margin-bottom:14px;
+    }
+
+    .login-required p{
+      color:#d0d0d0;
+      line-height:1.7;
+      margin-bottom:22px;
+    }
+
+    .hidden{
+      display:none;
+    }
+
+    /* ---------- FOOTER ---------- */
+    footer{
+      background:#0d0d0d;
+      border-top:1px solid rgba(255,255,255,0.07);
+      padding:46px 20px 24px;
+    }
+
+    .footer-shell{
+      max-width:1250px;
+      margin:0 auto;
+      display:grid;
+      grid-template-columns:1.1fr 1fr 1fr;
+      gap:28px;
+      align-items:start;
+    }
+
+    .footer-brand img{
+      height:48px;
+      width:auto;
+      margin-bottom:14px;
+      filter:drop-shadow(0 0 18px rgba(146,4,4,0.25));
+    }
+
+    .footer-brand h3,
+    .footer-col h3{
+      font-family:'Bebas Neue', Impact, sans-serif;
+      font-size:1.6rem;
+      letter-spacing:0.08em;
+      margin-bottom:12px;
+    }
+
+    .footer-brand p,
+    .footer-col p,
+    .footer-col a{
+      color:#d0d0d0;
+      line-height:1.75;
+      font-size:0.95rem;
+    }
+
+    .footer-col a{
+      display:block;
+      transition:0.25s ease;
+    }
+
+    .footer-col a:hover{
+      color:#fff;
+      transform:translateX(3px);
+    }
+
+    .copyright{
+      max-width:1250px;
+      margin:28px auto 0;
+      padding-top:18px;
+      border-top:1px solid rgba(255,255,255,0.07);
+      text-align:center;
+      color:#a8a8a8;
+      font-size:0.88rem;
+    }
+
+    @media(max-width:1050px){
+      .account-grid{
+        grid-template-columns:1fr;
+      }
+
+      .footer-shell{
+        grid-template-columns:1fr 1fr;
+      }
+    }
+
+    @media(max-width:768px){
+      .topbar{
+        min-height:58px;
+        padding:8px 12px;
+        grid-template-columns:auto 1fr auto;
+        gap:10px;
+      }
+
+      .topbar-logo img{
+        height:33px;
+      }
+
+      .topbar-title{
+        font-size:1rem;
+        letter-spacing:0.08em;
+      }
+
+      .menu-toggle{
+        padding:8px 13px;
+        font-size:0.84rem;
+      }
+
+      .dropdown-menu{
+        min-width:205px;
+      }
+
+      .account-page{
+        padding:100px 14px 64px;
+      }
+
+      .account-header{
+        flex-direction:column;
+        align-items:flex-start;
+      }
+
+      .header-actions{
+        width:100%;
+        justify-content:flex-start;
+      }
+
+      .panel{
+        padding:22px 18px;
+        border-radius:24px;
+      }
+
+      .status-card{
+        align-items:flex-start;
+      }
+
+      .submission-grid{
+        grid-template-columns:1fr;
+      }
+
+      .footer-shell{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media(max-width:520px){
+      .topbar-title{
+        max-width:145px;
+        white-space:normal;
+        line-height:1;
+      }
+
+      .btn{
+        width:100%;
+      }
+
+      .header-actions{
+        flex-direction:column;
+      }
+
+      .status-card{
+        flex-direction:column;
+      }
+
+      footer{
+        line-height:1.8;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header class="topbar">
+    <a href="index.html" class="topbar-logo" aria-label="Overthink Film Fest - pagina principală">
+      <img src="Foto/overthink-alb.svg" alt="Logo Overthink Film Fest">
+    </a>
+
+    <div class="topbar-title">OVERTHINK FILM FEST</div>
+
+    <div class="menu-wrapper" id="menuWrapper">
+      <button class="menu-toggle" id="menuToggle" type="button" aria-label="Deschide meniul">
+        Meniu <span class="menu-arrow">▾</span>
+      </button>
+
+      <nav class="dropdown-menu" id="dropdownMenu">
+        <a href="contact.html">Contact</a>
+        <a href="program.html">Program</a>
+        <a href="cont.html" class="active">Cont</a>
+        <a href="inscriere.html">Înscrie-te</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ACCOUNT PAGE -->
+  <main class="account-page">
+    <div class="section-shell">
+
+      <!-- LOGIN REQUIRED -->
+      <section class="panel login-required" id="loginRequired">
+        <h1>Autentificare necesară</h1>
+        <p>
+          Pentru a vedea contul, statusul înscrierii și feedbackul primit de la echipa festivalului,
+          trebuie să te autentifici.
+        </p>
+
+        <div class="header-actions" style="justify-content:center;">
+          <a href="auth.html" class="btn btn-primary">Autentificare</a>
+          <a href="inscriere.html" class="btn btn-secondary">Înscrie scurtmetraj</a>
+        </div>
+      </section>
+
+      <!-- ACCOUNT CONTENT -->
+      <section id="accountContent" class="hidden">
+        <div class="account-header">
+          <div>
+            <div class="eyebrow">Cont participant</div>
+
+            <h1>Panou cont</h1>
+
+            <p>
+              Aici vei putea urmări statusul înscrierii, datele trimise și feedbackul primit de la echipa festivalului.
+            </p>
+          </div>
+
+          <div class="header-actions">
+            <a href="inscriere.html" class="btn btn-primary">Înscriere</a>
+            <button type="button" class="btn btn-danger" id="logoutBtn">Deconectare</button>
+          </div>
+        </div>
+
+        <div class="account-grid">
+
+          <!-- PROFILE -->
+          <aside class="panel profile-card">
+            <img class="profile-logo" src="Foto/overthink-alb.svg" alt="Logo Overthink Film Fest">
+
+            <div class="profile-name" id="profileName">Utilizator</div>
+            <div class="profile-email" id="profileEmail">email@exemplu.com</div>
+
+            <div class="badge-row">
+              <span class="badge" id="roleBadge">Participant</span>
+              <span class="badge admin" id="adminBadge" style="display:none;">Admin</span>
+            </div>
+
+            <div class="info-list">
+              <div class="info-row">
+                <span>ID cont</span>
+                <strong id="profileId">-</strong>
+              </div>
+
+              <div class="info-row">
+                <span>Email</span>
+                <strong id="profileEmailRow">-</strong>
+              </div>
+
+              <div class="info-row">
+                <span>Status cont</span>
+                <strong>Autentificat</strong>
+              </div>
+            </div>
+
+            <div class="admin-panel-link" id="adminPanelLink">
+              <a href="admin.html" class="btn btn-primary">Panou admin</a>
+            </div>
+          </aside>
+
+          <!-- DASHBOARD -->
+          <div class="dashboard-stack">
+
+            <!-- STATUS -->
+            <section class="panel">
+              <h2>Status înscriere</h2>
+
+              <div class="status-card">
+                <div class="status-icon" id="statusIcon">○</div>
+
+                <div class="status-content">
+                  <strong id="statusTitle">Nu există o înscriere trimisă</strong>
+
+                  <span id="statusDescription">
+                    După trimiterea formularului de înscriere, statusul scurtmetrajului va apărea aici.
+                  </span>
+
+                  <br>
+
+                  <span class="status-pill neinscris" id="statusPill">Neînscris</span>
+                </div>
+              </div>
+
+              <div class="header-actions" id="statusActions">
+                <a href="inscriere.html" class="btn btn-primary">Trimite înscriere</a>
+              </div>
+            </section>
+
+            <!-- SUBMISSION DETAILS -->
+            <section class="panel">
+              <h2>Date scurtmetraj</h2>
+
+              <p class="panel-note" id="submissionNote">
+                Momentan nu există date de înscriere afișate.
+              </p>
+
+              <div class="empty-state" id="emptySubmission">
+                <h3>Nicio înscriere găsită</h3>
+
+                <p>
+                  Dacă ai un scurtmetraj pregătit, îl poți înscrie până pe 1 august 2026.
+                </p>
+
+                <a href="inscriere.html" class="btn btn-primary">Înscrie scurtmetraj</a>
+              </div>
+
+              <div class="submission-grid hidden" id="submissionDetails">
+                <div class="submission-item">
+                  <span>Titlu</span>
+                  <strong id="filmTitle">-</strong>
+                </div>
+
+                <div class="submission-item">
+                  <span>Categorie</span>
+                  <strong id="filmCategory">-</strong>
+                </div>
+
+                <div class="submission-item">
+                  <span>Durată</span>
+                  <strong id="filmDuration">-</strong>
+                </div>
+
+                <div class="submission-item">
+                  <span>An producție</span>
+                  <strong id="filmYear">-</strong>
+                </div>
+
+                <div class="submission-item full">
+                  <span>Link film</span>
+                  <p id="filmLink">-</p>
+                </div>
+
+                <div class="submission-item full">
+                  <span>Observații</span>
+                  <p id="filmNotes">-</p>
+                </div>
+              </div>
+            </section>
+
+            <!-- FEEDBACK -->
+            <section class="panel">
+              <h2>Feedback admin</h2>
+
+              <p class="panel-note">
+                Aici va apărea feedbackul trimis de echipa festivalului, inclusiv dacă înscrierea necesită modificări.
+              </p>
+
+              <div class="feedback-box" id="feedbackBox">
+                Nu există feedback pentru moment.
+              </div>
+            </section>
+
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-shell">
+      <div class="footer-brand">
+        <img src="Foto/LOGO Overthink 2 (1).svg" alt="Logo Overthink Film Fest">
+
+        <h3>Overthink Film Fest</h3>
+
+        <p>
+          Festival de film independent organizat de Clubul de Film Overthink.
+          Prima ediție: 7–9 august 2026, Insula de Agrement Bacău.
+        </p>
+      </div>
+
+      <div class="footer-col">
+        <h3>Linkuri</h3>
+        <a href="program.html">Program</a>
+        <a href="inscriere.html">Înscrie-te</a>
+      </div>
+
+      <div class="footer-col">
+        <h3>Contact</h3>
+        <p>Email: staff@overthink-jr.com</p>
+        <p>Telefon: 0773 746 372</p>
+        <a href="https://www.instagram.com/overthink.jr" target="_blank">Instagram: @overthink.jr</a>
+      </div>
+    </div>
+
+    <div class="copyright">
+      © 2026 Overthink Film Fest. Toate drepturile rezervate.
+    </div>
+  </footer>
+
+  <script>
+    // DROPDOWN MENU
+    const menuWrapper = document.getElementById("menuWrapper");
+    const menuToggle = document.getElementById("menuToggle");
+
+    menuToggle.addEventListener("click", (event) => {
+      event.stopPropagation();
+      menuWrapper.classList.toggle("open");
+    });
+
+    document.addEventListener("click", (event) => {
+      if(!menuWrapper.contains(event.target)){
+        menuWrapper.classList.remove("open");
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if(event.key === "Escape"){
+        menuWrapper.classList.remove("open");
+      }
+    });
+
+    const loginRequired = document.getElementById("loginRequired");
+    const accountContent = document.getElementById("accountContent");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    const token = localStorage.getItem("off_access_token");
+
+    function showLoggedOutState(){
+      loginRequired.classList.add("visible");
+      accountContent.classList.add("hidden");
+    }
+
+    function showLoggedInState(){
+      loginRequired.classList.remove("visible");
+      accountContent.classList.remove("hidden");
+    }
+
+    function clearAuthStorage(){
+      localStorage.removeItem("off_access_token");
+      localStorage.removeItem("off_user_email");
+      localStorage.removeItem("off_user_id");
+      localStorage.removeItem("off_is_admin");
+    }
+
+    function logout(){
+      clearAuthStorage();
+      window.location.href = "auth.html";
+    }
+
+    logoutBtn.addEventListener("click", logout);
+
+    async function accountFetch(url, options = {}){
+      const response = await fetch(url, {
+        ...options,
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          ...(options.headers || {})
+        }
+      });
+
+      let data = {};
+
+      try{
+        data = await response.json();
+      }catch(error){
+        data = {};
+      }
+
+      if(response.status === 401 || response.status === 403){
+        clearAuthStorage();
+        showLoggedOutState();
+        return { response, data };
+      }
+
+      return { response, data };
+    }
+
+    function formatNameFromEmail(email){
+      if(!email) return "Utilizator";
+
+      const namePart = email.split("@")[0] || "utilizator";
+
+      return namePart
+        .replace(/[._-]/g, " ")
+        .split(" ")
+        .filter(Boolean)
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
+    }
+
+    function formatDate(value){
+      if(!value){
+        return "-";
+      }
+
+      try{
+        return new Date(value).toLocaleDateString("ro-RO", {
+          year:"numeric",
+          month:"long",
+          day:"numeric"
+        });
+      }catch{
+        return value;
+      }
+    }
+
+    function statusLabel(status){
+      const labels = {
+        trimisa: "Trimisă",
+        in_verificare: "În verificare",
+        necesita_modificari: "Necesită modificări",
+        acceptata: "Acceptată",
+        respinsa: "Respinsă"
+      };
+
+      return labels[status] || status || "Neînscris";
+    }
+
+    function setProfile(user){
+      const name = user.name || formatNameFromEmail(user.email);
+
+      document.getElementById("profileName").textContent = name;
+      document.getElementById("profileEmail").textContent = user.email || "-";
+      document.getElementById("profileId").textContent = user.id || "-";
+      document.getElementById("profileEmailRow").textContent = user.email || "-";
+
+      localStorage.setItem("off_user_email", user.email || "");
+      localStorage.setItem("off_user_id", user.id || "");
+      localStorage.setItem("off_is_admin", user.is_admin ? "1" : "0");
+
+      if(user.is_admin){
+        document.getElementById("adminBadge").style.display = "inline-flex";
+        document.getElementById("roleBadge").textContent = "Participant / Admin";
+        document.getElementById("adminPanelLink").classList.add("visible");
+      }else{
+        document.getElementById("adminBadge").style.display = "none";
+        document.getElementById("roleBadge").textContent = user.role || "Participant";
+        document.getElementById("adminPanelLink").classList.remove("visible");
+      }
+    }
+
+    function setSubmissionStatus(status, canEdit = false){
+      const statusTitle = document.getElementById("statusTitle");
+      const statusDescription = document.getElementById("statusDescription");
+      const statusPill = document.getElementById("statusPill");
+      const statusIcon = document.getElementById("statusIcon");
+      const statusActions = document.getElementById("statusActions");
+
+      statusPill.className = "status-pill " + (status || "neinscris");
+
+      if(!status){
+        statusTitle.textContent = "Nu există o înscriere trimisă";
+        statusDescription.textContent = "După trimiterea formularului de înscriere, statusul scurtmetrajului va apărea aici.";
+        statusPill.textContent = "Neînscris";
+        statusIcon.textContent = "○";
+        statusActions.innerHTML = '<a href="inscriere.html" class="btn btn-primary">Trimite înscriere</a>';
+        return;
+      }
+
+      if(status === "trimisa"){
+        statusTitle.textContent = "Înscriere trimisă";
+        statusDescription.textContent = "Înscrierea a fost trimisă și urmează să fie verificată de echipa festivalului.";
+        statusIcon.textContent = "✓";
+        statusActions.innerHTML = "";
+      }
+
+      if(status === "in_verificare"){
+        statusTitle.textContent = "Înscriere în verificare";
+        statusDescription.textContent = "Echipa festivalului verifică datele și materialele trimise.";
+        statusIcon.textContent = "…";
+        statusActions.innerHTML = "";
+      }
+
+      if(status === "necesita_modificari"){
+        statusTitle.textContent = "Înscrierea necesită modificări";
+        statusDescription.textContent = "Echipa festivalului a cerut modificări sau completări pentru înscriere.";
+        statusIcon.textContent = "!";
+        statusActions.innerHTML = canEdit
+          ? '<a href="inscriere.html?edit=1" class="btn btn-primary">Modifică înscrierea</a>'
+          : "";
+      }
+
+      if(status === "acceptata"){
+        statusTitle.textContent = "Înscriere acceptată";
+        statusDescription.textContent = "Scurtmetrajul a fost acceptat pentru următoarea etapă.";
+        statusIcon.textContent = "★";
+        statusActions.innerHTML = "";
+      }
+
+      if(status === "respinsa"){
+        statusTitle.textContent = "Înscriere respinsă";
+        statusDescription.textContent = "Scurtmetrajul nu a fost acceptat în această ediție.";
+        statusIcon.textContent = "×";
+        statusActions.innerHTML = "";
+      }
+
+      statusPill.textContent = statusLabel(status);
+    }
+
+    function setNoSubmission(){
+      setSubmissionStatus(null, false);
+
+      document.getElementById("emptySubmission").classList.remove("hidden");
+      document.getElementById("submissionDetails").classList.add("hidden");
+      document.getElementById("submissionNote").textContent = "Momentan nu există date de înscriere afișate.";
+      document.getElementById("feedbackBox").textContent = "Nu există feedback pentru moment.";
+    }
+
+    function fillSubmissionDetails(submission){
+      document.getElementById("emptySubmission").classList.add("hidden");
+      document.getElementById("submissionDetails").classList.remove("hidden");
+      document.getElementById("submissionNote").textContent = "Datele de mai jos reprezintă înscrierea transmisă către festival.";
+
+      document.getElementById("filmTitle").textContent = submission.title || "-";
+      document.getElementById("filmCategory").textContent = submission.category || "-";
+      document.getElementById("filmDuration").textContent = submission.duration_minutes ? `${submission.duration_minutes} minute` : "-";
+      document.getElementById("filmYear").textContent = submission.production_year || "-";
+      document.getElementById("filmLink").innerHTML = submission.short_film_link
+        ? `<a href="${submission.short_film_link}" target="_blank" rel="noopener noreferrer">${submission.short_film_link}</a>`
+        : "-";
+
+      const teamText = Array.isArray(submission.team_members) && submission.team_members.length
+        ? submission.team_members.map(member => `${member.name} - ${member.role}`).join("; ")
+        : "-";
+
+      const materialText = Array.isArray(submission.material_links) && submission.material_links.length
+        ? submission.material_links.map(link => link.url).join("\n")
+        : "-";
+
+      const notes = [
+        submission.other_details ? `Alte detalii: ${submission.other_details}` : "",
+        submission.city ? `Oraș: ${submission.city}` : "",
+        submission.institution ? `Instituție: ${submission.institution}` : "",
+        `Echipă: ${teamText}`,
+        materialText !== "-" ? `Materiale: ${materialText}` : ""
+      ].filter(Boolean).join("\n");
+
+      document.getElementById("filmNotes").textContent = notes || "-";
+      document.getElementById("feedbackBox").textContent = submission.admin_feedback || "Nu există feedback pentru moment.";
+    }
+
+    async function loadAccountPage(){
+      if(!token){
+        showLoggedOutState();
+        return;
+      }
+
+      showLoggedInState();
+
+      try{
+        const meResult = await accountFetch("/api/account/me");
+
+        if(!meResult.response.ok){
+          showLoggedOutState();
+          return;
+        }
+
+        setProfile(meResult.data);
+
+        const submissionResult = await accountFetch("/api/submissions/my");
+
+        if(!submissionResult.response.ok){
+          setNoSubmission();
+          return;
+        }
+
+        if(!submissionResult.data.has_submission){
+          setNoSubmission();
+          return;
+        }
+
+        const submission = submissionResult.data.submission;
+
+        setSubmissionStatus(submission.status, submission.can_edit);
+        fillSubmissionDetails(submission);
+
+      }catch(error){
+        console.error(error);
+        setNoSubmission();
+      }
+    }
+
+    loadAccountPage();
+  </script>
+
+</body>
+</html>

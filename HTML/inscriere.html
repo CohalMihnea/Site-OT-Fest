@@ -1,0 +1,1848 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Înscriere | Overthink Film Fest</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    :root{
+      --red:#920404;
+      --red-bright:#d30707;
+      --bg:#000;
+      --card:rgba(255,255,255,0.045);
+      --border:rgba(255,255,255,0.08);
+      --text:#fff;
+      --muted:#d6d6d6;
+    }
+
+    html{
+      scroll-behavior:smooth;
+    }
+
+    body{
+      font-family:'Inter', Arial, sans-serif;
+      background:#000;
+      color:#fff;
+      overflow-x:hidden;
+    }
+
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
+
+    img{
+      max-width:100%;
+      display:block;
+    }
+
+    /* ---------- TOPBAR ---------- */
+    .topbar{
+      position:fixed;
+      top:0;
+      left:0;
+      width:100%;
+      min-height:62px;
+      padding:0 24px;
+      display:grid;
+      grid-template-columns:1fr auto 1fr;
+      align-items:center;
+      gap:18px;
+      z-index:1000;
+      background:rgba(10,10,10,0.82);
+      backdrop-filter:blur(14px);
+      border-bottom:1px solid rgba(255,255,255,0.08);
+    }
+
+    .topbar-logo{
+      width:max-content;
+      display:flex;
+      align-items:center;
+    }
+
+    .topbar-logo img{
+      height:39px;
+      width:auto;
+      filter:drop-shadow(0 0 12px rgba(146,4,4,0.25));
+      transition:0.3s ease;
+    }
+
+    .topbar-logo:hover img{
+      transform:scale(1.035);
+      opacity:0.88;
+    }
+
+    .topbar-title{
+      font-family:'Bebas Neue', Impact, sans-serif;
+      font-size:clamp(1.18rem, 2.4vw, 1.65rem);
+      letter-spacing:0.12em;
+      text-align:center;
+      white-space:nowrap;
+      text-shadow:0 0 18px rgba(146,4,4,0.42);
+    }
+
+    .menu-wrapper{
+      justify-self:end;
+      position:relative;
+    }
+
+    .menu-toggle{
+      border:none;
+      outline:none;
+      cursor:pointer;
+      color:white;
+      background:rgba(146,4,4,0.9);
+      font-family:'Inter', Arial, sans-serif;
+      font-weight:900;
+      font-size:0.92rem;
+      border-radius:999px;
+      padding:10px 19px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      transition:0.3s ease;
+      box-shadow:0 0 22px rgba(146,4,4,0.23);
+    }
+
+    .menu-toggle:hover{
+      background:#c00606;
+      transform:translateY(-2px);
+    }
+
+    .menu-arrow{
+      font-size:0.8rem;
+      transition:0.3s ease;
+    }
+
+    .menu-wrapper.open .menu-arrow{
+      transform:rotate(180deg);
+    }
+
+    .dropdown-menu{
+      position:absolute;
+      top:calc(100% + 13px);
+      right:0;
+      min-width:230px;
+      padding:10px;
+      border-radius:18px;
+      background:rgba(15,15,15,0.94);
+      backdrop-filter:blur(18px);
+      border:1px solid rgba(255,255,255,0.12);
+      box-shadow:
+        0 20px 60px rgba(0,0,0,0.55),
+        0 0 35px rgba(146,4,4,0.18);
+      opacity:0;
+      transform:translateY(-10px) scale(0.96);
+      pointer-events:none;
+      transition:0.25s ease;
+    }
+
+    .menu-wrapper.open .dropdown-menu{
+      opacity:1;
+      transform:translateY(0) scale(1);
+      pointer-events:auto;
+    }
+
+    .dropdown-menu a{
+      display:block;
+      color:white;
+      font-weight:800;
+      padding:12px 14px;
+      border-radius:12px;
+      transition:0.25s ease;
+    }
+
+    .dropdown-menu a:hover,
+    .dropdown-menu a.active{
+      background:rgba(146,4,4,0.78);
+      transform:translateX(3px);
+    }
+
+    /* ---------- HERO ---------- */
+    .hero{
+      position:relative;
+      min-height:62vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:120px 20px 76px;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at 50% 42%, rgba(146,4,4,0.34), transparent 30%),
+        radial-gradient(circle at 18% 75%, rgba(255,255,255,0.04), transparent 22%),
+        linear-gradient(180deg, rgba(0,0,0,0.68), rgba(0,0,0,0.95)),
+        #000;
+    }
+
+    .hero::before{
+      content:"";
+      position:absolute;
+      inset:-90px;
+      background:
+        linear-gradient(rgba(0,0,0,0.22), rgba(0,0,0,0.82)),
+        url("Foto/overthink-alb.svg") center/contain no-repeat;
+      opacity:0.11;
+      filter:saturate(0.9) contrast(1.08);
+      transform:scale(1.02);
+      z-index:0;
+      pointer-events:none;
+    }
+
+    .hero::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:radial-gradient(circle, transparent 36%, rgba(0,0,0,0.92) 78%);
+      z-index:1;
+      pointer-events:none;
+    }
+
+    .hero-content{
+      position:relative;
+      z-index:2;
+      max-width:980px;
+      animation:heroFadeUp 1.05s ease forwards;
+    }
+
+    .hero-label{
+      margin-bottom:18px;
+      color:#d8d8d8;
+      font-size:0.95rem;
+      font-weight:900;
+      letter-spacing:0.25em;
+      text-transform:uppercase;
+      text-shadow:0 0 14px rgba(146,4,4,0.35);
+    }
+
+    .hero h1{
+      font-family:'Bebas Neue', Impact, sans-serif;
+      font-size:clamp(4rem, 10vw, 7.5rem);
+      line-height:0.9;
+      letter-spacing:0.055em;
+      color:white;
+      text-transform:uppercase;
+      text-shadow:
+        0 0 16px rgba(255,255,255,0.12),
+        0 0 28px rgba(184,6,6,0.72),
+        0 0 60px rgba(184,6,6,0.28),
+        0 8px 40px rgba(0,0,0,0.95);
+    }
+
+    .hero p{
+      max-width:780px;
+      margin:24px auto 0;
+      font-size:clamp(0.98rem, 1.8vw, 1.12rem);
+      color:#e8e8e8;
+      line-height:1.7;
+    }
+
+    .hero-actions{
+      margin-top:34px;
+      display:flex;
+      justify-content:center;
+      gap:14px;
+      flex-wrap:wrap;
+    }
+
+    .hero-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:15px 24px;
+      border-radius:999px;
+      font-weight:900;
+      transition:0.3s ease;
+      min-width:155px;
+      font-size:1rem;
+      border:1px solid rgba(255,255,255,0.14);
+    }
+
+    .hero-btn.primary{
+      background:#b80606;
+      color:white;
+      box-shadow:0 0 28px rgba(184,6,6,0.42);
+    }
+
+    .hero-btn.secondary{
+      color:white;
+      background:rgba(255,255,255,0.06);
+      backdrop-filter:blur(8px);
+    }
+
+    .hero-btn:hover{
+      transform:translateY(-4px) scale(1.02);
+    }
+
+    /* ---------- GENERAL ---------- */
+    .section-shell{
+      max-width:1180px;
+      margin:0 auto;
+      padding:0 20px;
+      position:relative;
+      z-index:2;
+    }
+
+    .section-title{
+      text-align:center;
+      margin-bottom:16px;
+      font-family:'Bebas Neue', Impact, sans-serif;
+      letter-spacing:0.08em;
+      font-size:clamp(2.3rem, 5vw, 3.5rem);
+      color:#fff;
+      text-shadow:0 0 22px rgba(146,4,4,0.32);
+    }
+
+    .section-subtitle{
+      max-width:860px;
+      margin:0 auto 42px;
+      text-align:center;
+      color:#d2d2d2;
+      line-height:1.75;
+      font-size:1rem;
+    }
+
+    /* ---------- FORM SECTION ---------- */
+    .form-section{
+      padding:88px 0 96px;
+      background:
+        radial-gradient(circle at center, rgba(146,4,4,0.18), transparent 38%),
+        #000;
+    }
+
+    .form-card{
+      position:relative;
+      overflow:hidden;
+      max-width:1050px;
+      margin:0 auto;
+      padding:30px;
+      border-radius:28px;
+      background:rgba(255,255,255,0.045);
+      border:1px solid rgba(255,255,255,0.08);
+      box-shadow:0 18px 55px rgba(0,0,0,0.38);
+    }
+
+    .form-card::before{
+      content:"";
+      position:absolute;
+      inset:-1px;
+      background:radial-gradient(circle at 50% 0%, rgba(146,4,4,0.24), transparent 46%);
+      pointer-events:none;
+    }
+
+    .form-content{
+      position:relative;
+      z-index:2;
+    }
+
+    .account-switch{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+      margin-bottom:28px;
+    }
+
+    .switch-option{
+      position:relative;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:18px;
+      border-radius:20px;
+      background:rgba(0,0,0,0.32);
+      border:1px solid rgba(255,255,255,0.08);
+      cursor:pointer;
+      transition:0.25s ease;
+    }
+
+    .switch-option:hover{
+      border-color:rgba(146,4,4,0.45);
+      transform:translateY(-2px);
+    }
+
+    .switch-option input{
+      width:18px;
+      height:18px;
+      accent-color:#b80606;
+    }
+
+    .switch-option strong{
+      display:block;
+      font-size:1rem;
+      color:#fff;
+      margin-bottom:4px;
+    }
+
+    .switch-option span{
+      display:block;
+      font-size:0.88rem;
+      color:#cfcfcf;
+      line-height:1.5;
+    }
+
+    .form-block{
+      display:none;
+      margin-bottom:28px;
+      padding:22px;
+      border-radius:22px;
+      background:rgba(0,0,0,0.24);
+      border:1px solid rgba(255,255,255,0.08);
+    }
+
+    .form-block.active{
+      display:block;
+      animation:fadeIn 0.35s ease forwards;
+    }
+
+    .block-title{
+      font-family:'Bebas Neue', Impact, sans-serif;
+      font-size:2rem;
+      letter-spacing:0.06em;
+      margin-bottom:8px;
+      color:#fff;
+    }
+
+    .block-note{
+      color:#cfcfcf;
+      line-height:1.65;
+      margin-bottom:20px;
+      font-size:0.95rem;
+    }
+
+    .form-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:20px;
+      align-items:start;
+    }
+
+    .field{
+      display:flex;
+      flex-direction:column;
+      gap:9px;
+    }
+
+    .field.full{
+      grid-column:1 / -1;
+    }
+
+    label{
+      font-weight:900;
+      color:#fff;
+      letter-spacing:0.02em;
+    }
+
+    .required{
+      color:#d30707;
+      text-shadow:0 0 12px rgba(211,7,7,0.45);
+    }
+
+    input,
+    select,
+    textarea{
+      width:100%;
+      border:none;
+      outline:none;
+      color:#fff;
+      font-family:'Inter', Arial, sans-serif;
+      font-size:1rem;
+      background:rgba(0,0,0,0.42);
+      border:1px solid rgba(255,255,255,0.10);
+      border-radius:16px;
+      padding:14px 15px;
+      transition:0.25s ease;
+    }
+
+    textarea{
+      min-height:128px;
+      resize:vertical;
+      line-height:1.6;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus{
+      border-color:rgba(146,4,4,0.55);
+      box-shadow:
+        0 0 0 4px rgba(146,4,4,0.13),
+        0 0 22px rgba(146,4,4,0.18);
+    }
+
+    select{
+      appearance:none;
+      background-image:
+        linear-gradient(45deg, transparent 50%, #d30707 50%),
+        linear-gradient(135deg, #d30707 50%, transparent 50%);
+      background-position:
+        calc(100% - 19px) 20px,
+        calc(100% - 13px) 20px;
+      background-size:6px 6px, 6px 6px;
+      background-repeat:no-repeat;
+    }
+
+    select option{
+      background:#111;
+      color:#fff;
+    }
+
+    .hint{
+      color:#bfbfbf;
+      font-size:0.9rem;
+      line-height:1.55;
+    }
+
+    .warning-note{
+      grid-column:1 / -1;
+      padding:16px;
+      border-radius:18px;
+      background:rgba(146,4,4,0.10);
+      border:1px solid rgba(146,4,4,0.28);
+      color:#e6e6e6;
+      line-height:1.6;
+      font-size:0.94rem;
+    }
+
+    /* ---------- TEAM TABLE ---------- */
+    .team-table-wrap{
+      width:100%;
+      overflow-x:auto;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,0.08);
+      background:rgba(0,0,0,0.24);
+    }
+
+    .team-table{
+      width:100%;
+      min-width:620px;
+      border-collapse:collapse;
+    }
+
+    .team-table th,
+    .team-table td{
+      padding:12px;
+      border-bottom:1px solid rgba(255,255,255,0.08);
+      text-align:left;
+      vertical-align:middle;
+    }
+
+    .team-table th{
+      color:#d30707;
+      font-size:0.82rem;
+      font-weight:900;
+      letter-spacing:0.10em;
+      text-transform:uppercase;
+      background:rgba(146,4,4,0.08);
+    }
+
+    .team-table tr:last-child td{
+      border-bottom:none;
+    }
+
+    .team-table th:first-child,
+    .team-table td:first-child{
+      width:58px;
+      text-align:center;
+    }
+
+    .team-table th:last-child,
+    .team-table td:last-child{
+      width:58px;
+      text-align:center;
+    }
+
+    .team-number{
+      color:#fff;
+      font-weight:900;
+    }
+
+    /* ---------- LINKS ---------- */
+    .link-list{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+
+    .link-row{
+      display:grid;
+      grid-template-columns:34px 1fr 42px;
+      gap:10px;
+      align-items:center;
+    }
+
+    .link-number{
+      height:42px;
+      border-radius:14px;
+      background:rgba(146,4,4,0.18);
+      border:1px solid rgba(146,4,4,0.32);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:900;
+      color:#fff;
+    }
+
+    .icon-btn{
+      height:42px;
+      border:none;
+      border-radius:14px;
+      background:rgba(255,255,255,0.07);
+      color:#fff;
+      font-weight:900;
+      cursor:pointer;
+      transition:0.25s ease;
+      font-size:1.15rem;
+    }
+
+    .icon-btn:hover{
+      background:rgba(146,4,4,0.72);
+      transform:translateY(-2px);
+    }
+
+    .btn-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-top:18px;
+    }
+
+    button.primary,
+    button.secondary{
+      border:none;
+      outline:none;
+      cursor:pointer;
+      color:#fff;
+      font-family:'Inter', Arial, sans-serif;
+      font-weight:900;
+      border-radius:999px;
+      padding:13px 22px;
+      transition:0.3s ease;
+    }
+
+    button.primary{
+      background:rgba(146,4,4,0.95);
+      box-shadow:0 0 20px rgba(146,4,4,0.22);
+    }
+
+    button.primary:hover{
+      background:#c00606;
+      transform:translateY(-2px);
+    }
+
+    button.secondary{
+      background:rgba(255,255,255,0.08);
+      border:1px solid rgba(255,255,255,0.10);
+    }
+
+    button.secondary:hover{
+      border-color:rgba(146,4,4,0.45);
+      transform:translateY(-2px);
+    }
+
+    button:disabled{
+      opacity:0.55;
+      cursor:not-allowed;
+      transform:none!important;
+    }
+
+    .consent{
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      padding:16px;
+      border-radius:18px;
+      background:rgba(255,255,255,0.035);
+      border:1px solid rgba(255,255,255,0.08);
+    }
+
+    .consent input{
+      width:18px;
+      height:18px;
+      margin-top:2px;
+      accent-color:#b80606;
+      flex-shrink:0;
+    }
+
+    .consent span{
+      color:#d8d8d8;
+      line-height:1.6;
+    }
+
+    .inline-link{
+      color:#d30707;
+      font-weight:900;
+      text-decoration:underline;
+      text-underline-offset:3px;
+    }
+
+    .inline-link:hover{
+      color:#fff;
+    }
+
+    .status{
+      display:none;
+      margin-top:22px;
+      padding:15px 16px;
+      border-radius:16px;
+      line-height:1.6;
+      font-weight:800;
+    }
+
+    .status.success{
+      display:block;
+      background:rgba(24,148,67,0.15);
+      border:1px solid rgba(24,148,67,0.35);
+      color:#d8ffe4;
+    }
+
+    .status.error{
+      display:block;
+      background:rgba(184,6,6,0.15);
+      border:1px solid rgba(184,6,6,0.40);
+      color:#ffd7d7;
+    }
+
+    .status.info{
+      display:block;
+      background:rgba(255,255,255,0.08);
+      border:1px solid rgba(255,255,255,0.14);
+      color:#eeeeee;
+    }
+
+    /* ---------- FOOTER ---------- */
+    footer{
+      background:#0d0d0d;
+      border-top:1px solid rgba(255,255,255,0.07);
+      padding:46px 20px 24px;
+    }
+
+    .footer-shell{
+      max-width:1250px;
+      margin:0 auto;
+      display:grid;
+      grid-template-columns:1.1fr 1fr 1fr;
+      gap:28px;
+      align-items:start;
+    }
+
+    .footer-brand img{
+      height:48px;
+      width:auto;
+      margin-bottom:14px;
+      filter:drop-shadow(0 0 18px rgba(146,4,4,0.25));
+    }
+
+    .footer-brand h3,
+    .footer-col h3{
+      font-family:'Bebas Neue', Impact, sans-serif;
+      font-size:1.6rem;
+      letter-spacing:0.08em;
+      margin-bottom:12px;
+    }
+
+    .footer-brand p,
+    .footer-col p,
+    .footer-col a{
+      color:#d0d0d0;
+      line-height:1.75;
+      font-size:0.95rem;
+    }
+
+    .footer-col a{
+      display:block;
+      transition:0.25s ease;
+    }
+
+    .footer-col a:hover{
+      color:#fff;
+      transform:translateX(3px);
+    }
+
+    .copyright{
+      max-width:1250px;
+      margin:28px auto 0;
+      padding-top:18px;
+      border-top:1px solid rgba(255,255,255,0.07);
+      text-align:center;
+      color:#a8a8a8;
+      font-size:0.88rem;
+    }
+
+    /* ---------- REVEAL ---------- */
+    .reveal{
+      opacity:0;
+      transform:translateY(42px);
+      transition:opacity 0.85s ease, transform 0.85s ease;
+    }
+
+    .reveal.visible{
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    /* ---------- ANIMATIONS ---------- */
+    @keyframes heroFadeUp{
+      from{
+        opacity:0;
+        transform:translateY(28px) scale(0.98);
+      }
+      to{
+        opacity:1;
+        transform:translateY(0) scale(1);
+      }
+    }
+
+    @keyframes fadeIn{
+      from{
+        opacity:0;
+        transform:translateY(8px);
+      }
+      to{
+        opacity:1;
+        transform:translateY(0);
+      }
+    }
+
+    /* ---------- RESPONSIVE ---------- */
+    @media(max-width:1050px){
+      .footer-shell{
+        grid-template-columns:1fr 1fr;
+      }
+    }
+
+    @media(max-width:820px){
+      .form-grid{
+        grid-template-columns:1fr;
+      }
+
+      .account-switch{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media(max-width:768px){
+      .topbar{
+        min-height:58px;
+        padding:8px 12px;
+        grid-template-columns:auto 1fr auto;
+        gap:10px;
+      }
+
+      .topbar-logo img{
+        height:33px;
+      }
+
+      .topbar-title{
+        font-size:1rem;
+        letter-spacing:0.08em;
+      }
+
+      .menu-toggle{
+        padding:8px 13px;
+        font-size:0.84rem;
+      }
+
+      .dropdown-menu{
+        min-width:205px;
+      }
+
+      .hero{
+        min-height:58vh;
+        padding:105px 16px 64px;
+      }
+
+      .hero-label{
+        font-size:0.72rem;
+        letter-spacing:0.18em;
+      }
+
+      .hero h1{
+        font-size:clamp(3.2rem, 16vw, 5rem);
+      }
+
+      .hero p{
+        line-height:1.65;
+      }
+
+      .hero-actions{
+        margin-top:26px;
+        gap:10px;
+        flex-wrap:nowrap;
+      }
+
+      .hero-btn{
+        min-width:auto;
+        width:auto;
+        flex:1;
+        padding:13px 10px;
+        font-size:0.86rem;
+        white-space:nowrap;
+      }
+
+      .form-section{
+        padding:62px 0 70px;
+      }
+
+      .form-card{
+        padding:22px 18px;
+        border-radius:24px;
+      }
+
+      .form-block{
+        padding:18px;
+      }
+
+      .block-title{
+        font-size:1.75rem;
+      }
+
+      .footer-shell{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media(max-width:520px){
+      .topbar-title{
+        max-width:145px;
+        white-space:normal;
+        line-height:1;
+      }
+
+      .hero-actions{
+        flex-direction:column;
+      }
+
+      .hero-btn{
+        width:100%;
+      }
+
+      .link-row{
+        grid-template-columns:30px 1fr 38px;
+        gap:8px;
+      }
+
+      footer{
+        line-height:1.8;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header class="topbar">
+    <a href="index.html" class="topbar-logo" aria-label="Overthink Film Fest - pagina principală">
+      <img src="Foto/overthink-alb.svg" alt="Logo Overthink Film Fest">
+    </a>
+
+    <div class="topbar-title">OVERTHINK FILM FEST</div>
+
+    <div class="menu-wrapper" id="menuWrapper">
+      <button class="menu-toggle" id="menuToggle" type="button" aria-label="Deschide meniul">
+        Meniu <span class="menu-arrow">▾</span>
+      </button>
+
+      <nav class="dropdown-menu" id="dropdownMenu">
+        <a href="contact.html">Contact</a>
+        <a href="program.html">Program</a>
+        <a href="cont.html">Cont</a>
+        <a href="inscriere.html" class="active">Înscrie-te</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-label">OVERTHINK FILM FEST</div>
+
+      <h1>Înscriere</h1>
+
+      <p>
+        Completează formularul pentru înscrierea scurtmetrajului tău în prima ediție Overthink Film Fest.
+        Înscrierile sunt deschise până pe 1 august 2026.
+      </p>
+
+      <div class="hero-actions">
+        <a href="#formular" class="hero-btn primary">Completează formularul</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FORMULAR -->
+  <section class="form-section" id="formular">
+    <div class="section-shell">
+      <h2 class="section-title reveal">Formular scurtmetraj</h2>
+
+      <p class="section-subtitle reveal">
+        Câmpurile marcate cu steluță sunt obligatorii. Dacă filmul depășește 25 de minute, îl poți trimite în continuare, iar includerea lui în concurs va rămâne la decizia echipei de selecție.
+      </p>
+
+      <article class="form-card reveal">
+        <div class="form-content">
+          <form id="submissionForm" autocomplete="off" novalidate>
+
+            <!-- CONT -->
+            <div class="account-switch">
+              <label class="switch-option">
+                <input type="radio" name="account_mode" value="existing" checked>
+                <span>
+                  <strong>Am deja cont</strong>
+                  <span>Folosesc un cont existent pentru înscriere.</span>
+                </span>
+              </label>
+
+              <label class="switch-option">
+                <input type="radio" name="account_mode" value="new">
+                <span>
+                  <strong>Nu am cont</strong>
+                  <span>Îmi creez contul direct în formular.</span>
+                </span>
+              </label>
+            </div>
+
+            <div class="form-block active" id="existingAccountBlock">
+              <div class="block-title">Cont existent</div>
+              <p class="block-note">
+                Pentru înscriere trebuie să fii autentificat. Emailul este preluat automat din contul tău.
+              </p>
+
+              <div class="form-grid">
+                <div class="field">
+                  <label for="existingEmail">Email cont <span class="required">*</span></label>
+                  <input id="existingEmail" name="existing_email" type="email" placeholder="email@exemplu.com" autocomplete="off">
+                </div>
+
+                <div class="field">
+                  <label for="existingPassword">Parolă cont <span class="required">*</span></label>
+                  <input id="existingPassword" name="existing_password" type="password" placeholder="Parola contului" autocomplete="off">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-block" id="newAccountBlock">
+              <div class="block-title">Creare cont</div>
+              <p class="block-note">
+                Contul este necesar pentru a putea vedea statusul înscrierii și feedbackul primit de la echipa festivalului.
+              </p>
+
+              <div class="form-grid">
+                <div class="field">
+                  <label for="accountName">Nume complet <span class="required">*</span></label>
+                  <input id="accountName" name="account_name" type="text" autocomplete="off">
+                </div>
+
+                <div class="field">
+                  <label for="accountPhone">Telefon <span class="required">*</span></label>
+                  <input id="accountPhone" name="account_phone" type="tel" placeholder="07xxxxxxxx" autocomplete="off">
+                  <p class="hint">Numărul trebuie să aibă format valid, de exemplu 07xxxxxxxx.</p>
+                </div>
+
+                <div class="field">
+                  <label for="accountEmail">Email <span class="required">*</span></label>
+                  <input id="accountEmail" name="account_email" type="email" autocomplete="off">
+                </div>
+
+                <div class="field">
+                  <label for="accountPassword">Parolă <span class="required">*</span></label>
+                  <input id="accountPassword" name="account_password" type="password" minlength="6" autocomplete="off">
+                  <p class="hint">Parola trebuie să aibă cel puțin 6 caractere.</p>
+                </div>
+
+                <div class="field">
+                  <label for="accountConfirmPassword">Confirmă parola <span class="required">*</span></label>
+                  <input id="accountConfirmPassword" name="account_confirm_password" type="password" minlength="6" autocomplete="off">
+                </div>
+
+                <div class="field">
+                  <label for="emailCode">Cod verificare email <span class="required">*</span></label>
+                  <input id="emailCode" name="email_code" type="text" inputmode="numeric" maxlength="6" placeholder="Cod de 6 cifre" autocomplete="off">
+                  <p class="hint">Contul se creează și se verifică din pagina Cont.</p>
+                </div>
+
+                <div class="field full">
+                  <div class="btn-row">
+                    <button class="secondary" type="button" id="sendCodeBtn">Trimite cod pe email</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- DATE FILM -->
+            <div class="form-block active">
+              <div class="block-title">Date scurtmetraj</div>
+              <p class="block-note">
+                Completează datele principale ale scurtmetrajului. Linkurile trebuie să fie accesibile pentru echipa de selecție.
+              </p>
+
+              <div class="form-grid">
+                <div class="field full">
+                  <label for="title">Titlu scurtmetraj <span class="required">*</span></label>
+                  <input id="title" name="title" type="text" required autocomplete="off">
+                </div>
+
+                <div class="field">
+                  <label for="category">Categorie film <span class="required">*</span></label>
+                  <select id="category" name="category" required autocomplete="off">
+                    <option value="">Alege categoria</option>
+                    <option value="Ficțiune">Ficțiune</option>
+                    <option value="Documentar">Documentar</option>
+                    <option value="Animație">Animație</option>
+                    <option value="Experimental">Experimental</option>
+                    <option value="Altă categorie">Altă categorie</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="productionYear">An producție <span class="required">*</span></label>
+                  <select id="productionYear" name="production_year" required autocomplete="off">
+                    <option value="">Alege anul</option>
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+                    <option value="2026">2026</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="duration">Durată film, în minute <span class="required">*</span></label>
+                  <input id="duration" name="duration_minutes" type="number" min="1" required autocomplete="off">
+                  <p class="hint">Durata recomandată este de maximum 25 de minute.</p>
+                </div>
+
+                <div class="field">
+                  <label for="city">Oraș</label>
+                  <input id="city" name="city" type="text" placeholder="Opțional" autocomplete="off">
+                </div>
+
+                <div class="field">
+                  <label for="institution">Instituție</label>
+                  <input id="institution" name="institution" type="text" placeholder="Liceu / facultate / organizație, opțional" autocomplete="off">
+                </div>
+
+                <div class="field full">
+                  <label for="presentation">Prezentare scurtmetraj <span class="required">*</span></label>
+                  <textarea id="presentation" name="presentation" required autocomplete="off"></textarea>
+                </div>
+
+                <div class="warning-note">
+                  Filmele care depășesc 25 de minute pot fi trimise, însă includerea lor în concurs va fi analizată separat de echipa festivalului.
+                </div>
+
+                <div class="field full">
+                  <label for="shortFilmLink">Link scurtmetraj <span class="required">*</span></label>
+                  <input id="shortFilmLink" name="short_film_link" type="url" placeholder="https://..." required autocomplete="off">
+                  <p class="hint">Linkul trebuie să fie valid și să înceapă cu http:// sau https://.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- ECHIPĂ -->
+            <div class="form-block active">
+              <div class="block-title">Echipă</div>
+              <p class="block-note">
+                Adaugă fiecare membru separat. Rolul este obligatoriu pentru fiecare membru trecut în formular.
+              </p>
+
+              <div class="form-grid">
+                <div class="field full">
+                  <label>Echipă <span class="required">*</span></label>
+
+                  <div class="team-table-wrap">
+                    <table class="team-table" aria-label="Tabel echipă scurtmetraj">
+                      <thead>
+                        <tr>
+                          <th>Nr.</th>
+                          <th>Nume membru</th>
+                          <th>Rol în echipă <span class="required">*</span></th>
+                          <th></th>
+                        </tr>
+                      </thead>
+
+                      <tbody id="teamMembersBody">
+                        <tr class="team-row">
+                          <td class="team-number">1</td>
+                          <td><input type="text" class="team-name" placeholder="Nume" autocomplete="off" required></td>
+                          <td><input type="text" class="team-role" placeholder="Rol" autocomplete="off" required></td>
+                          <td><button class="icon-btn" type="button" aria-label="Șterge membru" onclick="removeTeamMember(this)">×</button></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <div class="btn-row">
+                    <button class="secondary" type="button" onclick="addTeamMember()">Adaugă membru</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- LINKURI ȘI CONTACT -->
+            <div class="form-block active">
+              <div class="block-title">Materiale și contact</div>
+              <p class="block-note">
+                Poți adăuga linkuri către materiale de producție, making-of, afiș, dosar de presă sau alte materiale relevante.
+              </p>
+
+              <div class="form-grid">
+                <div class="field full">
+                  <label>Link materiale producție</label>
+
+                  <div class="link-list" id="materialLinksList">
+                    <div class="link-row">
+                      <div class="link-number">1</div>
+                      <input type="url" class="material-link" placeholder="https://..." autocomplete="off">
+                      <button class="icon-btn" type="button" aria-label="Șterge link" onclick="removeMaterialLink(this)">×</button>
+                    </div>
+                  </div>
+
+                  <p class="hint">Poți adăuga mai multe linkuri. Acestea vor fi numerotate automat.</p>
+
+                  <div class="btn-row">
+                    <button class="secondary" type="button" onclick="addMaterialLink()">Adaugă link</button>
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label for="contactPhone">Telefon contact <span class="required">*</span></label>
+                  <input id="contactPhone" name="contact_phone" type="tel" placeholder="07xxxxxxxx" required autocomplete="off">
+                </div>
+
+                <div class="field">
+                  <label for="contactEmail">Email contact <span class="required">*</span></label>
+                  <input id="contactEmail" name="contact_email" type="email" required autocomplete="off">
+                </div>
+
+                <div class="field">
+                  <label for="coordinatorName">Nume coordonator / profesor</label>
+                  <input id="coordinatorName" name="coordinator_name" type="text" placeholder="Opțional" autocomplete="off">
+                </div>
+
+                <div class="field">
+                  <label for="coordinatorEmail">Email coordonator / profesor</label>
+                  <input id="coordinatorEmail" name="coordinator_email" type="email" placeholder="Opțional" autocomplete="off">
+                </div>
+
+                <div class="field full">
+                  <label for="otherDetails">Alte detalii</label>
+                  <textarea id="otherDetails" name="other_details" autocomplete="off"></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- ACORDURI -->
+            <div class="form-block active">
+              <div class="block-title">Acorduri</div>
+
+              <div class="form-grid">
+                <div class="field full">
+                  <label class="consent">
+                    <input id="acceptRules" name="accept_rules" type="checkbox" value="1" required autocomplete="off">
+                    <span>
+                      Confirm că am citit și accept <a href="regulament.html#regulament" class="inline-link">regulamentul festivalului</a>.
+                    </span>
+                  </label>
+                </div>
+
+                <div class="field full">
+                  <label class="consent">
+                    <input id="acceptGdpr" name="accept_gdpr" type="checkbox" value="1" required autocomplete="off">
+                    <span>
+                      Sunt de acord cu prelucrarea datelor conform <a href="regulament.html#gdpr" class="inline-link">politicii GDPR</a>.
+                    </span>
+                  </label>
+                </div>
+
+                <div class="field full">
+                  <label class="consent">
+                    <input id="acceptCookies" name="accept_cookies" type="checkbox" value="1" required autocomplete="off">
+                    <span>
+                      Accept folosirea cookie-urilor conform <a href="regulament.html#cookies" class="inline-link">politicii de cookies</a>.
+                    </span>
+                  </label>
+                </div>
+
+                <div class="field full">
+                  <label class="consent">
+                    <input id="marketingConsent" name="marketing_consent" type="checkbox" value="1" autocomplete="off">
+                    <span>
+                      Sunt de acord să primesc mesaje de comunicare și informări despre Overthink Film Fest pe adresa de email introdusă.
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="btn-row">
+              <button class="primary" type="submit" id="submitBtn">Trimite înscrierea</button>
+            </div>
+
+            <div id="statusBox" class="status"></div>
+
+          </form>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-shell">
+      <div class="footer-brand">
+        <img src="Foto/LOGO Overthink 2 (1).svg" alt="Logo Overthink Film Fest">
+
+        <h3>Overthink Film Fest</h3>
+
+        <p>
+          Festival de film independent organizat de Clubul de Film Overthink.
+          Prima ediție: 7–9 august 2026, Insula de Agrement Bacău.
+        </p>
+      </div>
+
+      <div class="footer-col">
+        <h3>Linkuri</h3>
+        <a href="program.html">Program</a>
+        <a href="inscriere.html">Înscrie-te</a>
+      </div>
+
+      <div class="footer-col">
+        <h3>Contact</h3>
+        <p>Email: staff@overthink-jr.com</p>
+        <p>Telefon: 0773 746 372</p>
+        <a href="https://www.instagram.com/overthink.jr" target="_blank">Instagram: @overthink.jr</a>
+      </div>
+    </div>
+
+    <div class="copyright">
+      © 2026 Overthink Film Fest. Toate drepturile rezervate.
+    </div>
+  </footer>
+
+  <script>
+    // DROPDOWN MENU
+    const menuWrapper = document.getElementById("menuWrapper");
+    const menuToggle = document.getElementById("menuToggle");
+
+    menuToggle.addEventListener("click", (event) => {
+      event.stopPropagation();
+      menuWrapper.classList.toggle("open");
+    });
+
+    document.addEventListener("click", (event) => {
+      if(!menuWrapper.contains(event.target)){
+        menuWrapper.classList.remove("open");
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if(event.key === "Escape"){
+        menuWrapper.classList.remove("open");
+      }
+    });
+
+    // REVEAL ON SCROLL
+    const revealElements = document.querySelectorAll(".reveal");
+
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          entry.target.classList.add("visible");
+        }
+      });
+    }, { threshold:0.15 });
+
+    revealElements.forEach(el => revealObserver.observe(el));
+
+    // BACKEND CONFIG
+    const token = localStorage.getItem("off_access_token");
+    const storedEmail = localStorage.getItem("off_user_email") || "";
+
+    const statusBox = document.getElementById("statusBox");
+    const form = document.getElementById("submissionForm");
+    const submitBtn = document.getElementById("submitBtn");
+    const accountSwitch = document.querySelector(".account-switch");
+    const existingAccountBlock = document.getElementById("existingAccountBlock");
+    const newAccountBlock = document.getElementById("newAccountBlock");
+    const sendCodeBtn = document.getElementById("sendCodeBtn");
+
+    let existingSubmission = null;
+    let editMode = false;
+
+    function showStatus(message, type){
+      statusBox.textContent = message;
+      statusBox.className = "status " + type;
+    }
+
+    function requireLogin(){
+      if(!token){
+        showStatus("Trebuie să fii autentificat pentru a trimite o înscriere. Vei fi redirecționat către pagina de autentificare.", "error");
+        submitBtn.disabled = true;
+
+        setTimeout(() => {
+          window.location.href = "auth.html";
+        }, 1800);
+
+        return false;
+      }
+
+      return true;
+    }
+
+    function hideAccountBlocksForLoggedUser(){
+      if(accountSwitch){
+        accountSwitch.style.display = "none";
+      }
+
+      if(existingAccountBlock){
+        existingAccountBlock.classList.remove("active");
+        existingAccountBlock.style.display = "none";
+      }
+
+      if(newAccountBlock){
+        newAccountBlock.classList.remove("active");
+        newAccountBlock.style.display = "none";
+      }
+
+      const contactEmailInput = document.getElementById("contactEmail");
+      const existingEmailInput = document.getElementById("existingEmail");
+
+      if(contactEmailInput && storedEmail && !contactEmailInput.value){
+        contactEmailInput.value = storedEmail;
+      }
+
+      if(existingEmailInput && storedEmail && !existingEmailInput.value){
+        existingEmailInput.value = storedEmail;
+      }
+    }
+
+    async function apiFetch(url, options = {}){
+      const headers = {
+        ...(options.headers || {}),
+        "Authorization": `Bearer ${token}`
+      };
+
+      if(!(options.body instanceof FormData) && options.body){
+        headers["Content-Type"] = "application/json";
+      }
+
+      const response = await fetch(url, {
+        ...options,
+        headers
+      });
+
+      let data = {};
+
+      try{
+        data = await response.json();
+      }catch(error){
+        data = {};
+      }
+
+      if(response.status === 401 || response.status === 403){
+        if(data.detail){
+          showStatus(data.detail, "error");
+        }
+      }
+
+      return { response, data };
+    }
+
+    function isValidUrl(value){
+      try{
+        const url = new URL(value);
+        return url.protocol === "http:" || url.protocol === "https:";
+      }catch{
+        return false;
+      }
+    }
+
+    function isValidRomanianPhone(value){
+      return /^07\d{8}$/.test(value.trim().replace(/\s/g, ""));
+    }
+
+    // TEAM MEMBERS
+    function renumberTeamMembers(){
+      document.querySelectorAll(".team-row").forEach((row, index) => {
+        row.querySelector(".team-number").textContent = index + 1;
+      });
+    }
+
+    function addTeamMember(){
+      const body = document.getElementById("teamMembersBody");
+      const row = document.createElement("tr");
+
+      row.className = "team-row";
+      row.innerHTML = `
+        <td class="team-number"></td>
+        <td><input type="text" class="team-name" placeholder="Nume" autocomplete="off" required></td>
+        <td><input type="text" class="team-role" placeholder="Rol" autocomplete="off" required></td>
+        <td><button class="icon-btn" type="button" aria-label="Șterge membru" onclick="removeTeamMember(this)">×</button></td>
+      `;
+
+      body.appendChild(row);
+      renumberTeamMembers();
+    }
+
+    function removeTeamMember(button){
+      const rows = document.querySelectorAll(".team-row");
+
+      if(rows.length === 1){
+        rows[0].querySelector(".team-name").value = "";
+        rows[0].querySelector(".team-role").value = "";
+        return;
+      }
+
+      button.closest(".team-row").remove();
+      renumberTeamMembers();
+    }
+
+    function collectTeamMembers(){
+      return Array.from(document.querySelectorAll(".team-row")).map((row) => ({
+        name: row.querySelector(".team-name").value.trim(),
+        role: row.querySelector(".team-role").value.trim()
+      })).filter(member => member.name || member.role);
+    }
+
+    // MATERIAL LINKS
+    function renumberMaterialLinks(){
+      document.querySelectorAll(".link-row").forEach((row, index) => {
+        row.querySelector(".link-number").textContent = index + 1;
+      });
+    }
+
+    function addMaterialLink(){
+      const list = document.getElementById("materialLinksList");
+      const row = document.createElement("div");
+
+      row.className = "link-row";
+      row.innerHTML = `
+        <div class="link-number"></div>
+        <input type="url" class="material-link" placeholder="https://..." autocomplete="off">
+        <button class="icon-btn" type="button" aria-label="Șterge link" onclick="removeMaterialLink(this)">×</button>
+      `;
+
+      list.appendChild(row);
+      renumberMaterialLinks();
+    }
+
+    function removeMaterialLink(button){
+      const rows = document.querySelectorAll(".link-row");
+
+      if(rows.length === 1){
+        rows[0].querySelector("input").value = "";
+        return;
+      }
+
+      button.closest(".link-row").remove();
+      renumberMaterialLinks();
+    }
+
+    function collectMaterialLinks(){
+      return Array.from(document.querySelectorAll(".material-link"))
+        .map(input => input.value.trim())
+        .filter(Boolean)
+        .map(url => ({ url }));
+    }
+
+    function setInputValue(id, value){
+      const input = document.getElementById(id);
+
+      if(input){
+        input.value = value || "";
+      }
+    }
+
+    function setCheckboxValue(id, value){
+      const input = document.getElementById(id);
+
+      if(input){
+        input.checked = Boolean(value);
+      }
+    }
+
+    function fillTeamMembers(members){
+      const body = document.getElementById("teamMembersBody");
+      body.innerHTML = "";
+
+      const cleanMembers = Array.isArray(members) && members.length ? members : [{ name:"", role:"" }];
+
+      cleanMembers.forEach(member => {
+        const row = document.createElement("tr");
+
+        row.className = "team-row";
+        row.innerHTML = `
+          <td class="team-number"></td>
+          <td><input type="text" class="team-name" placeholder="Nume" autocomplete="off" required></td>
+          <td><input type="text" class="team-role" placeholder="Rol" autocomplete="off" required></td>
+          <td><button class="icon-btn" type="button" aria-label="Șterge membru" onclick="removeTeamMember(this)">×</button></td>
+        `;
+
+        row.querySelector(".team-name").value = member.name || "";
+        row.querySelector(".team-role").value = member.role || "";
+
+        body.appendChild(row);
+      });
+
+      renumberTeamMembers();
+    }
+
+    function fillMaterialLinks(links){
+      const list = document.getElementById("materialLinksList");
+      list.innerHTML = "";
+
+      const cleanLinks = Array.isArray(links) && links.length ? links : [{ url:"" }];
+
+      cleanLinks.forEach(link => {
+        const row = document.createElement("div");
+
+        row.className = "link-row";
+        row.innerHTML = `
+          <div class="link-number"></div>
+          <input type="url" class="material-link" placeholder="https://..." autocomplete="off">
+          <button class="icon-btn" type="button" aria-label="Șterge link" onclick="removeMaterialLink(this)">×</button>
+        `;
+
+        row.querySelector(".material-link").value = typeof link === "string" ? link : (link.url || "");
+
+        list.appendChild(row);
+      });
+
+      renumberMaterialLinks();
+    }
+
+    function fillFormWithSubmission(submission){
+      setInputValue("title", submission.title);
+      setInputValue("category", submission.category);
+      setInputValue("productionYear", submission.production_year);
+      setInputValue("duration", submission.duration_minutes);
+      setInputValue("city", submission.city);
+      setInputValue("institution", submission.institution);
+      setInputValue("presentation", submission.presentation);
+      setInputValue("shortFilmLink", submission.short_film_link);
+      setInputValue("contactPhone", submission.contact_phone);
+      setInputValue("contactEmail", submission.contact_email);
+      setInputValue("coordinatorName", submission.coordinator_name);
+      setInputValue("coordinatorEmail", submission.coordinator_email);
+      setInputValue("otherDetails", submission.other_details);
+
+      setCheckboxValue("acceptRules", true);
+      setCheckboxValue("acceptGdpr", true);
+      setCheckboxValue("acceptCookies", true);
+      setCheckboxValue("marketingConsent", submission.marketing_consent);
+
+      fillTeamMembers(submission.team_members);
+      fillMaterialLinks(submission.material_links);
+    }
+
+    async function loadExistingSubmissionForEdit(){
+      if(!token){
+        return;
+      }
+
+      try{
+        const { response, data } = await apiFetch("/api/submissions/my", {
+          method: "GET"
+        });
+
+        if(!response.ok){
+          return;
+        }
+
+        if(data.has_submission && data.submission){
+          existingSubmission = data.submission;
+
+          if(existingSubmission.can_edit || existingSubmission.status === "necesita_modificari"){
+            editMode = true;
+            submitBtn.textContent = "Retrimite înscrierea modificată";
+            fillFormWithSubmission(existingSubmission);
+            showStatus("Ai o înscriere care poate fi modificată. Datele au fost încărcate automat.", "info");
+          }else{
+            submitBtn.disabled = true;
+            showStatus("Ai deja o înscriere trimisă. O poți modifica doar dacă adminul solicită modificări.", "info");
+          }
+        }
+      }catch(error){
+        console.error(error);
+      }
+    }
+
+    function validateForm(){
+      const shortFilmLink = document.getElementById("shortFilmLink").value.trim();
+      const materialLinks = collectMaterialLinks();
+      const teamMembers = collectTeamMembers();
+      const contactPhone = document.getElementById("contactPhone").value.trim();
+      const contactEmail = document.getElementById("contactEmail").value.trim();
+      const duration = Number(document.getElementById("duration").value);
+
+      if(!document.getElementById("title").value.trim()){
+        showStatus("Completează titlul scurtmetrajului.", "error");
+        return null;
+      }
+
+      if(!document.getElementById("category").value){
+        showStatus("Alege categoria filmului.", "error");
+        return null;
+      }
+
+      if(!document.getElementById("productionYear").value){
+        showStatus("Alege anul de producție.", "error");
+        return null;
+      }
+
+      if(!duration || duration <= 0){
+        showStatus("Completează durata filmului în minute.", "error");
+        return null;
+      }
+
+      if(!document.getElementById("presentation").value.trim()){
+        showStatus("Completează prezentarea scurtmetrajului.", "error");
+        return null;
+      }
+
+      if(!isValidUrl(shortFilmLink)){
+        showStatus("Linkul scurtmetrajului nu este valid. Trebuie să înceapă cu http:// sau https://.", "error");
+        return null;
+      }
+
+      if(teamMembers.length === 0){
+        showStatus("Adaugă cel puțin un membru în echipă.", "error");
+        return null;
+      }
+
+      for(let i = 0; i < teamMembers.length; i++){
+        if(!teamMembers[i].name){
+          showStatus(`Completează numele membrului #${i + 1}.`, "error");
+          return null;
+        }
+
+        if(!teamMembers[i].role){
+          showStatus(`Completează rolul membrului #${i + 1}.`, "error");
+          return null;
+        }
+      }
+
+      for(let i = 0; i < materialLinks.length; i++){
+        if(!isValidUrl(materialLinks[i].url)){
+          showStatus(`Linkul material #${i + 1} nu este valid.`, "error");
+          return null;
+        }
+      }
+
+      if(!isValidRomanianPhone(contactPhone)){
+        showStatus("Numărul de telefon de contact trebuie să înceapă cu 07 și să aibă fix 10 cifre.", "error");
+        return null;
+      }
+
+      if(!contactEmail || !document.getElementById("contactEmail").checkValidity()){
+        showStatus("Completează un email de contact valid.", "error");
+        return null;
+      }
+
+      if(!document.getElementById("acceptRules").checked){
+        showStatus("Trebuie să accepți regulamentul festivalului.", "error");
+        return null;
+      }
+
+      if(!document.getElementById("acceptGdpr").checked){
+        showStatus("Trebuie să accepți politica GDPR.", "error");
+        return null;
+      }
+
+      if(!document.getElementById("acceptCookies").checked){
+        showStatus("Trebuie să accepți politica de cookies.", "error");
+        return null;
+      }
+
+      return {
+        title: document.getElementById("title").value.trim(),
+        category: document.getElementById("category").value.trim(),
+        production_year: document.getElementById("productionYear").value.trim(),
+        duration_minutes: duration,
+        city: document.getElementById("city").value.trim() || null,
+        institution: document.getElementById("institution").value.trim() || null,
+        presentation: document.getElementById("presentation").value.trim(),
+        short_film_link: shortFilmLink,
+        contact_phone: contactPhone,
+        contact_email: contactEmail,
+        coordinator_name: document.getElementById("coordinatorName").value.trim() || null,
+        coordinator_email: document.getElementById("coordinatorEmail").value.trim() || null,
+        other_details: document.getElementById("otherDetails").value.trim() || null,
+        team_members: teamMembers,
+        material_links: materialLinks,
+        accept_rules: document.getElementById("acceptRules").checked,
+        accept_gdpr: document.getElementById("acceptGdpr").checked,
+        accept_cookies: document.getElementById("acceptCookies").checked,
+        marketing_consent: document.getElementById("marketingConsent").checked
+      };
+    }
+
+    if(sendCodeBtn){
+      sendCodeBtn.addEventListener("click", () => {
+        showStatus("Conturile se creează din pagina Cont. Pentru înscriere trebuie să fii autentificat.", "info");
+      });
+    }
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      if(!requireLogin()){
+        return;
+      }
+
+      const payload = validateForm();
+
+      if(!payload){
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = editMode ? "Se retrimite..." : "Se trimite...";
+
+      try{
+        const endpoint = editMode ? "/api/submissions/my" : "/api/submissions";
+        const method = editMode ? "PUT" : "POST";
+
+        const { response, data } = await apiFetch(endpoint, {
+          method,
+          body: JSON.stringify(payload)
+        });
+
+        if(!response.ok){
+          showStatus(data.detail || "Înscrierea nu a putut fi salvată.", "error");
+          submitBtn.disabled = false;
+          submitBtn.textContent = editMode ? "Retrimite înscrierea modificată" : "Trimite înscrierea";
+          return;
+        }
+
+        showStatus(data.detail || "Înscriere salvată cu succes.", "success");
+
+        setTimeout(() => {
+          window.location.href = "cont.html";
+        }, 1300);
+
+      }catch(error){
+        console.error(error);
+        showStatus("Eroare de conexiune la server.", "error");
+        submitBtn.disabled = false;
+        submitBtn.textContent = editMode ? "Retrimite înscrierea modificată" : "Trimite înscrierea";
+      }
+    });
+
+    hideAccountBlocksForLoggedUser();
+    requireLogin();
+    loadExistingSubmissionForEdit();
+  </script>
+
+</body>
+</html>
