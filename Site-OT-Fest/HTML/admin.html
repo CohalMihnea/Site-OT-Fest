@@ -1,0 +1,1493 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Admin | Overthink Film Fest</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    :root{
+      --red:#920404;
+      --red-bright:#d30707;
+      --bg:#000;
+      --card:rgba(255,255,255,0.045);
+      --border:rgba(255,255,255,0.08);
+      --text:#fff;
+      --muted:#d6d6d6;
+    }
+
+    html{
+      scroll-behavior:smooth;
+    }
+
+    body{
+      font-family:'Inter', Arial, sans-serif;
+      background:#000;
+      color:#fff;
+      overflow-x:hidden;
+      min-height:100vh;
+    }
+
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
+
+    img{
+      max-width:100%;
+      display:block;
+    }
+
+    /* ---------- TOPBAR ---------- */
+    .topbar{
+      position:fixed;
+      top:0;
+      left:0;
+      width:100%;
+      min-height:62px;
+      padding:0 24px;
+      display:grid;
+      grid-template-columns:1fr auto 1fr;
+      align-items:center;
+      gap:18px;
+      z-index:1000;
+      background:rgba(10,10,10,0.82);
+      backdrop-filter:blur(14px);
+      border-bottom:1px solid rgba(255,255,255,0.08);
+    }
+
+    .topbar-logo{
+      width:max-content;
+      display:flex;
+      align-items:center;
+    }
+
+    .topbar-logo img{
+      height:39px;
+      width:auto;
+      filter:drop-shadow(0 0 12px rgba(146,4,4,0.25));
+      transition:0.3s ease;
+    }
+
+    .topbar-logo:hover img{
+      transform:scale(1.035);
+      opacity:0.88;
+    }
+
+    .topbar-title{
+      font-family:'Bebas Neue', Impact, sans-serif;
+      font-size:clamp(1.18rem, 2.4vw, 1.65rem);
+      letter-spacing:0.12em;
+      text-align:center;
+      white-space:nowrap;
+      text-shadow:0 0 18px rgba(146,4,4,0.42);
+    }
+
+    .menu-wrapper{
+      justify-self:end;
+      position:relative;
+    }
+
+    .menu-toggle{
+      border:none;
+      outline:none;
+      cursor:pointer;
+      color:white;
+      background:rgba(146,4,4,0.9);
+      font-family:'Inter', Arial, sans-serif;
+      font-weight:900;
+      font-size:0.92rem;
+      border-radius:999px;
+      padding:10px 19px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      transition:0.3s ease;
+      box-shadow:0 0 22px rgba(146,4,4,0.23);
+    }
+
+    .menu-toggle:hover{
+      background:#c00606;
+      transform:translateY(-2px);
+    }
+
+    .menu-arrow{
+      font-size:0.8rem;
+      transition:0.3s ease;
+    }
+
+    .menu-wrapper.open .menu-arrow{
+      transform:rotate(180deg);
+    }
+
+    .dropdown-menu{
+      position:absolute;
+      top:calc(100% + 13px);
+      right:0;
+      min-width:230px;
+      padding:10px;
+      border-radius:18px;
+      background:rgba(15,15,15,0.94);
+      backdrop-filter:blur(18px);
+      border:1px solid rgba(255,255,255,0.12);
+      box-shadow:
+        0 20px 60px rgba(0,0,0,0.55),
+        0 0 35px rgba(146,4,4,0.18);
+      opacity:0;
+      transform:translateY(-10px) scale(0.96);
+      pointer-events:none;
+      transition:0.25s ease;
+    }
+
+    .menu-wrapper.open .dropdown-menu{
+      opacity:1;
+      transform:translateY(0) scale(1);
+      pointer-events:auto;
+    }
+
+    .dropdown-menu a{
+      display:block;
+      color:white;
+      font-weight:800;
+      padding:12px 14px;
+      border-radius:12px;
+      transition:0.25s ease;
+    }
+
+    .dropdown-menu a:hover,
+    .dropdown-menu a.active{
+      background:rgba(146,4,4,0.78);
+      transform:translateX(3px);
+    }
+
+    /* ---------- PAGE ---------- */
+    .admin-page{
+      min-height:100vh;
+      padding:120px 20px 90px;
+      position:relative;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at 50% 18%, rgba(146,4,4,0.30), transparent 28%),
+        radial-gradient(circle at 18% 78%, rgba(255,255,255,0.035), transparent 22%),
+        linear-gradient(180deg, #000, #050505, #000);
+    }
+
+    .admin-page::before{
+      content:"";
+      position:absolute;
+      inset:-120px;
+      background:
+        linear-gradient(rgba(0,0,0,0.24), rgba(0,0,0,0.90)),
+        url("Foto/overthink-alb.svg") center/contain no-repeat;
+      opacity:0.06;
+      filter:saturate(0.9) contrast(1.08);
+      transform:scale(1.02);
+      pointer-events:none;
+    }
+
+    .section-shell{
+      max-width:1380px;
+      margin:0 auto;
+      position:relative;
+      z-index:2;
+    }
+
+    .admin-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-end;
+      gap:24px;
+      margin-bottom:34px;
+    }
+
+    .eyebrow{
+      color:#d30707;
+      font-weight:900;
+      font-size:0.9rem;
+      letter-spacing:0.16em;
+      text-transform:uppercase;
+      margin-bottom:10px;
+    }
+
+    .admin-header h1{
+      font-family:'Bebas Neue', Impact, sans-serif;
+      font-size:clamp(3.4rem, 8vw, 6.2rem);
+      letter-spacing:0.055em;
+      line-height:0.92;
+      text-transform:uppercase;
+      text-shadow:
+        0 0 14px rgba(255,255,255,0.10),
+        0 0 28px rgba(146,4,4,0.48);
+    }
+
+    .admin-header p{
+      max-width:690px;
+      color:#d5d5d5;
+      line-height:1.7;
+      margin-top:16px;
+    }
+
+    .header-actions{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:12px 18px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.14);
+      font-family:'Inter', Arial, sans-serif;
+      font-weight:900;
+      font-size:0.88rem;
+      cursor:pointer;
+      transition:0.3s ease;
+      color:#fff;
+      background:rgba(255,255,255,0.06);
+      white-space:nowrap;
+    }
+
+    .btn-primary{
+      background:rgba(146,4,4,0.95);
+      box-shadow:0 0 24px rgba(146,4,4,0.25);
+    }
+
+    .btn-primary:hover{
+      background:#c00606;
+      transform:translateY(-2px);
+    }
+
+    .btn-secondary:hover{
+      border-color:rgba(146,4,4,0.45);
+      transform:translateY(-2px);
+    }
+
+    .btn-danger{
+      background:rgba(184,6,6,0.18);
+      border-color:rgba(184,6,6,0.38);
+    }
+
+    .btn-danger:hover{
+      background:#b80606;
+      transform:translateY(-2px);
+    }
+
+    .btn-small{
+      padding:9px 12px;
+      font-size:0.78rem;
+    }
+
+    .restricted{
+      display:none;
+      max-width:760px;
+      margin:0 auto;
+      text-align:center;
+      padding:36px 28px;
+    }
+
+    .restricted.visible{
+      display:block;
+    }
+
+    .panel{
+      position:relative;
+      overflow:hidden;
+      border-radius:28px;
+      background:rgba(255,255,255,0.045);
+      border:1px solid rgba(255,255,255,0.08);
+      box-shadow:0 18px 55px rgba(0,0,0,0.38);
+      padding:28px;
+    }
+
+    .panel::before{
+      content:"";
+      position:absolute;
+      inset:-1px;
+      background:radial-gradient(circle at 50% 0%, rgba(146,4,4,0.22), transparent 46%);
+      pointer-events:none;
+    }
+
+    .panel > *{
+      position:relative;
+      z-index:2;
+    }
+
+    .panel h2{
+      font-family:'Bebas Neue', Impact, sans-serif;
+      font-size:2.25rem;
+      letter-spacing:0.06em;
+      line-height:1;
+      margin-bottom:16px;
+      text-transform:uppercase;
+    }
+
+    .panel-note{
+      color:#cfcfcf;
+      line-height:1.65;
+      margin-bottom:20px;
+      font-size:0.94rem;
+    }
+
+    .admin-content.hidden{
+      display:none;
+    }
+
+    .stats-grid{
+      display:grid;
+      grid-template-columns:repeat(5, 1fr);
+      gap:16px;
+      margin-bottom:24px;
+    }
+
+    .stat-card{
+      position:relative;
+      overflow:hidden;
+      border-radius:22px;
+      background:rgba(255,255,255,0.045);
+      border:1px solid rgba(255,255,255,0.08);
+      padding:20px;
+      min-height:135px;
+    }
+
+    .stat-card::before{
+      content:"";
+      position:absolute;
+      inset:-1px;
+      background:radial-gradient(circle at 50% 0%, rgba(146,4,4,0.18), transparent 46%);
+      pointer-events:none;
+    }
+
+    .stat-card > *{
+      position:relative;
+      z-index:2;
+    }
+
+    .stat-label{
+      color:#bfbfbf;
+      font-size:0.78rem;
+      font-weight:900;
+      letter-spacing:0.10em;
+      text-transform:uppercase;
+      margin-bottom:12px;
+    }
+
+    .stat-number{
+      font-family:'Bebas Neue', Impact, sans-serif;
+      font-size:3.2rem;
+      line-height:1;
+      letter-spacing:0.04em;
+      text-shadow:0 0 22px rgba(146,4,4,0.35);
+    }
+
+    .stat-text{
+      margin-top:8px;
+      color:#cfcfcf;
+      font-size:0.86rem;
+      line-height:1.45;
+    }
+
+    .admin-grid{
+      display:grid;
+      grid-template-columns:1.25fr 0.75fr;
+      gap:24px;
+      align-items:start;
+    }
+
+    .filters{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:20px;
+    }
+
+    .filter-btn{
+      border:none;
+      outline:none;
+      cursor:pointer;
+      color:#fff;
+      background:rgba(255,255,255,0.06);
+      border:1px solid rgba(255,255,255,0.10);
+      border-radius:999px;
+      padding:10px 14px;
+      font-family:'Inter', Arial, sans-serif;
+      font-weight:900;
+      font-size:0.8rem;
+      transition:0.25s ease;
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active{
+      background:rgba(146,4,4,0.78);
+      border-color:rgba(146,4,4,0.44);
+      transform:translateY(-2px);
+    }
+
+    .table-wrap{
+      overflow-x:auto;
+      border-radius:20px;
+      border:1px solid rgba(255,255,255,0.08);
+      background:rgba(0,0,0,0.22);
+    }
+
+    table{
+      width:100%;
+      min-width:880px;
+      border-collapse:collapse;
+    }
+
+    th,
+    td{
+      padding:14px 12px;
+      border-bottom:1px solid rgba(255,255,255,0.08);
+      text-align:left;
+      vertical-align:middle;
+    }
+
+    th{
+      background:rgba(146,4,4,0.10);
+      color:#d30707;
+      font-size:0.78rem;
+      font-weight:900;
+      letter-spacing:0.10em;
+      text-transform:uppercase;
+    }
+
+    tr:last-child td{
+      border-bottom:none;
+    }
+
+    tbody tr{
+      transition:0.2s ease;
+      cursor:pointer;
+    }
+
+    tbody tr:hover,
+    tbody tr.selected{
+      background:rgba(146,4,4,0.14);
+    }
+
+    .muted{
+      color:#bfbfbf;
+      font-size:0.9rem;
+    }
+
+    .status-pill{
+      display:inline-flex;
+      padding:7px 10px;
+      border-radius:999px;
+      font-size:0.72rem;
+      font-weight:900;
+      letter-spacing:0.06em;
+      text-transform:uppercase;
+      background:rgba(255,255,255,0.08);
+      border:1px solid rgba(255,255,255,0.12);
+      color:#fff;
+      white-space:nowrap;
+    }
+
+    .status-pill.trimisa{
+      background:rgba(146,4,4,0.18);
+      border-color:rgba(146,4,4,0.36);
+    }
+
+    .status-pill.in_verificare{
+      background:rgba(255,170,0,0.12);
+      border-color:rgba(255,170,0,0.28);
+    }
+
+    .status-pill.necesita_modificari{
+      background:rgba(255,125,0,0.14);
+      border-color:rgba(255,125,0,0.34);
+    }
+
+    .status-pill.acceptata{
+      background:rgba(24,148,67,0.15);
+      border-color:rgba(24,148,67,0.35);
+    }
+
+    .status-pill.respinsa{
+      background:rgba(184,6,6,0.18);
+      border-color:rgba(184,6,6,0.42);
+    }
+
+    .details-stack{
+      display:flex;
+      flex-direction:column;
+      gap:24px;
+    }
+
+    .detail-box{
+      padding:15px;
+      border-radius:16px;
+      background:rgba(0,0,0,0.28);
+      border:1px solid rgba(255,255,255,0.08);
+      margin-bottom:12px;
+    }
+
+    .detail-box span{
+      display:block;
+      color:#a9a9a9;
+      font-size:0.76rem;
+      font-weight:900;
+      letter-spacing:0.08em;
+      text-transform:uppercase;
+      margin-bottom:6px;
+    }
+
+    .detail-box strong,
+    .detail-box p,
+    .detail-box a{
+      color:#fff;
+      line-height:1.55;
+      word-break:break-word;
+      font-size:0.94rem;
+    }
+
+    .detail-box a{
+      color:#ffb0b0;
+      text-decoration:underline;
+      text-underline-offset:3px;
+      font-weight:800;
+    }
+
+    .form-control{
+      width:100%;
+      border:none;
+      outline:none;
+      color:#fff;
+      font-family:'Inter', Arial, sans-serif;
+      font-size:0.95rem;
+      background:rgba(0,0,0,0.42);
+      border:1px solid rgba(255,255,255,0.10);
+      border-radius:16px;
+      padding:13px 14px;
+      transition:0.25s ease;
+    }
+
+    textarea.form-control{
+      min-height:130px;
+      resize:vertical;
+      line-height:1.6;
+    }
+
+    select.form-control option{
+      background:#111;
+      color:#fff;
+    }
+
+    .form-control:focus{
+      border-color:rgba(146,4,4,0.55);
+      box-shadow:
+        0 0 0 4px rgba(146,4,4,0.13),
+        0 0 22px rgba(146,4,4,0.18);
+    }
+
+    .field{
+      margin-bottom:14px;
+    }
+
+    .field label{
+      display:block;
+      color:#e7e7e7;
+      font-size:0.8rem;
+      font-weight:900;
+      letter-spacing:0.08em;
+      text-transform:uppercase;
+      margin-bottom:8px;
+    }
+
+    .action-row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:16px;
+    }
+
+    .empty-message{
+      padding:22px;
+      border-radius:18px;
+      background:rgba(0,0,0,0.28);
+      border:1px dashed rgba(255,255,255,0.16);
+      color:#cfcfcf;
+      line-height:1.65;
+      text-align:center;
+    }
+
+    .message-box{
+      display:none;
+      margin-top:14px;
+      padding:13px 14px;
+      border-radius:14px;
+      font-size:0.9rem;
+      font-weight:800;
+      line-height:1.5;
+    }
+
+    .message-box.visible{
+      display:block;
+    }
+
+    .message-box.success{
+      background:rgba(24,148,67,0.15);
+      border:1px solid rgba(24,148,67,0.35);
+      color:#d8ffe4;
+    }
+
+    .message-box.error{
+      background:rgba(184,6,6,0.15);
+      border:1px solid rgba(184,6,6,0.42);
+      color:#ffd7d7;
+    }
+
+    .restricted h1{
+      font-family:'Bebas Neue', Impact, sans-serif;
+      font-size:clamp(3rem, 8vw, 5rem);
+      letter-spacing:0.06em;
+      margin-bottom:14px;
+    }
+
+    .restricted p{
+      color:#d0d0d0;
+      line-height:1.7;
+      margin-bottom:22px;
+    }
+
+    /* ---------- FOOTER ---------- */
+    footer{
+      background:#0d0d0d;
+      border-top:1px solid rgba(255,255,255,0.07);
+      padding:46px 20px 24px;
+    }
+
+    .footer-shell{
+      max-width:1250px;
+      margin:0 auto;
+      display:grid;
+      grid-template-columns:1.1fr 1fr 1fr;
+      gap:28px;
+      align-items:start;
+    }
+
+    .footer-brand img{
+      height:48px;
+      width:auto;
+      margin-bottom:14px;
+      filter:drop-shadow(0 0 18px rgba(146,4,4,0.25));
+    }
+
+    .footer-brand h3,
+    .footer-col h3{
+      font-family:'Bebas Neue', Impact, sans-serif;
+      font-size:1.6rem;
+      letter-spacing:0.08em;
+      margin-bottom:12px;
+    }
+
+    .footer-brand p,
+    .footer-col p,
+    .footer-col a{
+      color:#d0d0d0;
+      line-height:1.75;
+      font-size:0.95rem;
+    }
+
+    .footer-col a{
+      display:block;
+      transition:0.25s ease;
+    }
+
+    .footer-col a:hover{
+      color:#fff;
+      transform:translateX(3px);
+    }
+
+    .copyright{
+      max-width:1250px;
+      margin:28px auto 0;
+      padding-top:18px;
+      border-top:1px solid rgba(255,255,255,0.07);
+      text-align:center;
+      color:#a8a8a8;
+      font-size:0.88rem;
+    }
+
+    @media(max-width:1180px){
+      .stats-grid{
+        grid-template-columns:repeat(3, 1fr);
+      }
+
+      .admin-grid{
+        grid-template-columns:1fr;
+      }
+
+      .footer-shell{
+        grid-template-columns:1fr 1fr;
+      }
+    }
+
+    @media(max-width:768px){
+      .topbar{
+        min-height:58px;
+        padding:8px 12px;
+        grid-template-columns:auto 1fr auto;
+        gap:10px;
+      }
+
+      .topbar-logo img{
+        height:33px;
+      }
+
+      .topbar-title{
+        font-size:1rem;
+        letter-spacing:0.08em;
+      }
+
+      .menu-toggle{
+        padding:8px 13px;
+        font-size:0.84rem;
+      }
+
+      .dropdown-menu{
+        min-width:205px;
+      }
+
+      .admin-page{
+        padding:100px 14px 64px;
+      }
+
+      .admin-header{
+        flex-direction:column;
+        align-items:flex-start;
+      }
+
+      .header-actions{
+        width:100%;
+        justify-content:flex-start;
+      }
+
+      .stats-grid{
+        grid-template-columns:1fr;
+      }
+
+      .panel{
+        padding:22px 18px;
+        border-radius:24px;
+      }
+
+      .footer-shell{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media(max-width:520px){
+      .topbar-title{
+        max-width:145px;
+        white-space:normal;
+        line-height:1;
+      }
+
+      .btn{
+        width:100%;
+      }
+
+      .header-actions,
+      .action-row{
+        flex-direction:column;
+      }
+
+      footer{
+        line-height:1.8;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header class="topbar">
+    <a href="index.html" class="topbar-logo" aria-label="Overthink Film Fest - pagina principală">
+      <img src="Foto/overthink-alb.svg" alt="Logo Overthink Film Fest">
+    </a>
+
+    <div class="topbar-title">OVERTHINK FILM FEST</div>
+
+    <div class="menu-wrapper" id="menuWrapper">
+      <button class="menu-toggle" id="menuToggle" type="button" aria-label="Deschide meniul">
+        Meniu <span class="menu-arrow">▾</span>
+      </button>
+
+      <nav class="dropdown-menu" id="dropdownMenu">
+        <a href="contact.html">Contact</a>
+        <a href="program.html">Program</a>
+        <a href="cont.html">Cont</a>
+        <a href="inscriere.html">Înscrie-te</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ADMIN PAGE -->
+  <main class="admin-page">
+    <div class="section-shell">
+
+      <!-- RESTRICTED -->
+      <section class="panel restricted" id="restrictedBox">
+        <h1>Acces restricționat</h1>
+        <p>
+          Această pagină este disponibilă doar pentru conturile de admin.
+          Autentifică-te cu un cont administrativ pentru a accesa panoul.
+        </p>
+
+        <div class="header-actions" style="justify-content:center;">
+          <a href="auth.html" class="btn btn-primary">Autentificare</a>
+          <a href="cont.html" class="btn btn-secondary">Înapoi la cont</a>
+        </div>
+      </section>
+
+      <!-- ADMIN CONTENT -->
+      <section class="admin-content hidden" id="adminContent">
+
+        <div class="admin-header">
+          <div>
+            <div class="eyebrow">Panou administrare</div>
+            <h1>Admin</h1>
+            <p>
+              Gestionare înscrieri, statusuri, feedback, conturi și exporturi pentru Overthink Film Fest.
+              Datele sunt încărcate din backend și actualizate în baza de date.
+            </p>
+          </div>
+
+          <div class="header-actions">
+            <button type="button" class="btn btn-primary" id="exportCsvBtn">Export CSV</button>
+            <a href="cont.html" class="btn btn-secondary">Cont</a>
+          </div>
+        </div>
+
+        <!-- STATS -->
+        <section class="stats-grid">
+          <article class="stat-card">
+            <div class="stat-label">Total înscrieri</div>
+            <div class="stat-number" id="statTotal">0</div>
+            <div class="stat-text">Toate scurtmetrajele trimise.</div>
+          </article>
+
+          <article class="stat-card">
+            <div class="stat-label">În verificare</div>
+            <div class="stat-number" id="statReview">0</div>
+            <div class="stat-text">Înscrieri analizate de echipă.</div>
+          </article>
+
+          <article class="stat-card">
+            <div class="stat-label">Necesită modificări</div>
+            <div class="stat-number" id="statChanges">0</div>
+            <div class="stat-text">Înscrieri ce trebuie completate.</div>
+          </article>
+
+          <article class="stat-card">
+            <div class="stat-label">Acceptate</div>
+            <div class="stat-number" id="statAccepted">0</div>
+            <div class="stat-text">Filme acceptate pentru etapă.</div>
+          </article>
+
+          <article class="stat-card">
+            <div class="stat-label">Respinse</div>
+            <div class="stat-number" id="statRejected">0</div>
+            <div class="stat-text">Înscrieri respinse.</div>
+          </article>
+        </section>
+
+        <div class="admin-grid">
+
+          <!-- SUBMISSIONS TABLE -->
+          <section class="panel">
+            <h2>Înscrieri</h2>
+            <p class="panel-note">
+              Selectează o înscriere din tabel pentru a vedea detaliile și pentru a schimba statusul.
+            </p>
+
+            <div class="filters" id="filters">
+              <button class="filter-btn active" data-status="all">Toate</button>
+              <button class="filter-btn" data-status="trimisa">Trimisă</button>
+              <button class="filter-btn" data-status="in_verificare">În verificare</button>
+              <button class="filter-btn" data-status="necesita_modificari">Necesită modificări</button>
+              <button class="filter-btn" data-status="acceptata">Acceptată</button>
+              <button class="filter-btn" data-status="respinsa">Respinsă</button>
+            </div>
+
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Titlu</th>
+                    <th>Contact</th>
+                    <th>Categorie</th>
+                    <th>Durată</th>
+                    <th>Status</th>
+                    <th>Data</th>
+                    <th>Acțiune</th>
+                  </tr>
+                </thead>
+
+                <tbody id="submissionsBody"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- DETAILS -->
+          <aside class="details-stack">
+
+            <section class="panel">
+              <h2>Detalii</h2>
+
+              <div id="emptyDetails" class="empty-message">
+                Selectează o înscriere pentru a vedea detaliile.
+              </div>
+
+              <div id="detailsBox" style="display:none;">
+                <div class="detail-box">
+                  <span>Titlu</span>
+                  <strong id="detailTitle">-</strong>
+                </div>
+
+                <div class="detail-box">
+                  <span>Participant / contact</span>
+                  <strong id="detailContact">-</strong>
+                  <p id="detailEmail">-</p>
+                  <p id="detailPhone">-</p>
+                </div>
+
+                <div class="detail-box">
+                  <span>Film</span>
+                  <p id="detailFilmInfo">-</p>
+                </div>
+
+                <div class="detail-box">
+                  <span>Link scurtmetraj</span>
+                  <a href="#" target="_blank" id="detailLink">-</a>
+                </div>
+
+                <div class="detail-box">
+                  <span>Prezentare</span>
+                  <p id="detailPresentation">-</p>
+                </div>
+
+                <div class="detail-box">
+                  <span>Echipă</span>
+                  <p id="detailTeam">-</p>
+                </div>
+              </div>
+            </section>
+
+            <section class="panel">
+              <h2>Administrare</h2>
+
+              <div id="adminActionsEmpty" class="empty-message">
+                Selectează o înscriere pentru a edita statusul și feedbackul.
+              </div>
+
+              <div id="adminActionsBox" style="display:none;">
+                <div class="field">
+                  <label for="statusSelect">Status înscriere</label>
+                  <select id="statusSelect" class="form-control">
+                    <option value="trimisa">Trimisă</option>
+                    <option value="in_verificare">În verificare</option>
+                    <option value="necesita_modificari">Necesită modificări</option>
+                    <option value="acceptata">Acceptată</option>
+                    <option value="respinsa">Respinsă</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="feedbackText">Feedback admin</label>
+                  <textarea id="feedbackText" class="form-control" placeholder="Scrie feedback pentru participant..."></textarea>
+                </div>
+
+                <div class="action-row">
+                  <button type="button" class="btn btn-primary" id="saveStatusBtn">Salvează</button>
+                  <button type="button" class="btn btn-secondary" id="disableAccountBtn">Dezactivează cont</button>
+                  <button type="button" class="btn btn-danger" id="deleteSubmissionBtn">Șterge înscriere</button>
+                </div>
+
+                <div id="adminMessage" class="message-box"></div>
+              </div>
+            </section>
+
+          </aside>
+
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-shell">
+      <div class="footer-brand">
+        <img src="Foto/LOGO Overthink 2 (1).svg" alt="Logo Overthink Film Fest">
+
+        <h3>Overthink Film Fest</h3>
+
+        <p>
+          Festival de film independent organizat de Clubul de Film Overthink.
+          Prima ediție: 7–9 august 2026, Insula de Agrement Bacău.
+        </p>
+      </div>
+
+      <div class="footer-col">
+        <h3>Linkuri</h3>
+        <a href="regulament.html#gdpr">Politica GDPR</a>
+        <a href="regulament.html#cookies">Politica Cookies</a>
+        <a href="noutati.html">Noutăți</a>
+        <a href="program.html">Program</a>
+        <a href="inscriere.html">Înscrie-te</a>
+      </div>
+
+      <div class="footer-col">
+        <h3>Contact</h3>
+        <p>Email: staff@overthink-jr.com</p>
+        <p>Telefon: 0773 746 372</p>
+        <a href="https://www.instagram.com/overthink.jr" target="_blank">Instagram: @overthink.jr</a>
+      </div>
+    </div>
+
+    <div class="copyright">
+      © 2026 Overthink Film Fest. Toate drepturile rezervate.
+    </div>
+  </footer>
+
+  <script>
+    // DROPDOWN MENU
+    const menuWrapper = document.getElementById("menuWrapper");
+    const menuToggle = document.getElementById("menuToggle");
+
+    menuToggle.addEventListener("click", (event) => {
+      event.stopPropagation();
+      menuWrapper.classList.toggle("open");
+    });
+
+    document.addEventListener("click", (event) => {
+      if(!menuWrapper.contains(event.target)){
+        menuWrapper.classList.remove("open");
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if(event.key === "Escape"){
+        menuWrapper.classList.remove("open");
+      }
+    });
+
+    const restrictedBox = document.getElementById("restrictedBox");
+    const adminContent = document.getElementById("adminContent");
+    const submissionsBody = document.getElementById("submissionsBody");
+    const filterButtons = document.querySelectorAll(".filter-btn");
+
+    const token = localStorage.getItem("off_access_token");
+
+    let submissions = [];
+    let users = [];
+    let selectedId = null;
+    let currentFilter = "all";
+
+    function showRestricted(){
+      restrictedBox.classList.add("visible");
+      adminContent.classList.add("hidden");
+    }
+
+    function showAdminContent(){
+      restrictedBox.classList.remove("visible");
+      adminContent.classList.remove("hidden");
+    }
+
+    function statusLabel(status){
+      const labels = {
+        trimisa: "Trimisă",
+        in_verificare: "În verificare",
+        necesita_modificari: "Necesită modificări",
+        acceptata: "Acceptată",
+        respinsa: "Respinsă"
+      };
+
+      return labels[status] || status || "-";
+    }
+
+    function formatDate(value){
+      if(!value){
+        return "-";
+      }
+
+      try{
+        return new Date(value).toLocaleDateString("ro-RO", {
+          year:"numeric",
+          month:"short",
+          day:"numeric"
+        });
+      }catch{
+        return value;
+      }
+    }
+
+    async function adminFetch(url, options = {}){
+      const response = await fetch(url, {
+        ...options,
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+          ...(options.headers || {})
+        }
+      });
+
+      let data = {};
+
+      try{
+        data = await response.json();
+      }catch(error){
+        data = {};
+      }
+
+      if(response.status === 401 || response.status === 403){
+        showRestricted();
+      }
+
+      return { response, data };
+    }
+
+    async function verifyAdminAccess(){
+      if(!token){
+        showRestricted();
+        return false;
+      }
+
+      const { response, data } = await adminFetch("/api/account/me", {
+        method: "GET"
+      });
+
+      if(!response.ok || !data.is_admin){
+        showRestricted();
+        return false;
+      }
+
+      localStorage.setItem("off_is_admin", "1");
+      showAdminContent();
+      return true;
+    }
+
+    function renderStatsFromData(stats){
+      document.getElementById("statTotal").textContent = stats.total_submissions || 0;
+      document.getElementById("statReview").textContent = stats.by_status?.in_verificare || 0;
+      document.getElementById("statChanges").textContent = stats.by_status?.necesita_modificari || 0;
+      document.getElementById("statAccepted").textContent = stats.by_status?.acceptata || 0;
+      document.getElementById("statRejected").textContent = stats.by_status?.respinsa || 0;
+    }
+
+    function renderStatsFallback(){
+      document.getElementById("statTotal").textContent = submissions.length;
+      document.getElementById("statReview").textContent = submissions.filter(s => s.status === "in_verificare").length;
+      document.getElementById("statChanges").textContent = submissions.filter(s => s.status === "necesita_modificari").length;
+      document.getElementById("statAccepted").textContent = submissions.filter(s => s.status === "acceptata").length;
+      document.getElementById("statRejected").textContent = submissions.filter(s => s.status === "respinsa").length;
+    }
+
+    function getFilteredSubmissions(){
+      if(currentFilter === "all"){
+        return submissions;
+      }
+
+      return submissions.filter(item => item.status === currentFilter);
+    }
+
+    function getContactName(item){
+      if(item.user && item.user.name){
+        return item.user.name;
+      }
+
+      if(item.coordinator_name){
+        return item.coordinator_name;
+      }
+
+      return item.contact_email || "-";
+    }
+
+    function renderTable(){
+      const rows = getFilteredSubmissions();
+
+      submissionsBody.innerHTML = "";
+
+      if(rows.length === 0){
+        submissionsBody.innerHTML = `
+          <tr>
+            <td colspan="8" class="muted">Nu există înscrieri pentru filtrul selectat.</td>
+          </tr>
+        `;
+        return;
+      }
+
+      rows.forEach(item => {
+        const tr = document.createElement("tr");
+
+        if(item.id === selectedId){
+          tr.classList.add("selected");
+        }
+
+        tr.innerHTML = `
+          <td>#${item.id}</td>
+          <td><strong>${item.title || "-"}</strong></td>
+          <td>
+            <strong>${getContactName(item)}</strong><br>
+            <span class="muted">${item.contact_email || item.user?.email || "-"}</span>
+          </td>
+          <td>${item.category || "-"}</td>
+          <td>${item.duration_minutes || "-"} min</td>
+          <td><span class="status-pill ${item.status}">${statusLabel(item.status)}</span></td>
+          <td>${formatDate(item.created_at)}</td>
+          <td><button class="btn btn-small btn-secondary" type="button">Deschide</button></td>
+        `;
+
+        tr.addEventListener("click", () => {
+          selectSubmission(item.id);
+        });
+
+        submissionsBody.appendChild(tr);
+      });
+    }
+
+    function selectSubmission(id){
+      selectedId = id;
+      const item = submissions.find(s => s.id === selectedId);
+
+      if(!item){
+        return;
+      }
+
+      document.getElementById("emptyDetails").style.display = "none";
+      document.getElementById("detailsBox").style.display = "block";
+      document.getElementById("adminActionsEmpty").style.display = "none";
+      document.getElementById("adminActionsBox").style.display = "block";
+
+      const teamText = Array.isArray(item.team_members) && item.team_members.length
+        ? item.team_members.map(member => `${member.name} - ${member.role}`).join("; ")
+        : "-";
+
+      document.getElementById("detailTitle").textContent = item.title || "-";
+      document.getElementById("detailContact").textContent = getContactName(item);
+      document.getElementById("detailEmail").textContent = item.contact_email || item.user?.email || "-";
+      document.getElementById("detailPhone").textContent = item.contact_phone || item.user?.phone || "-";
+      document.getElementById("detailFilmInfo").textContent = `${item.category || "-"}, ${item.duration_minutes || "-"} minute, ${item.production_year || "-"}`;
+      document.getElementById("detailLink").textContent = item.short_film_link || "-";
+      document.getElementById("detailLink").href = item.short_film_link || "#";
+      document.getElementById("detailPresentation").textContent = item.presentation || "-";
+      document.getElementById("detailTeam").textContent = teamText;
+
+      document.getElementById("statusSelect").value = item.status || "trimisa";
+      document.getElementById("feedbackText").value = item.admin_feedback || "";
+
+      hideAdminMessage();
+      renderTable();
+    }
+
+    function showAdminMessage(text, type = "success"){
+      const box = document.getElementById("adminMessage");
+      box.textContent = text;
+      box.className = "message-box visible " + type;
+    }
+
+    function hideAdminMessage(){
+      const box = document.getElementById("adminMessage");
+      box.textContent = "";
+      box.className = "message-box";
+    }
+
+    function resetDetails(){
+      selectedId = null;
+      document.getElementById("emptyDetails").style.display = "block";
+      document.getElementById("detailsBox").style.display = "none";
+      document.getElementById("adminActionsEmpty").style.display = "block";
+      document.getElementById("adminActionsBox").style.display = "none";
+    }
+
+    async function loadAdminDashboard(){
+      const statsResult = await adminFetch("/api/admin/stats");
+      const submissionsResult = await adminFetch("/api/admin/submissions");
+      const usersResult = await adminFetch("/api/admin/users");
+
+      if(statsResult.response.ok){
+        renderStatsFromData(statsResult.data);
+      }
+
+      if(submissionsResult.response.ok){
+        submissions = submissionsResult.data.submissions || [];
+      }
+
+      if(usersResult.response.ok){
+        users = usersResult.data.users || [];
+      }
+
+      if(!statsResult.response.ok){
+        renderStatsFallback();
+      }
+
+      renderTable();
+
+      if(selectedId && submissions.some(item => item.id === selectedId)){
+        selectSubmission(selectedId);
+      }else{
+        resetDetails();
+      }
+    }
+
+    filterButtons.forEach(button => {
+      button.addEventListener("click", () => {
+        filterButtons.forEach(btn => btn.classList.remove("active"));
+        button.classList.add("active");
+
+        currentFilter = button.dataset.status;
+        renderTable();
+      });
+    });
+
+    document.getElementById("saveStatusBtn").addEventListener("click", async () => {
+      if(!selectedId){
+        return;
+      }
+
+      const status = document.getElementById("statusSelect").value;
+      const feedback = document.getElementById("feedbackText").value.trim();
+
+      const { response, data } = await adminFetch(`/api/admin/submissions/${selectedId}/status`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          status: status,
+          admin_feedback: feedback || null,
+          can_edit: status === "necesita_modificari"
+        })
+      });
+
+      if(!response.ok){
+        showAdminMessage(data.detail || "Statusul nu a putut fi salvat.", "error");
+        return;
+      }
+
+      showAdminMessage(data.detail || "Status actualizat.", "success");
+      await loadAdminDashboard();
+      selectSubmission(selectedId);
+    });
+
+    document.getElementById("deleteSubmissionBtn").addEventListener("click", async () => {
+      if(!selectedId){
+        return;
+      }
+
+      const confirmDelete = confirm("Sigur vrei să ștergi definitiv această înscriere?");
+
+      if(!confirmDelete){
+        return;
+      }
+
+      const { response, data } = await adminFetch(`/api/admin/submissions/${selectedId}`, {
+        method: "DELETE"
+      });
+
+      if(!response.ok){
+        showAdminMessage(data.detail || "Înscrierea nu a putut fi ștearsă.", "error");
+        return;
+      }
+
+      alert(data.detail || "Înscriere ștearsă.");
+      selectedId = null;
+      await loadAdminDashboard();
+    });
+
+    document.getElementById("disableAccountBtn").addEventListener("click", async () => {
+      if(!selectedId){
+        return;
+      }
+
+      const item = submissions.find(s => s.id === selectedId);
+
+      if(!item || !item.user_id){
+        showAdminMessage("Nu am găsit userul asociat înscrierii.", "error");
+        return;
+      }
+
+      const confirmDisable = confirm("Sigur vrei să dezactivezi contul asociat acestei înscrieri?");
+
+      if(!confirmDisable){
+        return;
+      }
+
+      const { response, data } = await adminFetch(`/api/admin/users/${item.user_id}/disable`, {
+        method: "PATCH"
+      });
+
+      if(!response.ok){
+        showAdminMessage(data.detail || "Contul nu a putut fi dezactivat.", "error");
+        return;
+      }
+
+      showAdminMessage(data.detail || "Cont dezactivat.", "success");
+      await loadAdminDashboard();
+    });
+
+    document.getElementById("exportCsvBtn").addEventListener("click", () => {
+      const header = ["ID", "Titlu", "Nume contact", "Email", "Telefon", "Categorie", "Durata", "An", "Status", "Data", "Link"];
+      const rows = submissions.map(item => [
+        item.id,
+        item.title,
+        getContactName(item),
+        item.contact_email || item.user?.email || "",
+        item.contact_phone || item.user?.phone || "",
+        item.category,
+        item.duration_minutes,
+        item.production_year,
+        statusLabel(item.status),
+        formatDate(item.created_at),
+        item.short_film_link
+      ]);
+
+      const csvContent = [header, ...rows]
+        .map(row => row.map(value => `"${String(value ?? "").replaceAll('"', '""')}"`).join(","))
+        .join("\n");
+
+      const blob = new Blob([csvContent], { type:"text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "overthink-film-fest-inscrieri.csv";
+      link.click();
+
+      URL.revokeObjectURL(url);
+    });
+
+    async function initAdminPage(){
+      const isAllowed = await verifyAdminAccess();
+
+      if(!isAllowed){
+        return;
+      }
+
+      await loadAdminDashboard();
+    }
+
+    initAdminPage();
+  </script>
+
+</body>
+</html>

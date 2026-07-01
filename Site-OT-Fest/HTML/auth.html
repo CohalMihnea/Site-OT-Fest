@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Cont | Overthink Film Fest</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    :root{
+      --red:#920404;
+      --red-bright:#d30707;
+      --bg:#000;
+      --card:rgba(255,255,255,0.045);
+      --border:rgba(255,255,255,0.08);
+      --text:#fff;
+      --muted:#d6d6d6;
+    }
+
+    html{
+      scroll-behavior:smooth;
+    }
+
+    body{
+      font-family:'Inter', Arial, sans-serif;
+      background:#000;
+      color:#fff;
+      overflow-x:hidden;
+      min-height:100vh;
+    }
+
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
+
+    img{
+      max-width:100%;
+      display:block;
+    }
+
+    /* ---------- TOPBAR ---------- */
+    .topbar{
+      position:fixed;
+      top:0;
+      left:0;
+      width:100%;
+      min-height:62px;
+      padding:0 24px;
+      display:grid;
+      grid-template-columns:1fr auto 1fr;
+      align-items:center;
+      gap:18px;
+      z-index:1000;
+      background:rgba(10,10,10,0.82);
+      backdrop-filter:blur(14px);
+      border-bottom:1px solid rgba(255,255,255,0.08);
+    }
+
+    .topbar-logo{
+      width:max-content;
+      display:flex;
+      align-items:center;
+    }
+
+    .topbar-logo img{
+      height:39px;
+      width:auto;
+      filter:drop-shadow(0 0 12px rgba(146,4,4,0.25));
+      transition:0.3s ease;
+    }
+
+    .topbar-logo:hover img{
+      transform:scale(1.035);
+      opacity:0.88;
+    }
+
+    .topbar-title{
+      font-family:'Bebas Neue', Impact, sans-serif;
+      font-size:clamp(1.18rem, 2.4vw, 1.65rem);
+      letter-spacing:0.12em;
+      text-align:center;
+      white-space:nowrap;
+      text-shadow:0 0 18px rgba(146,4,4,0.42);
+    }
+
+    .menu-wrapper{
+      justify-self:end;
+      position:relative;
+    }
+
+    .menu-toggle{
+      border:none;
+      outline:none;
+      cursor:pointer;
+      color:white;
+      background:rgba(146,4,4,0.9);
+      font-family:'Inter', Arial, sans-serif;
+      font-weight:900;
+      font-size:0.92rem;
+      border-radius:999px;
+      padding:10px 19px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      transition:0.3s ease;
+      box-shadow:0 0 22px rgba(146,4,4,0.23);
+    }
+
+    .menu-toggle:hover{
+      background:#c00606;
+      transform:translateY(-2px);
+    }
+
+    .menu-arrow{
+      font-size:0.8rem;
+      transition:0.3s ease;
+    }
+
+    .menu-wrapper.open .menu-arrow{
+      transform:rotate(180deg);
+    }
+
+    .dropdown-menu{
+      position:absolute;
+      top:calc(100% + 13px);
+      right:0;
+      min-width:230px;
+      padding:10px;
+      border-radius:18px;
+      background:rgba(15,15,15,0.94);
+      backdrop-filter:blur(18px);
+      border:1px solid rgba(255,255,255,0.12);
+      box-shadow:
+        0 20px 60px rgba(0,0,0,0.55),
+        0 0 35px rgba(146,4,4,0.18);
+      opacity:0;
+      transform:translateY(-10px) scale(0.96);
+      pointer-events:none;
+      transition:0.25s ease;
+    }
+
+    .menu-wrapper.open .dropdown-menu{
+      opacity:1;
+      transform:translateY(0) scale(1);
+      pointer-events:auto;
+    }
+
+    .dropdown-menu a{
+      display:block;
+      color:white;
+      font-weight:800;
+      padding:12px 14px;
+      border-radius:12px;
+      transition:0.25s ease;
+    }
+
+    .dropdown-menu a:hover,
+    .dropdown-menu a.active{
+      background:rgba(146,4,4,0.78);
+      transform:translateX(3px);
+    }
+
+    /* ---------- AUTH PAGE ---------- */
+    .auth-page{
+      min-height:100vh;
+      padding:112px 20px 70px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      position:relative;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at 50% 28%, rgba(146,4,4,0.32), transparent 28%),
+        radial-gradient(circle at 18% 76%, rgba(255,255,255,0.035), transparent 22%),
+        linear-gradient(180deg, #000, #050505, #000);
+    }
+
+    .auth-page::before{
+      content:"";
+      position:absolute;
+      inset:-120px;
+      background:
+        linear-gradient(rgba(0,0,0,0.25), rgba(0,0,0,0.86)),
+        url("Foto/overthink-alb.svg") center/contain no-repeat;
+      opacity:0.08;
+      filter:saturate(0.9) contrast(1.08);
+      transform:scale(1.02);
+      pointer-events:none;
+    }
+
+    .auth-shell{
+      width:100%;
+      max-width:470px;
+      position:relative;
+      z-index:2;
+    }
+
+    .auth-card{
+      width:100%;
+      padding:34px 30px;
+      border-radius:28px;
+      background:rgba(255,255,255,0.052);
+      border:1px solid rgba(255,255,255,0.10);
+      box-shadow:
+        0 20px 70px rgba(0,0,0,0.55),
+        0 0 42px rgba(146,4,4,0.16);
+      backdrop-filter:blur(18px);
+      overflow:hidden;
+      position:relative;
+    }
+
+    .auth-card::before{
+      content:"";
+      position:absolute;
+      inset:-1px;
+      background:radial-gradient(circle at 50% 0%, rgba(146,4,4,0.24), transparent 46%);
+      pointer-events:none;
+    }
+
+    .auth-content{
+      position:relative;
+      z-index:2;
+    }
+
+    .auth-logo{
+      width:122px;
+      margin:0 auto 16px;
+      filter:
+        drop-shadow(0 0 14px rgba(255,255,255,0.10))
+        drop-shadow(0 0 34px rgba(146,4,4,0.40));
+      opacity:0.96;
+    }
+
+    .auth-title{
+      text-align:center;
+      font-family:'Bebas Neue', Impact, sans-serif;
+      font-size:clamp(2.6rem, 8vw, 3.8rem);
+      letter-spacing:0.055em;
+      line-height:0.95;
+      margin-bottom:8px;
+      text-transform:uppercase;
+      text-shadow:
+        0 0 10px rgba(255,255,255,0.12),
+        0 0 26px rgba(146,4,4,0.56);
+    }
+
+    .auth-subtitle{
+      text-align:center;
+      color:#cfcfcf;
+      line-height:1.6;
+      font-size:0.94rem;
+      margin-bottom:24px;
+    }
+
+    .form-box{
+      display:none;
+    }
+
+    .form-box.active{
+      display:block;
+      animation:fadeIn 0.35s ease forwards;
+    }
+
+    .form-box h2{
+      font-size:1.35rem;
+      margin-bottom:18px;
+      font-weight:900;
+      letter-spacing:0.04em;
+      text-align:center;
+    }
+
+    .form-note{
+      color:#cfcfcf;
+      line-height:1.6;
+      font-size:0.92rem;
+      text-align:center;
+      margin-bottom:20px;
+    }
+
+    .input-group{
+      margin-bottom:16px;
+      text-align:left;
+    }
+
+    .input-group label{
+      display:block;
+      font-size:0.82rem;
+      font-weight:900;
+      margin-bottom:7px;
+      color:#e7e7e7;
+      text-transform:uppercase;
+      letter-spacing:0.06em;
+    }
+
+    .input-group input,
+    .input-group select{
+      width:100%;
+      padding:13px 15px;
+      background:rgba(0,0,0,0.44);
+      border:1px solid rgba(255,255,255,0.12);
+      border-radius:14px;
+      color:white;
+      font-family:'Inter', Arial, sans-serif;
+      font-size:0.95rem;
+      outline:none;
+      transition:0.25s ease;
+    }
+
+    .input-group input:focus,
+    .input-group select:focus{
+      border-color:rgba(184,6,6,0.65);
+      box-shadow:
+        0 0 0 4px rgba(146,4,4,0.12),
+        0 0 18px rgba(146,4,4,0.20);
+    }
+
+    .input-group select option{
+      background:#111;
+      color:white;
+    }
+
+    .input-help{
+      color:#bdbdbd;
+      font-size:0.8rem;
+      line-height:1.5;
+      margin-top:6px;
+      display:block;
+    }
+
+    .btn{
+      width:100%;
+      padding:14px;
+      border:none;
+      outline:none;
+      cursor:pointer;
+      color:white;
+      background:#b80606;
+      font-family:'Inter', Arial, sans-serif;
+      font-weight:900;
+      font-size:0.94rem;
+      border-radius:999px;
+      margin-top:8px;
+      transition:0.3s ease;
+      box-shadow:0 0 24px rgba(146,4,4,0.35);
+      text-transform:uppercase;
+      letter-spacing:0.05em;
+    }
+
+    .btn:hover{
+      background:#c00606;
+      transform:translateY(-2px);
+    }
+
+    .switch-text{
+      margin-top:18px;
+      font-size:0.9rem;
+      color:#bdbdbd;
+      text-align:center;
+      line-height:1.7;
+    }
+
+    .switch-text a{
+      color:#d30707;
+      text-decoration:none;
+      font-weight:900;
+      transition:0.25s ease;
+    }
+
+    .switch-text a:hover{
+      color:white;
+    }
+
+    .message-box{
+      margin-bottom:18px;
+      padding:12px 14px;
+      border-radius:14px;
+      font-size:0.9rem;
+      display:none;
+      font-weight:800;
+      line-height:1.5;
+      text-align:center;
+    }
+
+    .message-box.error{
+      display:block;
+      background:rgba(184,6,6,0.15);
+      border:1px solid rgba(184,6,6,0.42);
+      color:#ffd7d7;
+    }
+
+    .message-box.success{
+      display:block;
+      background:rgba(24,148,67,0.15);
+      border:1px solid rgba(24,148,67,0.35);
+      color:#d8ffe4;
+    }
+
+    .verify-backup-box{
+      margin-top:18px;
+      padding:18px;
+      border-radius:20px;
+      background:rgba(146,4,4,0.12);
+      border:1px solid rgba(211,7,7,0.35);
+    }
+
+    .verify-backup-text{
+      color:#f1d8d8;
+      line-height:1.6;
+      font-weight:700;
+      margin-bottom:14px;
+      text-align:center;
+    }
+
+    .verify-backup-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:14px;
+    }
+
+    .secondary-action{
+      flex:1;
+      min-width:150px;
+      border:none;
+      outline:none;
+      cursor:pointer;
+      color:#fff;
+      background:rgba(255,255,255,0.08);
+      border:1px solid rgba(255,255,255,0.12);
+      border-radius:999px;
+      padding:12px 16px;
+      font-weight:900;
+      transition:0.25s ease;
+    }
+
+    .secondary-action:hover{
+      background:rgba(146,4,4,0.8);
+      transform:translateY(-2px);
+    }
+
+    .quick-links{
+      margin-top:18px;
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .quick-link{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:10px 14px;
+      border-radius:999px;
+      background:rgba(255,255,255,0.06);
+      border:1px solid rgba(255,255,255,0.10);
+      color:#e6e6e6;
+      font-size:0.82rem;
+      font-weight:900;
+      transition:0.25s ease;
+    }
+
+    .quick-link:hover{
+      border-color:rgba(146,4,4,0.42);
+      transform:translateY(-2px);
+      color:#fff;
+    }
+
+    /* ---------- FOOTER ---------- */
+    footer{
+      background:#0d0d0d;
+      border-top:1px solid rgba(255,255,255,0.07);
+      padding:46px 20px 24px;
+    }
+
+    .footer-shell{
+      max-width:1250px;
+      margin:0 auto;
+      display:grid;
+      grid-template-columns:1.1fr 1fr 1fr;
+      gap:28px;
+      align-items:start;
+    }
+
+    .footer-brand img{
+      height:48px;
+      width:auto;
+      margin-bottom:14px;
+      filter:drop-shadow(0 0 18px rgba(146,4,4,0.25));
+    }
+
+    .footer-brand h3,
+    .footer-col h3{
+      font-family:'Bebas Neue', Impact, sans-serif;
+      font-size:1.6rem;
+      letter-spacing:0.08em;
+      margin-bottom:12px;
+    }
+
+    .footer-brand p,
+    .footer-col p,
+    .footer-col a{
+      color:#d0d0d0;
+      line-height:1.75;
+      font-size:0.95rem;
+    }
+
+    .footer-col a{
+      display:block;
+      transition:0.25s ease;
+    }
+
+    .footer-col a:hover{
+      color:#fff;
+      transform:translateX(3px);
+    }
+
+    .copyright{
+      max-width:1250px;
+      margin:28px auto 0;
+      padding-top:18px;
+      border-top:1px solid rgba(255,255,255,0.07);
+      text-align:center;
+      color:#a8a8a8;
+      font-size:0.88rem;
+    }
+
+    @keyframes fadeIn{
+      from{
+        opacity:0;
+        transform:translateY(8px);
+      }
+      to{
+        opacity:1;
+        transform:translateY(0);
+      }
+    }
+
+    @media(max-width:1050px){
+      .footer-shell{
+        grid-template-columns:1fr 1fr;
+      }
+    }
+
+    @media(max-width:768px){
+      .topbar{
+        min-height:58px;
+        padding:8px 12px;
+        grid-template-columns:auto 1fr auto;
+        gap:10px;
+      }
+
+      .topbar-logo img{
+        height:33px;
+      }
+
+      .topbar-title{
+        font-size:1rem;
+        letter-spacing:0.08em;
+      }
+
+      .menu-toggle{
+        padding:8px 13px;
+        font-size:0.84rem;
+      }
+
+      .dropdown-menu{
+        min-width:205px;
+      }
+
+      .auth-page{
+        padding:96px 14px 48px;
+        align-items:flex-start;
+      }
+
+      .auth-card{
+        padding:26px 18px;
+        border-radius:24px;
+      }
+
+      .auth-logo{
+        width:104px;
+      }
+
+      .footer-shell{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media(max-width:520px){
+      .topbar-title{
+        max-width:145px;
+        white-space:normal;
+        line-height:1;
+      }
+
+      footer{
+        line-height:1.8;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header class="topbar">
+    <a href="index.html" class="topbar-logo" aria-label="Overthink Film Fest - pagina principală">
+      <img src="Foto/overthink-alb.svg" alt="Logo Overthink Film Fest">
+    </a>
+
+    <div class="topbar-title">OVERTHINK FILM FEST</div>
+
+    <div class="menu-wrapper" id="menuWrapper">
+      <button class="menu-toggle" id="menuToggle" type="button" aria-label="Deschide meniul">
+        Meniu <span class="menu-arrow">▾</span>
+      </button>
+
+      <nav class="dropdown-menu" id="dropdownMenu">
+        <a href="contact.html">Contact</a>
+        <a href="program.html">Program</a>
+        <a href="auth.html" class="active">Cont</a>
+        <a href="inscriere.html">Înscrie-te</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- AUTH -->
+  <main class="auth-page">
+    <div class="auth-shell">
+      <article class="auth-card">
+        <div class="auth-content">
+          <img class="auth-logo" src="Foto/overthink-alb.svg" alt="Logo Overthink Film Fest">
+
+          <h1 class="auth-title">Cont festival</h1>
+
+          <p class="auth-subtitle">
+            Autentifică-te sau creează un cont pentru înscrierea scurtmetrajului și urmărirea statusului.
+          </p>
+
+          <div id="messageBox" class="message-box"></div>
+
+          <!-- LOGIN -->
+          <div id="loginBox" class="form-box active">
+            <h2>Autentificare</h2>
+
+            <form id="loginForm" onsubmit="handleLogin(event)">
+              <div class="input-group">
+                <label>Email</label>
+                <input type="email" name="email" id="loginEmailInput" required>
+              </div>
+
+              <div class="input-group">
+                <label>Parolă</label>
+                <input type="password" name="password" required>
+              </div>
+
+              <button type="submit" class="btn">Conectare</button>
+            </form>
+
+            <div id="verifyBackupBox" class="verify-backup-box" style="display:none;">
+              <p class="verify-backup-text">
+                Emailul acestui cont nu este verificat. Poți cere un cod nou și îl poți introduce mai jos.
+              </p>
+
+              <div class="input-group">
+                <label for="backupVerifyCode">Cod verificare email</label>
+                <input
+                  id="backupVerifyCode"
+                  type="text"
+                  maxlength="6"
+                  inputmode="numeric"
+                  placeholder="Cod de 6 cifre"
+                  autocomplete="off"
+                  style="text-align:center; font-size:1.2rem; letter-spacing:4px;"
+                >
+              </div>
+
+              <div class="verify-backup-actions">
+                <button type="button" id="resendVerifyCodeBtn" class="secondary-action">
+                  Retrimite codul
+                </button>
+
+                <button type="button" id="verifyBackupCodeBtn" class="secondary-action">
+                  Verifică emailul
+                </button>
+              </div>
+            </div>
+
+            <div class="switch-text">
+              <p><a href="#" onclick="switchForm('forgotBox')">Ai uitat parola?</a></p>
+              <p>Nu ai cont? <a href="#" onclick="switchForm('registerBox')">Înregistrează-te</a></p>
+            </div>
+          </div>
+
+          <!-- REGISTER -->
+          <div id="registerBox" class="form-box">
+            <h2>Înregistrare</h2>
+
+            <form id="registerForm" onsubmit="handleRegister(event)">
+              <div class="input-group">
+                <label>Nume complet</label>
+                <input type="text" name="name" required>
+              </div>
+
+              <div class="input-group">
+                <label>Rol în echipă</label>
+                <input type="text" name="role" placeholder="ex: regizor, actor, editor..." required>
+              </div>
+
+              <div class="input-group">
+                <label>Sex</label>
+                <select name="sex" required>
+                  <option value="" disabled selected hidden>Alege varianta</option>
+                  <option value="M">M</option>
+                  <option value="F">F</option>
+                  <option value="Altceva">Altceva</option>
+                </select>
+              </div>
+
+              <div class="input-group">
+                <label>Email</label>
+                <input type="email" name="email" required>
+              </div>
+
+              <div class="input-group">
+                <label>Număr de telefon</label>
+                <input type="tel" name="phone" placeholder="07xxxxxxxx" pattern="[0-9]+" title="Introduceți doar cifre" required>
+              </div>
+
+              <div class="input-group">
+                <label>Parolă</label>
+                <input type="password" name="password" minlength="6" required>
+                <small class="input-help">Parola trebuie să aibă cel puțin 6 caractere.</small>
+              </div>
+
+              <div class="input-group">
+                <label>Confirmă parola</label>
+                <input type="password" name="confirm_password" minlength="6" required>
+              </div>
+
+              <button type="submit" class="btn">Creează cont</button>
+            </form>
+
+            <div class="switch-text">
+              <p>Ai deja cont? <a href="#" onclick="switchForm('loginBox')">Conectează-te</a></p>
+            </div>
+          </div>
+
+          <!-- VERIFY DUPĂ REGISTER -->
+          <div id="verifyBox" class="form-box">
+            <h2>Verificare email</h2>
+
+            <p class="form-note">
+              Introdu codul de 6 cifre trimis pe adresa ta de email.
+            </p>
+
+            <form id="verifyForm" onsubmit="handleVerify(event)">
+              <input type="hidden" name="email" id="verifyEmailHidden">
+
+              <div class="input-group">
+                <label>Cod de verificare</label>
+                <input
+                  type="text"
+                  name="code"
+                  maxlength="6"
+                  inputmode="numeric"
+                  style="text-align:center; font-size:1.35rem; letter-spacing:4px;"
+                  required
+                >
+              </div>
+
+              <button type="submit" class="btn">Verifică emailul</button>
+            </form>
+
+            <div class="switch-text">
+              <p><a href="#" onclick="resendCodeFromVerifyBox()">Nu ai primit codul? Retrimite codul</a></p>
+              <p><a href="#" onclick="switchForm('loginBox')">Înapoi la autentificare</a></p>
+            </div>
+          </div>
+
+          <!-- FORGOT -->
+          <div id="forgotBox" class="form-box">
+            <h2>Recuperare parolă</h2>
+
+            <p class="form-note">
+              Introdu emailul contului pentru a primi codul de resetare.
+            </p>
+
+            <form id="forgotForm" onsubmit="handleForgot(event)">
+              <div class="input-group">
+                <label>Email</label>
+                <input type="email" name="email" id="forgotEmailInput" required>
+              </div>
+
+              <button type="submit" class="btn">Trimite cod</button>
+            </form>
+
+            <div class="switch-text">
+              <p><a href="#" onclick="switchForm('loginBox')">Înapoi la autentificare</a></p>
+            </div>
+          </div>
+
+          <!-- RESET -->
+          <div id="resetBox" class="form-box">
+            <h2>Setează parola nouă</h2>
+
+            <form id="resetForm" onsubmit="handleReset(event)">
+              <input type="hidden" name="email" id="resetEmailHidden">
+
+              <div class="input-group">
+                <label>Cod primit pe email</label>
+                <input type="text" name="code" maxlength="6" inputmode="numeric" style="text-align:center; font-size:1.2rem;" required>
+              </div>
+
+              <div class="input-group">
+                <label>Noua parolă</label>
+                <input type="password" name="new_password" minlength="6" required>
+              </div>
+
+              <div class="input-group">
+                <label>Confirmă noua parolă</label>
+                <input type="password" name="confirm_new_password" minlength="6" required>
+              </div>
+
+              <button type="submit" class="btn">Resetează parola</button>
+            </form>
+          </div>
+
+          <div class="quick-links">
+            <a href="inscriere.html" class="quick-link">Înscrie scurtmetraj</a>
+            <a href="index.html" class="quick-link">Pagina principală</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-shell">
+      <div class="footer-brand">
+        <img src="Foto/LOGO Overthink 2 (1).svg" alt="Logo Overthink Film Fest">
+
+        <h3>Overthink Film Fest</h3>
+
+        <p>
+          Festival de film independent organizat de Clubul de Film Overthink.
+          Prima ediție: 7–9 august 2026, Insula de Agrement Bacău.
+        </p>
+      </div>
+
+      <div class="footer-col">
+        <h3>Linkuri</h3>
+        <a href="program.html">Program</a>
+        <a href="inscriere.html">Înscrie-te</a>
+        <a href="contact.html">Contact</a>
+        <a href="cont.html">Cont</a>
+      </div>
+
+      <div class="footer-col">
+        <h3>Contact</h3>
+        <p>Email: staff@overthink-jr.com</p>
+        <p>Telefon: 0773 746 372</p>
+        <a href="https://www.instagram.com/overthink.jr" target="_blank" rel="noopener noreferrer">Instagram: @overthink.jr</a>
+      </div>
+    </div>
+
+    <div class="copyright">
+      © 2026 Overthink Film Fest. Toate drepturile rezervate.
+    </div>
+  </footer>
+
+  <script>
+    const menuWrapper = document.getElementById("menuWrapper");
+    const menuToggle = document.getElementById("menuToggle");
+
+    menuToggle.addEventListener("click", (event) => {
+      event.stopPropagation();
+      menuWrapper.classList.toggle("open");
+    });
+
+    document.addEventListener("click", (event) => {
+      if(!menuWrapper.contains(event.target)){
+        menuWrapper.classList.remove("open");
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if(event.key === "Escape"){
+        menuWrapper.classList.remove("open");
+      }
+    });
+
+    const verifyBackupBox = document.getElementById("verifyBackupBox");
+    const backupVerifyCode = document.getElementById("backupVerifyCode");
+    const resendVerifyCodeBtn = document.getElementById("resendVerifyCodeBtn");
+    const verifyBackupCodeBtn = document.getElementById("verifyBackupCodeBtn");
+
+    let lastUnverifiedEmail = "";
+
+    function hideVerifyBackupBox(){
+      if(verifyBackupBox){
+        verifyBackupBox.style.display = "none";
+      }
+
+      if(backupVerifyCode){
+        backupVerifyCode.value = "";
+      }
+    }
+
+    function switchForm(boxId){
+      const msgBox = document.getElementById("messageBox");
+      msgBox.className = "message-box";
+      msgBox.style.display = "none";
+      msgBox.textContent = "";
+
+      hideVerifyBackupBox();
+
+      document.querySelectorAll(".form-box").forEach(box => {
+        box.classList.remove("active");
+      });
+
+      document.getElementById(boxId).classList.add("active");
+    }
+
+    function showMessage(text, isSuccess = false){
+      const msgBox = document.getElementById("messageBox");
+      msgBox.textContent = text;
+      msgBox.className = isSuccess ? "message-box success" : "message-box error";
+      msgBox.style.display = "block";
+    }
+
+    function isUnverifiedEmailMessage(message){
+      const lowerMessage = String(message || "").toLowerCase();
+
+      return (
+        lowerMessage.includes("neverificat") ||
+        lowerMessage.includes("nu este verificat") ||
+        lowerMessage.includes("emailul nu este verificat") ||
+        lowerMessage.includes("verifică emailul") ||
+        lowerMessage.includes("verifica emailul")
+      );
+    }
+
+    async function handleLogin(event){
+      event.preventDefault();
+
+      const formData = new FormData(event.target);
+      const email = String(formData.get("email") || "").trim().toLowerCase();
+
+      try{
+        const response = await fetch("/api/login", {
+          method:"POST",
+          body:formData
+        });
+
+        const data = await response.json();
+
+        if(response.ok){
+          localStorage.setItem("off_access_token", data.access_token);
+          localStorage.setItem("off_user_email", data.email || email);
+          localStorage.setItem("off_user_id", data.user_id || "");
+          localStorage.setItem("off_is_admin", data.is_admin ? "1" : "0");
+
+          showMessage(data.detail || "Autentificare reușită.", true);
+
+          setTimeout(() => {
+            window.location.href = "cont.html";
+          }, 900);
+
+          return;
+        }
+
+        const message = data.detail || "Email sau parolă incorectă.";
+        showMessage(message);
+
+        if(isUnverifiedEmailMessage(message)){
+          lastUnverifiedEmail = email;
+
+          if(verifyBackupBox){
+            verifyBackupBox.style.display = "block";
+          }
+        }
+
+      }catch(error){
+        console.error(error);
+        showMessage("Eroare de conexiune la server.");
+      }
+    }
+
+    async function handleRegister(event){
+      event.preventDefault();
+
+      const formData = new FormData(event.target);
+      const email = String(formData.get("email") || "").trim().toLowerCase();
+
+      const password = String(formData.get("password") || "");
+      const confirmPassword = String(formData.get("confirm_password") || "");
+
+      if(password !== confirmPassword){
+        showMessage("Parolele nu coincid.");
+        return;
+      }
+
+      try{
+        const response = await fetch("/api/register", {
+          method:"POST",
+          body:formData
+        });
+
+        const data = await response.json();
+
+        if(response.ok){
+          showMessage(data.detail || "Cont creat cu succes. Verifică emailul.", true);
+
+          lastUnverifiedEmail = email;
+          document.getElementById("verifyEmailHidden").value = email;
+
+          event.target.reset();
+
+          setTimeout(() => switchForm("verifyBox"), 1200);
+          return;
+        }
+
+        showMessage(data.detail || "A apărut o eroare.");
+
+      }catch(error){
+        console.error(error);
+        showMessage("Eroare de conexiune la server.");
+      }
+    }
+
+    async function handleVerify(event){
+      event.preventDefault();
+
+      const formData = new FormData(event.target);
+
+      try{
+        const response = await fetch("/api/verify", {
+          method:"POST",
+          body:formData
+        });
+
+        const data = await response.json();
+
+        if(response.ok){
+          showMessage(data.detail || "Email verificat cu succes. Te poți autentifica.", true);
+          event.target.reset();
+
+          setTimeout(() => switchForm("loginBox"), 1400);
+          return;
+        }
+
+        showMessage(data.detail || "Codul introdus nu este valid.");
+
+      }catch(error){
+        console.error(error);
+        showMessage("Eroare de conexiune la server.");
+      }
+    }
+
+    async function resendVerificationCode(email){
+      if(!email){
+        showMessage("Nu am găsit emailul contului. Introdu emailul și încearcă din nou.");
+        return false;
+      }
+
+      const formData = new FormData();
+      formData.append("email", email);
+
+      try{
+        const response = await fetch("/api/resend-verification", {
+          method:"POST",
+          body:formData
+        });
+
+        const data = await response.json();
+
+        if(response.ok){
+          showMessage(data.detail || "Codul a fost retrimis pe email.", true);
+          return true;
+        }
+
+        showMessage(data.detail || "Nu am putut retrimite codul.");
+        return false;
+
+      }catch(error){
+        console.error(error);
+        showMessage("Eroare de conexiune la server.");
+        return false;
+      }
+    }
+
+    async function resendCodeFromVerifyBox(){
+      const email = document.getElementById("verifyEmailHidden").value || lastUnverifiedEmail;
+      await resendVerificationCode(email);
+    }
+
+    resendVerifyCodeBtn.addEventListener("click", async () => {
+      if(!lastUnverifiedEmail){
+        const loginEmailInput = document.getElementById("loginEmailInput");
+        lastUnverifiedEmail = loginEmailInput ? loginEmailInput.value.trim().toLowerCase() : "";
+      }
+
+      resendVerifyCodeBtn.disabled = true;
+      resendVerifyCodeBtn.textContent = "Se trimite...";
+
+      await resendVerificationCode(lastUnverifiedEmail);
+
+      resendVerifyCodeBtn.disabled = false;
+      resendVerifyCodeBtn.textContent = "Retrimite codul";
+    });
+
+    verifyBackupCodeBtn.addEventListener("click", async () => {
+      if(!lastUnverifiedEmail){
+        const loginEmailInput = document.getElementById("loginEmailInput");
+        lastUnverifiedEmail = loginEmailInput ? loginEmailInput.value.trim().toLowerCase() : "";
+      }
+
+      const code = backupVerifyCode.value.trim();
+
+      if(!lastUnverifiedEmail){
+        showMessage("Introdu emailul contului și încearcă din nou.");
+        return;
+      }
+
+      if(!code){
+        showMessage("Introdu codul de verificare primit pe email.");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("email", lastUnverifiedEmail);
+      formData.append("code", code);
+
+      try{
+        verifyBackupCodeBtn.disabled = true;
+        verifyBackupCodeBtn.textContent = "Se verifică...";
+
+        const response = await fetch("/api/verify", {
+          method:"POST",
+          body:formData
+        });
+
+        const data = await response.json();
+
+        if(response.ok){
+          showMessage(data.detail || "Email verificat cu succes. Acum te poți autentifica.", true);
+          hideVerifyBackupBox();
+
+          verifyBackupCodeBtn.disabled = false;
+          verifyBackupCodeBtn.textContent = "Verifică emailul";
+          return;
+        }
+
+        showMessage(data.detail || "Codul introdus nu este valid.");
+
+        verifyBackupCodeBtn.disabled = false;
+        verifyBackupCodeBtn.textContent = "Verifică emailul";
+
+      }catch(error){
+        console.error(error);
+        showMessage("Eroare de conexiune la server.");
+
+        verifyBackupCodeBtn.disabled = false;
+        verifyBackupCodeBtn.textContent = "Verifică emailul";
+      }
+    });
+
+    async function handleForgot(event){
+      event.preventDefault();
+
+      const formData = new FormData(event.target);
+      const email = formData.get("email");
+
+      try{
+        const response = await fetch("/api/forgot-password", {
+          method:"POST",
+          body:formData
+        });
+
+        const data = await response.json();
+
+        if(response.ok){
+          showMessage(data.detail || "Codul de resetare a fost trimis.", true);
+          document.getElementById("resetEmailHidden").value = email;
+          event.target.reset();
+
+          setTimeout(() => switchForm("resetBox"), 1400);
+          return;
+        }
+
+        showMessage(data.detail || "A apărut o eroare.");
+
+      }catch(error){
+        console.error(error);
+        showMessage("Eroare de conexiune la server.");
+      }
+    }
+
+    async function handleReset(event){
+      event.preventDefault();
+
+      const formData = new FormData(event.target);
+
+      const newPassword = String(formData.get("new_password") || "");
+      const confirmNewPassword = String(formData.get("confirm_new_password") || "");
+
+      if(newPassword !== confirmNewPassword){
+        showMessage("Parolele nu coincid.");
+        return;
+      }
+
+      try{
+        const response = await fetch("/api/reset-password", {
+          method:"POST",
+          body:formData
+        });
+
+        const data = await response.json();
+
+        if(response.ok){
+          showMessage(data.detail || "Parola a fost resetată. Te poți autentifica.", true);
+          event.target.reset();
+
+          setTimeout(() => switchForm("loginBox"), 1400);
+          return;
+        }
+
+        showMessage(data.detail || "A apărut o eroare.");
+
+      }catch(error){
+        console.error(error);
+        showMessage("Eroare de conexiune la server.");
+      }
+    }
+  </script>
+
+</body>
+</html>
