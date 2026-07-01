@@ -17,6 +17,7 @@ def serialize_submission(submission: Submission):
     return {
         "id": submission.id,
         "user_id": submission.user_id,
+
         "title": submission.title,
         "category": submission.category,
         "production_year": submission.production_year,
@@ -25,16 +26,29 @@ def serialize_submission(submission: Submission):
         "institution": submission.institution,
         "presentation": submission.presentation,
         "short_film_link": submission.short_film_link,
+
         "contact_phone": submission.contact_phone,
         "contact_email": submission.contact_email,
         "coordinator_name": submission.coordinator_name,
         "coordinator_email": submission.coordinator_email,
+
         "other_details": submission.other_details,
+
+        "accept_rules": submission.accept_rules,
+        "accept_gdpr": submission.accept_gdpr,
+        "accept_cookies": submission.accept_cookies,
+
+        # Acest câmp înseamnă:
+        # userul dorește să primească emailuri legate de statusul scurtmetrajului.
+        "marketing_consent": submission.marketing_consent,
+
         "status": submission.status,
         "admin_feedback": submission.admin_feedback,
         "can_edit": submission.can_edit,
+
         "created_at": submission.created_at,
         "updated_at": submission.updated_at,
+
         "team_members": [
             {
                 "id": member.id,
@@ -43,6 +57,7 @@ def serialize_submission(submission: Submission):
             }
             for member in submission.team_members
         ],
+
         "material_links": [
             {
                 "id": link.id,
@@ -91,6 +106,7 @@ def create_submission(
 
     submission = Submission(
         user_id=current_user.id,
+
         title=payload.title.strip(),
         category=payload.category.strip(),
         production_year=payload.production_year.strip(),
@@ -99,15 +115,23 @@ def create_submission(
         institution=payload.institution.strip() if payload.institution else None,
         presentation=payload.presentation.strip(),
         short_film_link=payload.short_film_link.strip(),
+
         contact_phone=payload.contact_phone.strip(),
         contact_email=str(payload.contact_email).strip().lower(),
         coordinator_name=payload.coordinator_name.strip() if payload.coordinator_name else None,
         coordinator_email=str(payload.coordinator_email).strip().lower() if payload.coordinator_email else None,
+
         other_details=payload.other_details.strip() if payload.other_details else None,
+
         accept_rules=payload.accept_rules,
         accept_gdpr=payload.accept_gdpr,
         accept_cookies=payload.accept_cookies,
+
+        # Se salvează în tabela submissions.
+        # True/1 = userul vrea emailuri despre statusul scurtmetrajului.
+        # False/0 = userul nu vrea emailuri despre status.
         marketing_consent=payload.marketing_consent,
+
         status="trimisa",
         admin_feedback=None,
         can_edit=False
@@ -215,14 +239,19 @@ def update_my_submission(
     submission.institution = payload.institution.strip() if payload.institution else None
     submission.presentation = payload.presentation.strip()
     submission.short_film_link = payload.short_film_link.strip()
+
     submission.contact_phone = payload.contact_phone.strip()
     submission.contact_email = str(payload.contact_email).strip().lower()
     submission.coordinator_name = payload.coordinator_name.strip() if payload.coordinator_name else None
     submission.coordinator_email = str(payload.coordinator_email).strip().lower() if payload.coordinator_email else None
+
     submission.other_details = payload.other_details.strip() if payload.other_details else None
+
     submission.accept_rules = payload.accept_rules
     submission.accept_gdpr = payload.accept_gdpr
     submission.accept_cookies = payload.accept_cookies
+
+    # Se actualizează alegerea userului pentru emailurile despre status.
     submission.marketing_consent = payload.marketing_consent
 
     submission.status = "trimisa"

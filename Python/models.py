@@ -22,6 +22,8 @@ class User(Base):
     is_verified = Column(Boolean, default=False, nullable=False)
     is_disabled = Column(Boolean, default=False, nullable=False)
 
+    marketing_consent = Column(Boolean, default=False, nullable=False)
+
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
@@ -86,6 +88,8 @@ class Submission(Base):
     admin_feedback = Column(Text, nullable=True)
 
     can_edit = Column(Boolean, default=False, nullable=False)
+
+    marketing_consent = Column(Boolean, default=False, nullable=False)
 
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

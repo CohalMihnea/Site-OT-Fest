@@ -70,6 +70,7 @@ def register(
     confirm_password: str = Form(...),
     role: str = Form("participant"),
     sex: str = Form(""),
+    marketing_consent: bool = Form(False),
     db: Session = Depends(get_db)
 ):
     normalized_email = normalize_email(email)
@@ -96,6 +97,7 @@ def register(
         role=role.strip() or "participant",
         is_admin=False,
         is_verified=False,
+        marketing_consent=marketing_consent
     )
 
     if hasattr(user, "sex"):
