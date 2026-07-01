@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Admin Noutăți | Overthink Film Fest</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+
+    :root{
+      --red:#920404;
+      --red-bright:#d30707;
+      --bg:#000;
+      --card:rgba(255,255,255,0.045);
+      --border:rgba(255,255,255,0.08);
+      --text:#fff;
+      --muted:#d6d6d6;
+    }
+
+    html{scroll-behavior:smooth;}
+
+    body{
+      font-family:'Inter', Arial, sans-serif;
+      background:#000;
+      color:#fff;
+      overflow-x:hidden;
+      min-height:100vh;
+    }
+
+    a{color:inherit;text-decoration:none;}
+    img{max-width:100%;display:block;}
+
+    /* ---------- TOPBAR ---------- */
+    .topbar{
+      position:fixed;
+      top:0;
+      left:0;
+      width:100%;
+      min-height:62px;
+      padding:0 24px;
+      display:grid;
+      grid-template-columns:1fr auto 1fr;
+      align-items:center;
+      gap:18px;
+      z-index:1000;
+      background:rgba(10,10,10,0.82);
+      backdrop-filter:blur(14px);
+      border-bottom:1px solid rgba(255,255,255,0.08);
+    }
+
+    .topbar-logo{width:max-content;display:flex;align-items:center;}
+
+    .topbar-logo img{
+      height:39px;
+      width:auto;
+      filter:drop-shadow(0 0 12px rgba(146,4,4,0.25));
+      transition:0.3s ease;
+    }
+
+    .topbar-logo:hover img{transform:scale(1.035);opacity:0.88;}
+
+    .topbar-title{
+      font-family:'Bebas Neue', Impact, sans-serif;
+      font-size:clamp(1.18rem, 2.4vw, 1.65rem);
+      letter-spacing:0.12em;
+      text-align:center;
+      white-space:nowrap;
+      text-shadow:0 0 18px rgba(146,4,4,0.42);
+    }
+
+    .menu-wrapper{justify-self:end;position:relative;}
+
+    .menu-toggle{
+      border:none;
+      outline:none;
+      cursor:pointer;
+      color:white;
+      background:rgba(146,4,4,0.9);
+      font-family:'Inter', Arial, sans-serif;
+      font-weight:900;
+      font-size:0.92rem;
+      border-radius:999px;
+      padding:10px 19px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      transition:0.3s ease;
+      box-shadow:0 0 22px rgba(146,4,4,0.23);
+    }
+
+    .menu-toggle:hover{background:#c00606;transform:translateY(-2px);}
+    .menu-arrow{font-size:0.8rem;transition:0.3s ease;}
+    .menu-wrapper.open .menu-arrow{transform:rotate(180deg);}
+
+    .dropdown-menu{
+      position:absolute;
+      top:calc(100% + 13px);
+      right:0;
+      min-width:240px;
+      padding:10px;
+      border-radius:18px;
+      background:rgba(15,15,15,0.94);
+      backdrop-filter:blur(18px);
+      border:1px solid rgba(255,255,255,0.12);
+      box-shadow:0 20px 60px rgba(0,0,0,0.55),0 0 35px rgba(146,4,4,0.18);
+      opacity:0;
+      transform:translateY(-10px) scale(0.96);
+      pointer-events:none;
+      transition:0.25s ease;
+    }
+
+    .menu-wrapper.open .dropdown-menu{opacity:1;transform:translateY(0) scale(1);pointer-events:auto;}
+
+    .dropdown-menu a{
+      display:block;
+      color:white;
+      font-weight:800;
+      padding:12px 14px;
+      border-radius:12px;
+      transition:0.25s ease;
+    }
+
+    .dropdown-menu a:hover,
+    .dropdown-menu a.active{background:rgba(146,4,4,0.78);transform:translateX(3px);}
+
+    /* ---------- PAGE ---------- */
+    .admin-page{
+      min-height:100vh;
+      padding:122px 20px 90px;
+      position:relative;
+      overflow:hidden;
+      background:radial-gradient(circle at 50% 20%, rgba(146,4,4,0.28), transparent 28%), radial-gradient(circle at 18% 78%, rgba(255,255,255,0.035), transparent 22%), linear-gradient(180deg, #000, #050505, #000);
+    }
+
+    .admin-page::before{
+      content:"";
+      position:absolute;
+      inset:-120px;
+      background:linear-gradient(rgba(0,0,0,0.24), rgba(0,0,0,0.88)), url("Foto/overthink-alb.svg") center/contain no-repeat;
+      opacity:0.07;
+      pointer-events:none;
+    }
+
+    .section-shell{max-width:1250px;margin:0 auto;position:relative;z-index:2;}
+
+    .page-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-end;
+      gap:24px;
+      margin-bottom:30px;
+    }
+
+    .eyebrow{color:#d30707;font-weight:900;font-size:0.9rem;letter-spacing:0.16em;text-transform:uppercase;margin-bottom:10px;}
+
+    .page-header h1{
+      font-family:'Bebas Neue', Impact, sans-serif;
+      font-size:clamp(3.4rem, 8vw, 6.2rem);
+      letter-spacing:0.055em;
+      line-height:0.92;
+      text-transform:uppercase;
+      text-shadow:0 0 14px rgba(255,255,255,0.10),0 0 28px rgba(146,4,4,0.48);
+    }
+
+    .page-header p{max-width:680px;color:#d5d5d5;line-height:1.7;margin-top:16px;}
+
+    .header-actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:flex-end;}
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:13px 20px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.14);
+      font-family:'Inter', Arial, sans-serif;
+      font-weight:900;
+      font-size:0.9rem;
+      cursor:pointer;
+      transition:0.3s ease;
+      color:#fff;
+      background:rgba(255,255,255,0.06);
+    }
+
+    .btn-primary{background:rgba(146,4,4,0.95);box-shadow:0 0 24px rgba(146,4,4,0.25);}
+    .btn-primary:hover{background:#c00606;transform:translateY(-2px);}
+    .btn-secondary:hover{border-color:rgba(146,4,4,0.45);transform:translateY(-2px);}
+    .btn-danger{background:rgba(184,6,6,0.18);border-color:rgba(184,6,6,0.38);}
+    .btn-danger:hover{background:#b80606;transform:translateY(-2px);}
+    .btn-small{padding:9px 13px;font-size:0.78rem;}
+
+    .admin-grid{display:grid;grid-template-columns:0.9fr 1.1fr;gap:24px;align-items:start;}
+
+    .panel{
+      position:relative;
+      overflow:hidden;
+      border-radius:28px;
+      background:rgba(255,255,255,0.045);
+      border:1px solid rgba(255,255,255,0.08);
+      box-shadow:0 18px 55px rgba(0,0,0,0.38);
+      padding:28px;
+    }
+
+    .panel::before{content:"";position:absolute;inset:-1px;background:radial-gradient(circle at 50% 0%, rgba(146,4,4,0.22), transparent 46%);pointer-events:none;}
+    .panel > *{position:relative;z-index:2;}
+
+    .panel h2{font-family:'Bebas Neue', Impact, sans-serif;font-size:2.25rem;letter-spacing:0.06em;line-height:1;margin-bottom:16px;text-transform:uppercase;}
+    .panel-note{color:#cfcfcf;line-height:1.65;margin-bottom:20px;font-size:0.94rem;}
+
+    .message-box{margin-bottom:18px;padding:13px 15px;border-radius:15px;font-size:0.9rem;display:none;font-weight:800;line-height:1.5;text-align:center;}
+    .message-box.error{display:block;background:rgba(184,6,6,0.15);border:1px solid rgba(184,6,6,0.42);color:#ffd7d7;}
+    .message-box.success{display:block;background:rgba(24,148,67,0.15);border:1px solid rgba(24,148,67,0.35);color:#d8ffe4;}
+
+    .input-group{margin-bottom:16px;text-align:left;}
+    .input-group label{display:block;font-size:0.82rem;font-weight:900;margin-bottom:7px;color:#e7e7e7;text-transform:uppercase;letter-spacing:0.06em;}
+    .input-group input,.input-group select,.input-group textarea{
+      width:100%;
+      padding:13px 15px;
+      background:rgba(0,0,0,0.44);
+      border:1px solid rgba(255,255,255,0.12);
+      border-radius:14px;
+      color:white;
+      font-family:'Inter', Arial, sans-serif;
+      font-size:0.95rem;
+      outline:none;
+      transition:0.25s ease;
+    }
+
+    .input-group textarea{min-height:130px;resize:vertical;line-height:1.65;}
+    .input-group textarea.large{min-height:260px;}
+    .input-group input:focus,.input-group select:focus,.input-group textarea:focus{border-color:rgba(184,6,6,0.65);box-shadow:0 0 0 4px rgba(146,4,4,0.12),0 0 18px rgba(146,4,4,0.20);}
+    .input-group select option{background:#111;color:white;}
+
+    .checkbox-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+
+    .check-card{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      padding:13px 14px;
+      border-radius:14px;
+      background:rgba(255,255,255,0.045);
+      border:1px solid rgba(255,255,255,0.10);
+      cursor:pointer;
+      color:#d8d8d8;
+      font-size:0.9rem;
+      font-weight:800;
+      line-height:1.45;
+    }
+
+    .check-card input{width:18px;height:18px;margin-top:2px;accent-color:#b80606;flex-shrink:0;}
+
+    .form-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;}
+
+    .news-list{display:flex;flex-direction:column;gap:14px;}
+
+    .news-item{
+      padding:18px;
+      border-radius:20px;
+      background:rgba(0,0,0,0.28);
+      border:1px solid rgba(255,255,255,0.08);
+      transition:0.25s ease;
+    }
+
+    .news-item:hover{border-color:rgba(146,4,4,0.33);}
+
+    .news-item-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:10px;}
+    .news-item h3{font-size:1.08rem;line-height:1.35;margin-bottom:6px;}
+    .news-meta{color:#aaa;font-size:0.76rem;font-weight:900;text-transform:uppercase;letter-spacing:0.06em;line-height:1.5;}
+    .news-summary{color:#d8d8d8;line-height:1.6;font-size:0.92rem;margin-top:10px;}
+
+    .badge-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;}
+    .badge{display:inline-flex;padding:7px 10px;border-radius:999px;font-size:0.72rem;font-weight:900;letter-spacing:0.06em;text-transform:uppercase;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);color:#fff;}
+    .badge.published{background:rgba(24,148,67,0.15);border-color:rgba(24,148,67,0.35);}
+    .badge.draft{background:rgba(255,170,0,0.12);border-color:rgba(255,170,0,0.28);}
+    .badge.featured{background:rgba(146,4,4,0.20);border-color:rgba(146,4,4,0.42);}
+
+    .item-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;}
+    .empty-state{padding:24px;border-radius:22px;background:rgba(0,0,0,0.26);border:1px solid rgba(255,255,255,0.08);text-align:center;color:#cfcfcf;line-height:1.65;}
+    .hidden{display:none !important;}
+
+    .blocked{max-width:720px;margin:0 auto;text-align:center;padding:34px 28px;}
+    .blocked h1{font-family:'Bebas Neue', Impact, sans-serif;font-size:clamp(3rem, 8vw, 5rem);letter-spacing:0.06em;margin-bottom:14px;}
+    .blocked p{color:#d0d0d0;line-height:1.7;margin-bottom:22px;}
+
+    /* ---------- FOOTER ---------- */
+    footer{background:#0d0d0d;border-top:1px solid rgba(255,255,255,0.07);padding:46px 20px 24px;}
+    .footer-shell{max-width:1250px;margin:0 auto;display:grid;grid-template-columns:1.1fr 1fr 1fr;gap:28px;align-items:start;}
+    .footer-brand img{height:48px;width:auto;margin-bottom:14px;filter:drop-shadow(0 0 18px rgba(146,4,4,0.25));}
+    .footer-brand h3,.footer-col h3{font-family:'Bebas Neue', Impact, sans-serif;font-size:1.6rem;letter-spacing:0.08em;margin-bottom:12px;}
+    .footer-brand p,.footer-col p,.footer-col a{color:#d0d0d0;line-height:1.75;font-size:0.95rem;}
+    .footer-col a{display:block;transition:0.25s ease;}
+    .footer-col a:hover{color:#fff;transform:translateX(3px);}
+    .copyright{max-width:1250px;margin:28px auto 0;padding-top:18px;border-top:1px solid rgba(255,255,255,0.07);text-align:center;color:#a8a8a8;font-size:0.88rem;}
+
+    @media(max-width:1050px){.admin-grid{grid-template-columns:1fr;}.footer-shell{grid-template-columns:1fr 1fr;}}
+
+    @media(max-width:768px){
+      .topbar{min-height:58px;padding:8px 12px;grid-template-columns:auto 1fr auto;gap:10px;}
+      .topbar-logo img{height:33px;}
+      .topbar-title{font-size:1rem;letter-spacing:0.08em;}
+      .menu-toggle{padding:8px 13px;font-size:0.84rem;}
+      .dropdown-menu{min-width:205px;}
+      .admin-page{padding:100px 14px 64px;}
+      .page-header{flex-direction:column;align-items:flex-start;}
+      .header-actions,.form-actions{width:100%;justify-content:flex-start;}
+      .btn{width:100%;}
+      .panel{padding:22px 18px;border-radius:24px;}
+      .checkbox-row{grid-template-columns:1fr;}
+      .news-item-top{flex-direction:column;}
+      .badge-row{justify-content:flex-start;}
+      .footer-shell{grid-template-columns:1fr;}
+    }
+
+    @media(max-width:520px){.topbar-title{max-width:145px;white-space:normal;line-height:1;}footer{line-height:1.8;}}
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <a href="index.html" class="topbar-logo" aria-label="Overthink Film Fest - pagina principală">
+      <img src="Foto/overthink-alb.svg" alt="Logo Overthink Film Fest">
+    </a>
+
+    <div class="topbar-title">OVERTHINK FILM FEST</div>
+
+    <div class="menu-wrapper" id="menuWrapper">
+      <button class="menu-toggle" id="menuToggle" type="button" aria-label="Deschide meniul">
+        Meniu <span class="menu-arrow">▾</span>
+      </button>
+
+      <nav class="dropdown-menu" id="dropdownMenu">
+        <a href="admin.html">Admin</a>
+        <a href="noutati-admin.html" class="active">Admin noutăți</a>
+        <a href="noutati.html">Noutăți publice</a>
+        <a href="cont.html">Cont</a>
+        <a href="index.html">Acasă</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="admin-page">
+    <div class="section-shell">
+      <section class="panel blocked hidden" id="blockedBox">
+        <h1>Acces restricționat</h1>
+        <p>Această pagină poate fi accesată doar de conturile de admin.</p>
+        <div class="header-actions" style="justify-content:center;">
+          <a href="auth.html" class="btn btn-primary">Autentificare</a>
+          <a href="cont.html" class="btn btn-secondary">Înapoi la cont</a>
+        </div>
+      </section>
+
+      <section id="adminContent" class="hidden">
+        <div class="page-header">
+          <div>
+            <div class="eyebrow">Panou admin</div>
+            <h1>Noutăți</h1>
+            <p>Creează, editează, publică sau ascunde noutățile afișate pe pagina publică a festivalului.</p>
+          </div>
+
+          <div class="header-actions">
+            <a href="noutati.html" class="btn btn-secondary">Vezi pagina publică</a>
+            <button type="button" class="btn btn-primary" id="newPostBtn">Noutate nouă</button>
+          </div>
+        </div>
+
+        <div id="messageBox" class="message-box"></div>
+
+        <div class="admin-grid">
+          <section class="panel">
+            <h2 id="formTitle">Creează noutate</h2>
+            <p class="panel-note">Poți salva noutatea ca draft sau o poți publica direct pe site.</p>
+
+            <form id="newsForm">
+              <input type="hidden" id="newsId">
+
+              <div class="input-group">
+                <label for="title">Titlu</label>
+                <input id="title" name="title" type="text" required placeholder="ex: Înscrierile sunt deschise">
+              </div>
+
+              <div class="input-group">
+                <label for="slug">Slug / link</label>
+                <input id="slug" name="slug" type="text" placeholder="se generează automat dacă îl lași gol">
+              </div>
+
+              <div class="input-group">
+                <label for="category">Categorie</label>
+                <select id="category" name="category" required>
+                  <option value="Anunț">Anunț</option>
+                  <option value="Program">Program</option>
+                  <option value="Parteneri">Parteneri</option>
+                  <option value="Voluntari">Voluntari</option>
+                  <option value="Concurs">Concurs</option>
+                  <option value="Media">Media</option>
+                </select>
+              </div>
+
+              <div class="input-group">
+                <label for="coverImageUrl">Imagine copertă</label>
+                <input id="coverImageUrl" name="cover_image_url" type="text" placeholder="ex: Foto/noutate.jpg sau link imagine">
+              </div>
+
+              <div class="input-group">
+                <label for="summary">Rezumat scurt</label>
+                <textarea id="summary" name="summary" maxlength="500" placeholder="Text scurt afișat pe card..."></textarea>
+              </div>
+
+              <div class="input-group">
+                <label for="content">Conținut complet</label>
+                <textarea id="content" name="content" class="large" required placeholder="Textul complet al noutății..."></textarea>
+              </div>
+
+              <div class="checkbox-row">
+                <label class="check-card">
+                  <input id="isPublished" name="is_published" type="checkbox">
+                  <span>Publică pe site</span>
+                </label>
+
+                <label class="check-card">
+                  <input id="isFeatured" name="is_featured" type="checkbox">
+                  <span>Noutate principală</span>
+                </label>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary" id="saveBtn">Salvează noutatea</button>
+                <button type="button" class="btn btn-secondary" id="resetFormBtn">Resetează</button>
+              </div>
+            </form>
+          </section>
+
+          <section class="panel">
+            <h2>Noutăți existente</h2>
+            <p class="panel-note">Aici apar toate noutățile, inclusiv drafturile.</p>
+            <div id="newsList" class="news-list"></div>
+          </section>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-shell">
+      <div class="footer-brand">
+        <img src="Foto/LOGO Overthink 2 (1).svg" alt="Logo Overthink Film Fest">
+        <h3>Overthink Film Fest</h3>
+        <p>Festival de film independent organizat de Clubul de Film Overthink. Prima ediție: 7–9 august 2026, Insula de Agrement Bacău.</p>
+      </div>
+
+      <div class="footer-col">
+        <h3>Linkuri</h3>
+        <a href="admin.html">Admin</a>
+        <a href="noutati.html">Noutăți publice</a>
+        <a href="cont.html">Cont</a>
+      </div>
+
+      <div class="footer-col">
+        <h3>Contact</h3>
+        <p>Email: staff@overthink-jr.com</p>
+        <p>Telefon: 0773 746 372</p>
+        <a href="https://www.instagram.com/overthink.jr" target="_blank" rel="noopener noreferrer">Instagram: @overthink.jr</a>
+      </div>
+    </div>
+
+    <div class="copyright">© 2026 Overthink Film Fest. Toate drepturile rezervate.</div>
+  </footer>
+
+  <script>
+    const menuWrapper = document.getElementById("menuWrapper");
+    const menuToggle = document.getElementById("menuToggle");
+
+    menuToggle.addEventListener("click", (event) => {
+      event.stopPropagation();
+      menuWrapper.classList.toggle("open");
+    });
+
+    document.addEventListener("click", (event) => {
+      if(!menuWrapper.contains(event.target)){
+        menuWrapper.classList.remove("open");
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if(event.key === "Escape"){
+        menuWrapper.classList.remove("open");
+      }
+    });
+
+    const token = localStorage.getItem("off_access_token");
+    const isAdminLocal = localStorage.getItem("off_is_admin") === "1";
+
+    const blockedBox = document.getElementById("blockedBox");
+    const adminContent = document.getElementById("adminContent");
+    const messageBox = document.getElementById("messageBox");
+    const newsForm = document.getElementById("newsForm");
+    const newsList = document.getElementById("newsList");
+    const formTitle = document.getElementById("formTitle");
+    const newPostBtn = document.getElementById("newPostBtn");
+    const resetFormBtn = document.getElementById("resetFormBtn");
+
+    const fields = {
+      id: document.getElementById("newsId"),
+      title: document.getElementById("title"),
+      slug: document.getElementById("slug"),
+      category: document.getElementById("category"),
+      coverImageUrl: document.getElementById("coverImageUrl"),
+      summary: document.getElementById("summary"),
+      content: document.getElementById("content"),
+      isPublished: document.getElementById("isPublished"),
+      isFeatured: document.getElementById("isFeatured")
+    };
+
+    let allNews = [];
+
+    function showMessage(text, isSuccess = false){
+      messageBox.textContent = text;
+      messageBox.className = isSuccess ? "message-box success" : "message-box error";
+      messageBox.style.display = "block";
+
+      setTimeout(() => {
+        messageBox.style.display = "none";
+      }, 5000);
+    }
+
+    function escapeHtml(value){
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function formatDate(value){
+      if(!value) return "";
+
+      try{
+        return new Date(value).toLocaleDateString("ro-RO", {
+          year:"numeric",
+          month:"long",
+          day:"numeric"
+        });
+      }catch{
+        return value;
+      }
+    }
+
+    function slugify(value){
+      return String(value || "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/ă/g, "a")
+        .replace(/â/g, "a")
+        .replace(/î/g, "i")
+        .replace(/ș/g, "s")
+        .replace(/ş/g, "s")
+        .replace(/ț/g, "t")
+        .replace(/ţ/g, "t")
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "")
+        .substring(0, 120);
+    }
+
+    function normalizeNews(data){
+      if(Array.isArray(data)) return data;
+      if(data && Array.isArray(data.news)) return data.news;
+      if(data && Array.isArray(data.items)) return data.items;
+      return [];
+    }
+
+    async function adminFetch(url, options = {}){
+      const response = await fetch(url, {
+        ...options,
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+          ...(options.headers || {})
+        }
+      });
+
+      let data = {};
+
+      try{
+        data = await response.json();
+      }catch{
+        data = {};
+      }
+
+      if(response.status === 401 || response.status === 403){
+        blockedBox.classList.remove("hidden");
+        adminContent.classList.add("hidden");
+      }
+
+      return { response, data };
+    }
+
+    async function verifyAdminAccess(){
+      if(!token || !isAdminLocal){
+        blockedBox.classList.remove("hidden");
+        adminContent.classList.add("hidden");
+        return false;
+      }
+
+      try{
+        const response = await fetch("/api/account/me", {
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
+        });
+
+        const data = await response.json();
+
+        if(!response.ok || !data.is_admin){
+          blockedBox.classList.remove("hidden");
+          adminContent.classList.add("hidden");
+          return false;
+        }
+
+        blockedBox.classList.add("hidden");
+        adminContent.classList.remove("hidden");
+        return true;
+      }catch(error){
+        console.error(error);
+        blockedBox.classList.remove("hidden");
+        adminContent.classList.add("hidden");
+        return false;
+      }
+    }
+
+    function resetForm(){
+      newsForm.reset();
+      fields.id.value = "";
+      formTitle.textContent = "Creează noutate";
+    }
+
+    function fillForm(post){
+      fields.id.value = post.id || "";
+      fields.title.value = post.title || "";
+      fields.slug.value = post.slug || "";
+      fields.category.value = post.category || "Anunț";
+      fields.coverImageUrl.value = post.cover_image_url || "";
+      fields.summary.value = post.summary || "";
+      fields.content.value = post.content || "";
+      fields.isPublished.checked = Boolean(post.is_published);
+      fields.isFeatured.checked = Boolean(post.is_featured);
+      formTitle.textContent = "Editează noutate";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function getPayload(){
+      const title = fields.title.value.trim();
+      const slug = fields.slug.value.trim() || slugify(title);
+
+      return {
+        title,
+        slug,
+        category: fields.category.value,
+        cover_image_url: fields.coverImageUrl.value.trim() || null,
+        summary: fields.summary.value.trim() || null,
+        content: fields.content.value.trim(),
+        is_published: fields.isPublished.checked,
+        is_featured: fields.isFeatured.checked
+      };
+    }
+
+    function renderNewsList(){
+      newsList.innerHTML = "";
+
+      if(allNews.length === 0){
+        newsList.innerHTML = `<div class="empty-state">Nu există încă noutăți create.</div>`;
+        return;
+      }
+
+      allNews.forEach(post => {
+        const item = document.createElement("article");
+        item.className = "news-item";
+
+        item.innerHTML = `
+          <div class="news-item-top">
+            <div>
+              <h3>${escapeHtml(post.title)}</h3>
+              <div class="news-meta">
+                ${escapeHtml(post.category || "Anunț")} · ${escapeHtml(formatDate(post.published_at || post.created_at || post.updated_at))}
+                <br>/${escapeHtml(post.slug || "")}
+              </div>
+            </div>
+
+            <div class="badge-row">
+              <span class="badge ${post.is_published ? "published" : "draft"}">${post.is_published ? "Publicată" : "Draft"}</span>
+              ${post.is_featured ? `<span class="badge featured">Principală</span>` : ""}
+            </div>
+          </div>
+
+          <div class="news-summary">${escapeHtml(post.summary || "Fără rezumat.")}</div>
+
+          <div class="item-actions">
+            <button type="button" class="btn btn-small btn-secondary" data-action="edit" data-id="${post.id}">Editează</button>
+            <button type="button" class="btn btn-small btn-secondary" data-action="toggle" data-id="${post.id}">${post.is_published ? "Ascunde" : "Publică"}</button>
+            <button type="button" class="btn btn-small btn-danger" data-action="delete" data-id="${post.id}">Șterge</button>
+          </div>
+        `;
+
+        newsList.appendChild(item);
+      });
+    }
+
+    async function loadNews(){
+      const result = await adminFetch("/api/admin/news");
+
+      if(!result.response.ok){
+        newsList.innerHTML = `<div class="empty-state">Noutățile nu au putut fi încărcate.</div>`;
+        return;
+      }
+
+      allNews = normalizeNews(result.data);
+      renderNewsList();
+    }
+
+    newsForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const payload = getPayload();
+
+      if(!payload.title || !payload.content){
+        showMessage("Completează titlul și conținutul noutății.");
+        return;
+      }
+
+      const id = fields.id.value;
+      const isEdit = Boolean(id);
+
+      const result = await adminFetch(isEdit ? `/api/admin/news/${id}` : "/api/admin/news", {
+        method: isEdit ? "PATCH" : "POST",
+        body: JSON.stringify(payload)
+      });
+
+      if(!result.response.ok){
+        showMessage(result.data.detail || "Noutatea nu a putut fi salvată.");
+        return;
+      }
+
+      showMessage(isEdit ? "Noutatea a fost actualizată." : "Noutatea a fost creată.", true);
+      resetForm();
+      await loadNews();
+    });
+
+    newsList.addEventListener("click", async (event) => {
+      const button = event.target.closest("button[data-action]");
+
+      if(!button){
+        return;
+      }
+
+      const id = Number(button.dataset.id);
+      const action = button.dataset.action;
+      const post = allNews.find(item => Number(item.id) === id);
+
+      if(!post){
+        showMessage("Noutatea nu a fost găsită.");
+        return;
+      }
+
+      if(action === "edit"){
+        fillForm(post);
+        return;
+      }
+
+      if(action === "toggle"){
+        const result = await adminFetch(`/api/admin/news/${id}`, {
+          method:"PATCH",
+          body: JSON.stringify({
+            ...post,
+            is_published: !post.is_published
+          })
+        });
+
+        if(!result.response.ok){
+          showMessage(result.data.detail || "Statusul noutății nu a putut fi modificat.");
+          return;
+        }
+
+        showMessage(post.is_published ? "Noutatea a fost ascunsă." : "Noutatea a fost publicată.", true);
+        await loadNews();
+        return;
+      }
+
+      if(action === "delete"){
+        const confirmed = confirm(`Sigur vrei să ștergi noutatea „${post.title}”?`);
+
+        if(!confirmed){
+          return;
+        }
+
+        const result = await adminFetch(`/api/admin/news/${id}`, {
+          method:"DELETE"
+        });
+
+        if(!result.response.ok){
+          showMessage(result.data.detail || "Noutatea nu a putut fi ștearsă.");
+          return;
+        }
+
+        showMessage("Noutatea a fost ștearsă.", true);
+        await loadNews();
+      }
+    });
+
+    fields.title.addEventListener("input", () => {
+      if(!fields.id.value && !fields.slug.value.trim()){
+        fields.slug.value = slugify(fields.title.value);
+      }
+    });
+
+    newPostBtn.addEventListener("click", resetForm);
+    resetFormBtn.addEventListener("click", resetForm);
+
+    async function init(){
+      const allowed = await verifyAdminAccess();
+
+      if(allowed){
+        await loadNews();
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>
