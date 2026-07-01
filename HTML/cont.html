@@ -776,7 +776,7 @@
       </button>
 
       <nav class="dropdown-menu" id="dropdownMenu">
-        <a href"index.html">Acasă</a>
+        <a href="index.html">Acasă</a>
         <a href="contact.html">Contact</a>
         <a href="program.html">Program</a>
         <a href="cont.html" class="active">Cont</a>
@@ -836,11 +836,11 @@
               <span class="badge admin" id="adminBadge" style="display:none;">Admin</span>
             </div>
 
-            <!--<div class="info-list">
+            <div class="info-list">
               <div class="info-row">
                 <span>ID cont</span>
                 <strong id="profileId">-</strong>
-              </div>-->
+              </div>
 
               <div class="info-row">
                 <span>Email</span>
@@ -1109,26 +1109,61 @@
       return labels[status] || status || "Neînscris";
     }
 
+    function setText(id, value){
+      const element = document.getElementById(id);
+
+      if(element){
+        element.textContent = value;
+      }
+    }
+
     function setProfile(user){
-      const name = user.name || formatNameFromEmail(user.email);
+      const safeUser = user || {};
+      const name = safeUser.name || formatNameFromEmail(safeUser.email);
+      const isAdmin =
+        safeUser.is_admin === true ||
+        safeUser.is_admin === 1 ||
+        safeUser.is_admin === "1" ||
+        safeUser.role === "admin" ||
+        localStorage.getItem("off_is_admin") === "1";
 
-      document.getElementById("profileName").textContent = name;
-      document.getElementById("profileEmail").textContent = user.email || "-";
-      document.getElementById("profileId").textContent = user.id || "-";
-      document.getElementById("profileEmailRow").textContent = user.email || "-";
+      setText("profileName", name);
+      setText("profileEmail", safeUser.email || "-");
+      setText("profileId", safeUser.id || "-");
+      setText("profileEmailRow", safeUser.email || "-");
 
-      localStorage.setItem("off_user_email", user.email || "");
-      localStorage.setItem("off_user_id", user.id || "");
-      localStorage.setItem("off_is_admin", user.is_admin ? "1" : "0");
+      localStorage.setItem("off_user_email", safeUser.email || "");
+      localStorage.setItem("off_user_id", safeUser.id || "");
+      localStorage.setItem("off_is_admin", isAdmin ? "1" : "0");
 
-      if(user.is_admin){
-        document.getElementById("adminBadge").style.display = "inline-flex";
-        document.getElementById("roleBadge").textContent = "Participant / Admin";
-        document.getElementById("adminPanelLink").classList.add("visible");
+      const adminBadge = document.getElementById("adminBadge");
+      const roleBadge = document.getElementById("roleBadge");
+      const adminPanelLink = document.getElementById("adminPanelLink");
+
+      if(isAdmin){
+        if(adminBadge){
+          adminBadge.style.display = "inline-flex";
+        }
+
+        if(roleBadge){
+          roleBadge.textContent = "Participant / Admin";
+        }
+
+        if(adminPanelLink){
+          adminPanelLink.classList.add("visible");
+        }
       }else{
-        document.getElementById("adminBadge").style.display = "none";
-        document.getElementById("roleBadge").textContent = user.role || "Participant";
-        document.getElementById("adminPanelLink").classList.remove("visible");
+        if(adminBadge){
+          adminBadge.style.display = "none";
+        }
+
+        if(roleBadge){
+          roleBadge.textContent = safeUser.role || "Participant";
+        }
+
+        if(adminPanelLink){
+          adminPanelLink.classList.remove("visible");
+        }
       }
     }
 
