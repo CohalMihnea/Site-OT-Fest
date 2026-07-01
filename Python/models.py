@@ -181,3 +181,24 @@ class AdminAction(Base):
     description = Column(Text, nullable=True)
 
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+
+class NewsPost(Base):
+    __tablename__ = "news_posts"
+
+    id = Column(Integer, primary_key=True, index=True)
+
+    title = Column(String(255), nullable=False)
+    slug = Column(String(255), unique=True, index=True, nullable=False)
+    summary = Column(Text, nullable=True)
+    content = Column(Text, nullable=False)
+    category = Column(String(100), default="Anunț", nullable=False)
+    cover_image_url = Column(String(500), nullable=True)
+
+    is_published = Column(Boolean, default=False, nullable=False)
+    is_featured = Column(Boolean, default=False, nullable=False)
+
+    created_by_user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    published_at = Column(DateTime, nullable=True)
