@@ -93,3 +93,80 @@ def send_password_reset_email(to_email: str, code: str) -> bool:
     except Exception as error:
         print("EROARE TRIMITERE EMAIL RESET:", error)
         return False
+
+def send_submission_status_email(
+            to_email: str,
+            film_title: str,
+            status: str,
+            admin_feedback: str | None = None
+    ) -> bool:
+        print("=== TRIMITERE EMAIL STATUS SCURTMETRAJ ===")
+        print("Către:", to_email)
+        print("Film:", film_title)
+        print("Status:", status)
+        print("EMAIL_FROM:", EMAIL_FROM)
+        print("RESEND_API_KEY există:", bool(RESEND_API_KEY))
+
+        if not RESEND_API_KEY:
+            print("ATENȚIE: RESEND_API_KEY lipsește. Emailul NU a fost trimis.")
+            return False
+
+        status_labels = {
+            "trimisa": "Trimisă",
+            "in_verificare": "În verificare",
+            "necesita_modificari": "Necesită modificări",
+            "acceptata": "Acceptată",
+            "respinsa": "Respinsă"
+        }
+
+        status_label = status_labels.get(status, status)
+
+        feedback_html = ""
+
+        if admin_feedback:
+            feedback_html = f"""
+            <p><strong>Feedback din partea echipei:</strong></p>
+            <p>{admin_feedback}</p>
+            """
+
+        payload = {
+            "from": EMAIL_FROM,
+            "to": [to_email],
+            "subject": f"Status actualizat pentru scurtmetrajul tău - {FESTIVAL_NAME}",
+            "html": f"""
+            <h2>Status actualizat pentru scurtmetrajul tău</h2>
+
+            <p>Bună!</p>
+
+            <p>Statusul scurtmetrajului tău înscris la <strong>{FESTIVAL_NAME}</strong> a fost actualizat.</p>
+
+            <p><strong>Scurtmetraj:</strong> {film_title}</p>
+            <p><strong>Status nou:</strong> {status_label}</p>
+
+            {feedback_html}
+
+            <p>Poți vedea detaliile actualizate în contul tău de pe site.</p>
+
+            <p>Cu drag,<br>Echipa Overthink Film Fest</p>
+            """
+        }
+
+        try:
+            response = requests.post(
+                "https://api.resend.com/emails",
+                headers={
+                    "Authorization": f"Bearer {RESEND_API_KEY}",
+                    "Content-Type": "application/json"
+                },
+                json=payload,
+                timeout=15
+            )
+
+            print("RESEND STATUS:", response.status_code)
+            print("RESEND RESPONSE:", response.text)
+
+            return response.status_code in [200, 201]
+
+        except Exception as error:
+            print("EROARE TRIMITERE EMAIL STATUS SCURTMETRAJ:", error)
+            return False

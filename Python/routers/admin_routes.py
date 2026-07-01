@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
+from email_service import send_submission_status_email
 
 from database import get_db
 from models import Submission, User
@@ -53,6 +54,7 @@ def serialize_submission(submission: Submission):
         "production_year": submission.production_year,
         "duration_minutes": submission.duration_minutes,
         "city": submission.city,
+        "marketing_consent": submission.marketing_consent,
         "institution": submission.institution,
         "presentation": submission.presentation,
         "short_film_link": submission.short_film_link,
@@ -180,6 +182,8 @@ def update_submission_status(
             detail="Înscrierea nu a fost găsită."
         )
 
+    old_status = submission.status
+
     submission.status = payload.status
     submission.admin_feedback = payload.admin_feedback
 
@@ -191,11 +195,32 @@ def update_submission_status(
     db.commit()
     db.refresh(submission)
 
+    email_sent = False
+    email_should_be_sent = (
+        old_status != payload.status
+        and bool(submission.marketing_consent)
+    )
+
+    if email_should_be_sent:
+        recipient_email = submission.contact_email
+
+        if not recipient_email and submission.user:
+            recipient_email = submission.user.email
+
+        if recipient_email:
+            email_sent = send_submission_status_email(
+                to_email=recipient_email,
+                film_title=submission.title,
+                status=submission.status,
+                admin_feedback=submission.admin_feedback
+            )
+
     return {
         "detail": "Statusul înscrierii a fost actualizat.",
+        "email_sent": email_sent,
+        "email_should_be_sent": email_should_be_sent,
         "submission": serialize_submission(submission)
     }
-
 
 @router.get("/users")
 def get_all_users(
