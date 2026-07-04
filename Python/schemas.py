@@ -1,3 +1,4 @@
+from enum import Enum
 from datetime import datetime
 from typing import List, Optional
 
@@ -66,6 +67,12 @@ class UserResponse(BaseModel):
 # SUBMISSION
 # -------------------------
 
+class SubmissionCategory(str, Enum):
+    STUDENTI_FICTIUNE = "studenti_fictiune"
+    STUDENTI_DOCUMENTAR = "studenti_documentar"
+    FILM_AMATOR_LICEENI = "film_amator_liceeni"
+
+
 class TeamMemberInput(BaseModel):
     name: str = Field(..., min_length=1, max_length=255)
     role: str = Field(..., min_length=1, max_length=255)
@@ -77,7 +84,7 @@ class MaterialLinkInput(BaseModel):
 
 class SubmissionCreateRequest(BaseModel):
     title: str = Field(..., min_length=1, max_length=255)
-    category: str = Field(..., min_length=1, max_length=100)
+    category: SubmissionCategory
     production_year: str = Field(..., min_length=4, max_length=20)
     duration_minutes: int = Field(..., ge=1)
 

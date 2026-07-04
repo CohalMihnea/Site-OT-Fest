@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, Text
+from sqlalchemy import Boolean, CheckConstraint, Column, DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import relationship
 
 from database import Base
@@ -56,12 +56,19 @@ class PasswordResetCode(Base):
 class Submission(Base):
     __tablename__ = "submissions"
 
+    __table_args__ = (
+        CheckConstraint(
+            "category IN ('studenti_fictiune', 'studenti_documentar', 'film_amator_liceeni')",
+            name="ck_submissions_category"
+        ),
+    )
+
     id = Column(Integer, primary_key=True, index=True)
 
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 
     title = Column(String(255), nullable=False)
-    category = Column(String(100), nullable=False)
+    category = Column(String(50), nullable=False)
     production_year = Column(String(20), nullable=False)
     duration_minutes = Column(Integer, nullable=False)
 
@@ -89,7 +96,6 @@ class Submission(Base):
 
     can_edit = Column(Boolean, default=False, nullable=False)
 
-    marketing_consent = Column(Boolean, default=False, nullable=False)
 
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -107,7 +113,6 @@ class Submission(Base):
         back_populates="submission",
         cascade="all, delete-orphan"
     )
-
 
 class SubmissionTeamMember(Base):
     __tablename__ = "submission_team_members"
