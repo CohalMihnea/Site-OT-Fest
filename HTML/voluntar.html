@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Voluntar | Overthink Film Fest</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    :root{--red:#920404;--red-bright:#d30707;--bg:#000;--card:rgba(255,255,255,0.045);--border:rgba(255,255,255,0.08);--text:#fff;--muted:#d6d6d6;}
+    html{scroll-behavior:smooth;}
+    body{font-family:'Inter',Arial,sans-serif;background:#000;color:#fff;overflow-x:hidden;min-height:100vh;}
+    a{color:inherit;text-decoration:none;} img{max-width:100%;display:block;}
+
+    .topbar{position:fixed;top:0;left:0;width:100%;min-height:62px;padding:0 24px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:18px;z-index:1000;background:rgba(10,10,10,0.82);backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,0.08);}
+    .topbar-logo{width:max-content;display:flex;align-items:center;}
+    .topbar-logo img{height:39px;width:auto;filter:drop-shadow(0 0 12px rgba(146,4,4,0.25));transition:0.3s ease;}
+    .topbar-logo:hover img{transform:scale(1.035);opacity:0.88;}
+    .topbar-title{font-family:'Bebas Neue',Impact,sans-serif;font-size:clamp(1.18rem,2.4vw,1.65rem);letter-spacing:0.12em;text-align:center;white-space:nowrap;text-shadow:0 0 18px rgba(146,4,4,0.42);}
+    .menu-wrapper{justify-self:end;position:relative;}
+    .menu-toggle{border:none;outline:none;cursor:pointer;color:white;background:rgba(146,4,4,0.9);font-family:'Inter',Arial,sans-serif;font-weight:900;font-size:0.92rem;border-radius:999px;padding:10px 19px;display:flex;align-items:center;gap:8px;transition:0.3s ease;box-shadow:0 0 22px rgba(146,4,4,0.23);}
+    .menu-toggle:hover{background:#c00606;transform:translateY(-2px);}
+    .menu-arrow{font-size:0.8rem;transition:0.3s ease;}
+    .menu-wrapper.open .menu-arrow{transform:rotate(180deg);}
+    .dropdown-menu{position:absolute;top:calc(100% + 13px);right:0;min-width:230px;padding:10px;border-radius:18px;background:rgba(15,15,15,0.94);backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,0.12);box-shadow:0 20px 60px rgba(0,0,0,0.55),0 0 35px rgba(146,4,4,0.18);opacity:0;transform:translateY(-10px) scale(0.96);pointer-events:none;transition:0.25s ease;}
+    .menu-wrapper.open .dropdown-menu{opacity:1;transform:translateY(0) scale(1);pointer-events:auto;}
+    .dropdown-menu a{display:block;color:white;font-weight:800;padding:12px 14px;border-radius:12px;transition:0.25s ease;}
+    .dropdown-menu a:hover,.dropdown-menu a.active{background:rgba(146,4,4,0.78);transform:translateX(3px);}
+
+    .page{min-height:100vh;padding:120px 20px 90px;position:relative;overflow:hidden;background:radial-gradient(circle at 50% 18%,rgba(146,4,4,0.30),transparent 28%),radial-gradient(circle at 18% 78%,rgba(255,255,255,0.035),transparent 22%),linear-gradient(180deg,#000,#050505,#000);}
+    .page::before{content:"";position:absolute;inset:-120px;background:linear-gradient(rgba(0,0,0,0.24),rgba(0,0,0,0.90)),url("Foto/overthink-alb.svg") center/contain no-repeat;opacity:0.06;filter:saturate(0.9) contrast(1.08);transform:scale(1.02);pointer-events:none;}
+    .shell{max-width:1250px;margin:0 auto;position:relative;z-index:2;}
+    .hero{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:32px;}
+    .eyebrow{color:#d30707;font-weight:900;font-size:0.9rem;letter-spacing:0.16em;text-transform:uppercase;margin-bottom:10px;}
+    h1{font-family:'Bebas Neue',Impact,sans-serif;font-size:clamp(3.5rem,8vw,6.4rem);letter-spacing:0.055em;line-height:0.92;text-transform:uppercase;text-shadow:0 0 14px rgba(255,255,255,0.10),0 0 28px rgba(146,4,4,0.48);}
+    .hero p{max-width:720px;color:#d5d5d5;line-height:1.7;margin-top:16px;}
+    .actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:flex-end;}
+    .btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 18px;border-radius:999px;border:1px solid rgba(255,255,255,0.14);font-family:'Inter',Arial,sans-serif;font-weight:900;font-size:0.88rem;cursor:pointer;transition:0.3s ease;color:#fff;background:rgba(255,255,255,0.06);white-space:nowrap;}
+    .btn-primary{background:rgba(146,4,4,0.95);box-shadow:0 0 24px rgba(146,4,4,0.25);}
+    .btn-primary:hover{background:#c00606;transform:translateY(-2px);}
+    .btn-secondary:hover{border-color:rgba(146,4,4,0.45);transform:translateY(-2px);}
+    .btn:disabled{opacity:.55;cursor:not-allowed;transform:none!important;}
+
+    .restricted{display:none;max-width:760px;margin:0 auto;text-align:center;padding:36px 28px;}
+    .restricted.visible{display:block;}
+    .restricted h1{font-size:clamp(3rem,8vw,5rem);margin-bottom:14px;}
+    .restricted p{color:#d0d0d0;line-height:1.7;margin-bottom:22px;}
+    .content.hidden{display:none;}
+
+    .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;}
+    .stat-card,.panel{position:relative;overflow:hidden;border-radius:28px;background:rgba(255,255,255,0.045);border:1px solid rgba(255,255,255,0.08);box-shadow:0 18px 55px rgba(0,0,0,0.38);padding:28px;}
+    .stat-card{border-radius:22px;padding:20px;min-height:130px;}
+    .stat-card::before,.panel::before{content:"";position:absolute;inset:-1px;background:radial-gradient(circle at 50% 0%,rgba(146,4,4,0.20),transparent 46%);pointer-events:none;}
+    .stat-card>* ,.panel>*{position:relative;z-index:2;}
+    .stat-label{color:#bfbfbf;font-size:0.78rem;font-weight:900;letter-spacing:0.10em;text-transform:uppercase;margin-bottom:12px;}
+    .stat-number{font-family:'Bebas Neue',Impact,sans-serif;font-size:3.3rem;line-height:1;letter-spacing:0.04em;text-shadow:0 0 22px rgba(146,4,4,0.35);}
+    .stat-text{margin-top:8px;color:#cfcfcf;font-size:0.86rem;line-height:1.45;}
+    .grid{display:grid;grid-template-columns:0.85fr 1.15fr;gap:24px;align-items:start;}
+    .panel h2{font-family:'Bebas Neue',Impact,sans-serif;font-size:2.25rem;letter-spacing:0.06em;line-height:1;margin-bottom:16px;text-transform:uppercase;}
+    .note{color:#cfcfcf;line-height:1.65;margin-bottom:20px;font-size:0.94rem;}
+    .field{margin-bottom:16px;}
+    .field label{display:block;color:#e7e7e7;font-size:0.8rem;font-weight:900;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px;}
+    input,select,textarea{width:100%;border:none;outline:none;color:#fff;font-family:'Inter',Arial,sans-serif;font-size:0.95rem;background:rgba(0,0,0,0.42);border:1px solid rgba(255,255,255,0.10);border-radius:16px;padding:13px 14px;transition:0.25s ease;}
+    textarea{min-height:90px;resize:vertical;line-height:1.6;}
+    select option{background:#111;color:#fff;}
+    input:focus,select:focus,textarea:focus{border-color:rgba(146,4,4,0.55);box-shadow:0 0 0 4px rgba(146,4,4,0.13),0 0 22px rgba(146,4,4,0.18);}
+    .table-wrap{overflow-x:auto;border-radius:20px;border:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.22);}
+    table{width:100%;min-width:720px;border-collapse:collapse;}
+    th,td{padding:14px 12px;border-bottom:1px solid rgba(255,255,255,0.08);text-align:left;vertical-align:middle;}
+    th{background:rgba(146,4,4,0.10);color:#d30707;font-size:0.78rem;font-weight:900;letter-spacing:0.10em;text-transform:uppercase;}
+    tr:last-child td{border-bottom:none;}
+    .muted{color:#bfbfbf;font-size:0.9rem;}
+    .status-pill{display:inline-flex;padding:7px 10px;border-radius:999px;font-size:0.72rem;font-weight:900;letter-spacing:0.06em;text-transform:uppercase;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);color:#fff;white-space:nowrap;}
+    .status-pill.in_asteptare{background:rgba(255,170,0,0.12);border-color:rgba(255,170,0,0.28);}
+    .status-pill.acceptata{background:rgba(24,148,67,0.15);border-color:rgba(24,148,67,0.35);}
+    .status-pill.respinsa{background:rgba(184,6,6,0.18);border-color:rgba(184,6,6,0.42);}
+    .message{display:none;margin-top:14px;padding:13px 14px;border-radius:14px;font-size:0.9rem;font-weight:800;line-height:1.5;}
+    .message.visible{display:block;}
+    .message.success{background:rgba(24,148,67,0.15);border:1px solid rgba(24,148,67,0.35);color:#d8ffe4;}
+    .message.error{background:rgba(184,6,6,0.15);border:1px solid rgba(184,6,6,0.42);color:#ffd7d7;}
+
+    footer{background:#0d0d0d;border-top:1px solid rgba(255,255,255,0.07);padding:46px 20px 24px;}
+    .footer-shell{max-width:1250px;margin:0 auto;display:grid;grid-template-columns:1.1fr 1fr 1fr;gap:28px;align-items:start;}
+    .footer-brand img{height:48px;width:auto;margin-bottom:14px;filter:drop-shadow(0 0 18px rgba(146,4,4,0.25));}
+    .footer-brand h3,.footer-col h3{font-family:'Bebas Neue',Impact,sans-serif;font-size:1.6rem;letter-spacing:0.08em;margin-bottom:12px;}
+    .footer-brand p,.footer-col p,.footer-col a{color:#d0d0d0;line-height:1.75;font-size:0.95rem;}
+    .footer-col a{display:block;transition:0.25s ease;}
+    .footer-col a:hover{color:#fff;transform:translateX(3px);}
+    .copyright{max-width:1250px;margin:28px auto 0;padding-top:18px;border-top:1px solid rgba(255,255,255,0.07);text-align:center;color:#a8a8a8;font-size:0.88rem;}
+
+    @media(max-width:900px){.hero{flex-direction:column;align-items:flex-start}.actions{justify-content:flex-start}.grid,.stats-grid,.footer-shell{grid-template-columns:1fr}.page{padding:100px 14px 64px}.panel{padding:22px 18px;border-radius:24px}}
+    @media(max-width:768px){.topbar{min-height:58px;padding:8px 12px;grid-template-columns:auto 1fr auto;gap:10px}.topbar-logo img{height:33px}.topbar-title{font-size:1rem;letter-spacing:0.08em}.menu-toggle{padding:8px 13px;font-size:0.84rem}.dropdown-menu{min-width:205px}}
+    @media(max-width:520px){.topbar-title{max-width:145px;white-space:normal;line-height:1}.btn{width:100%}.actions{width:100%;flex-direction:column}table{min-width:680px}}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a href="index.html" class="topbar-logo" aria-label="Overthink Film Fest - pagina principală"><img src="Foto/overthink-alb.svg" alt="Logo Overthink Film Fest"></a>
+    <div class="topbar-title">OVERTHINK FILM FEST</div>
+    <div class="menu-wrapper" id="menuWrapper">
+      <button class="menu-toggle" id="menuToggle" type="button" aria-label="Deschide meniul">Meniu <span class="menu-arrow">▾</span></button>
+      <nav class="dropdown-menu" id="dropdownMenu">
+        <a href="index.html">Acasă</a>
+        <a href="noutati.html">Noutăți</a>
+        <a href="program.html">Program</a>
+        <a href="cont.html">Cont</a>
+        <a href="voluntar.html" class="active">Voluntar</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page">
+    <div class="shell">
+      <section class="panel restricted" id="restrictedBox">
+        <h1>Acces restricționat</h1>
+        <p>Această pagină este disponibilă doar pentru conturile activate ca voluntar de către un admin.</p>
+        <div class="actions" style="justify-content:center;"><a href="auth.html" class="btn btn-primary">Autentificare</a><a href="cont.html" class="btn btn-secondary">Înapoi la cont</a></div>
+      </section>
+
+      <section class="content hidden" id="volunteerContent">
+        <div class="hero">
+          <div>
+            <div class="eyebrow">Meniu voluntar</div>
+            <h1>Ore voluntariat</h1>
+            <p>Adaugă orele lucrate pentru Overthink Film Fest. Fiecare înregistrare este trimisă spre verificare și poate fi acceptată sau respinsă de un admin.</p>
+          </div>
+          <div class="actions"><a href="cont.html" class="btn btn-secondary">Contul meu</a></div>
+        </div>
+
+        <section class="stats-grid">
+          <article class="stat-card"><div class="stat-label">Ore acceptate</div><div class="stat-number" id="acceptedHours">0</div><div class="stat-text">Ore validate de admin.</div></article>
+          <article class="stat-card"><div class="stat-label">În așteptare</div><div class="stat-number" id="pendingHours">0</div><div class="stat-text">Ore trimise spre aprobare.</div></article>
+          <article class="stat-card"><div class="stat-label">Respinse</div><div class="stat-number" id="rejectedHours">0</div><div class="stat-text">Ore neverificate sau respinse.</div></article>
+        </section>
+
+        <div class="grid">
+          <section class="panel">
+            <h2>Adaugă ore</h2>
+            <p class="note">Selectează activitatea și introdu numărul de ore. Orele trebuie să fie număr întreg: 1, 2, 3 etc.</p>
+            <form id="hoursForm">
+              <div class="field"><label for="activitySelect">Activitate</label><select id="activitySelect" required><option value="">Alege activitatea</option></select></div>
+              <div class="field"><label for="hoursInput">Număr ore</label><input id="hoursInput" type="number" min="1" max="24" step="1" required placeholder="Ex: 3"></div>
+              <button type="submit" class="btn btn-primary" id="submitHoursBtn">Trimite orele</button>
+              <div id="messageBox" class="message"></div>
+            </form>
+          </section>
+
+          <section class="panel">
+            <h2>Istoricul meu</h2>
+            <p class="note">Aici vezi toate orele introduse și statusul lor.</p>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Data</th><th>Activitate</th><th>Ore</th><th>Status</th><th>Feedback</th></tr></thead>
+                <tbody id="hoursBody"></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-shell">
+      <div class="footer-brand"><img src="Foto/LOGO Overthink 2 (1).svg" alt="Logo Overthink Film Fest"><h3>Overthink Film Fest</h3><p>Festival de film independent organizat de Clubul de Film Overthink.</p></div>
+      <div class="footer-col"><h3>Linkuri</h3><a href="noutati.html">Noutăți</a><a href="program.html">Program</a><a href="inscriere.html">Înscrie-te</a></div>
+      <div class="footer-col"><h3>Contact</h3><p>Email: staff@overthink-jr.com</p><p>Telefon: 0773 746 372</p><a href="https://www.instagram.com/overthink.jr" target="_blank">Instagram: @overthink.jr</a></div>
+    </div>
+    <div class="copyright">© 2026 Overthink Film Fest. Toate drepturile rezervate.</div>
+  </footer>
+
+  <script>
+    const menuWrapper = document.getElementById("menuWrapper");
+    const menuToggle = document.getElementById("menuToggle");
+    menuToggle.addEventListener("click", (event) => { event.stopPropagation(); menuWrapper.classList.toggle("open"); });
+    document.addEventListener("click", (event) => { if(!menuWrapper.contains(event.target)){ menuWrapper.classList.remove("open"); } });
+    document.addEventListener("keydown", (event) => { if(event.key === "Escape"){ menuWrapper.classList.remove("open"); } });
+
+    const token = localStorage.getItem("off_access_token");
+    const restrictedBox = document.getElementById("restrictedBox");
+    const volunteerContent = document.getElementById("volunteerContent");
+    const activitySelect = document.getElementById("activitySelect");
+    const hoursForm = document.getElementById("hoursForm");
+    const hoursInput = document.getElementById("hoursInput");
+    const hoursBody = document.getElementById("hoursBody");
+    const messageBox = document.getElementById("messageBox");
+    const submitHoursBtn = document.getElementById("submitHoursBtn");
+
+    function showRestricted(){ restrictedBox.classList.add("visible"); volunteerContent.classList.add("hidden"); }
+    function showContent(){ restrictedBox.classList.remove("visible"); volunteerContent.classList.remove("hidden"); }
+    function isVolunteerUser(user){ return user && (String(user.role || "").toLowerCase() === "voluntar" || user.is_admin === true || user.is_admin === 1); }
+    function showMessage(text, type="success"){ messageBox.textContent = text; messageBox.className = "message visible " + type; }
+    function clearMessage(){ messageBox.textContent = ""; messageBox.className = "message"; }
+    function statusLabel(status){ const labels = { in_asteptare:"În așteptare", acceptata:"Acceptată", respinsa:"Respinsă" }; return labels[status] || status || "-"; }
+    function formatDate(value){ if(!value){ return "-"; } try{ return new Date(value).toLocaleDateString("ro-RO", { year:"numeric", month:"short", day:"numeric" }); }catch{ return value; } }
+
+    async function apiFetch(url, options={}){
+      const response = await fetch(url, { ...options, headers:{ "Authorization":`Bearer ${token}`, "Content-Type":"application/json", ...(options.headers || {}) } });
+      let data = {}; try{ data = await response.json(); }catch{ data = {}; }
+      if(response.status === 401 || response.status === 403){ showRestricted(); }
+      return { response, data };
+    }
+
+    async function verifyAccess(){
+      if(!token){ showRestricted(); return false; }
+      const { response, data } = await apiFetch("/api/account/me");
+      if(!response.ok || !isVolunteerUser(data)){ showRestricted(); return false; }
+      showContent(); return true;
+    }
+
+    async function loadActivities(){
+      const { response, data } = await apiFetch("/api/volunteer/activities");
+      activitySelect.innerHTML = '<option value="">Alege activitatea</option>';
+      if(!response.ok){ return; }
+      (data.activities || []).forEach(activity => {
+        const option = document.createElement("option");
+        option.value = activity.value;
+        option.textContent = activity.label;
+        activitySelect.appendChild(option);
+      });
+    }
+
+    function renderEntries(entries){
+      hoursBody.innerHTML = "";
+      if(!entries.length){ hoursBody.innerHTML = '<tr><td colspan="5" class="muted">Nu ai adăugat încă ore de voluntariat.</td></tr>'; return; }
+      entries.forEach(entry => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td>${formatDate(entry.created_at)}</td><td><strong>${entry.activity_label || entry.activity || "-"}</strong></td><td>${entry.hours}</td><td><span class="status-pill ${entry.status}">${statusLabel(entry.status)}</span></td><td class="muted">${entry.admin_feedback || "-"}</td>`;
+        hoursBody.appendChild(tr);
+      });
+    }
+
+    function renderTotals(totals){
+      document.getElementById("acceptedHours").textContent = totals.accepted || 0;
+      document.getElementById("pendingHours").textContent = totals.pending || 0;
+      document.getElementById("rejectedHours").textContent = totals.rejected || 0;
+    }
+
+    async function loadHours(){
+      const { response, data } = await apiFetch("/api/volunteer/hours/my");
+      if(!response.ok){ return; }
+      renderTotals(data.totals || {});
+      renderEntries(data.entries || []);
+    }
+
+    hoursForm.addEventListener("submit", async (event) => {
+      event.preventDefault(); clearMessage();
+      const activity = activitySelect.value;
+      const hours = Number(hoursInput.value);
+      if(!activity){ showMessage("Alege activitatea.", "error"); return; }
+      if(!Number.isInteger(hours) || hours <= 0){ showMessage("Orele trebuie să fie număr întreg, mai mare decât 0.", "error"); return; }
+      submitHoursBtn.disabled = true;
+      const { response, data } = await apiFetch("/api/volunteer/hours", { method:"POST", body:JSON.stringify({ activity, hours }) });
+      submitHoursBtn.disabled = false;
+      if(!response.ok){ showMessage(data.detail || "Orele nu au putut fi trimise.", "error"); return; }
+      showMessage(data.detail || "Ore trimise spre aprobare.", "success");
+      hoursForm.reset();
+      await loadHours();
+    });
+
+    async function init(){ const ok = await verifyAccess(); if(!ok){ return; } await loadActivities(); await loadHours(); }
+    init();
+  </script>
+</body>
+</html>

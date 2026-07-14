@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
-from routers import auth_routes, account_routes, submission_routes, admin_routes, news_routes
+from routers import auth_routes, account_routes, submission_routes, admin_routes, news_routes, volunteer_routes
 from config import HTML_DIR, STATIC_DIR
 from database import Base, engine
 
@@ -19,6 +19,7 @@ app.include_router(account_routes.router)
 app.include_router(submission_routes.router)
 app.include_router(admin_routes.router)
 app.include_router(news_routes.router)
+app.include_router(volunteer_routes.router)
 
 app.add_middleware(
     CORSMiddleware,
@@ -95,6 +96,14 @@ def partners_admin_page():
 @app.get("/noutati.html")
 def noutati_page():
     return serve_html_file("noutati.html")
+
+@app.get("/voluntar.html")
+def voluntar_page():
+    return serve_html_file("voluntar.html")
+
+@app.get("/voluntari-admin.html")
+def voluntari_admin_page():
+    return serve_html_file("voluntari-admin.html")
 
 @app.get("/noutati-admin.html")
 def noutati_admin_page():

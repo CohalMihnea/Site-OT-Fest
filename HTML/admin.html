@@ -838,6 +838,7 @@
         <a href="program.html">Program</a>
         <a href="noutati.html">Noutăți</a>
         <a href="cont.html">Cont</a>
+        <a href="voluntari-admin.html">Admin voluntari</a>
         <a href="inscriere.html">Înscrie-te</a>
       </nav>
     </div>
@@ -875,9 +876,10 @@
           </div>
 
           <div class="header-actions">
-            <a href="noutati-admin.html" class="btn btn-primary">Noutăți admin</a>
+            <a href="voluntari-admin.html" class="btn btn-primary">Admin voluntari</a>
+            <a href="noutati-admin.html" class="btn btn-secondary">Noutăți admin</a>
             <a href="noutati.html" class="btn btn-secondary">Vezi noutăți</a>
-            <button type="button" class="btn btn-primary" id="exportCsvBtn">Export CSV</button>
+            <button type="button" class="btn btn-secondary" id="exportCsvBtn">Export CSV</button>
             <a href="cont.html" class="btn btn-secondary">Cont</a>
           </div>
         </div>
@@ -891,6 +893,18 @@
           <div class="header-actions" style="justify-content:flex-start;">
             <a href="noutati-admin.html" class="btn btn-primary">Gestionează noutățile</a>
             <a href="noutati.html" class="btn btn-secondary">Vezi pagina publică</a>
+          </div>
+        </section>
+
+        <section class="panel" style="margin-bottom:24px;">
+          <h2>Administrare voluntari</h2>
+          <p class="panel-note">
+            Activează conturi de voluntar, verifică orele introduse și acceptă sau respinge orele trimise de voluntari.
+          </p>
+
+          <div class="header-actions" style="justify-content:flex-start;">
+            <a href="voluntari-admin.html" class="btn btn-primary">Gestionează voluntarii</a>
+            <a href="voluntar.html" class="btn btn-secondary">Vezi meniul voluntarului</a>
           </div>
         </section>
 
@@ -1144,6 +1158,16 @@
       return labels[status] || status || "-";
     }
 
+    function categoryLabel(category){
+      const labels = {
+        studenti_fictiune: "Studenți – Ficțiune",
+        studenti_documentar: "Studenți – Documentar",
+        film_amator_liceeni: "Film amator – Liceeni"
+      };
+
+      return labels[category] || category || "-";
+    }
+
     function formatDate(value){
       if(!value){
         return "-";
@@ -1195,7 +1219,14 @@
         method: "GET"
       });
 
-      if(!response.ok || !data.is_admin){
+      const isAdmin = (
+        data.is_admin === true ||
+        data.is_admin === 1 ||
+        String(data.is_admin).toLowerCase() === "true" ||
+        String(data.role || "").toLowerCase() === "admin"
+      );
+
+      if(!response.ok || !isAdmin){
         showRestricted();
         return false;
       }
@@ -1269,7 +1300,7 @@
             <strong>${getContactName(item)}</strong><br>
             <span class="muted">${item.contact_email || item.user?.email || "-"}</span>
           </td>
-          <td>${item.category || "-"}</td>
+          <td>${categoryLabel(item.category)}</td>
           <td>${item.duration_minutes || "-"} min</td>
           <td><span class="status-pill ${item.status}">${statusLabel(item.status)}</span></td>
           <td>${formatDate(item.created_at)}</td>
@@ -1305,7 +1336,7 @@
       document.getElementById("detailContact").textContent = getContactName(item);
       document.getElementById("detailEmail").textContent = item.contact_email || item.user?.email || "-";
       document.getElementById("detailPhone").textContent = item.contact_phone || item.user?.phone || "-";
-      document.getElementById("detailFilmInfo").textContent = `${item.category || "-"}, ${item.duration_minutes || "-"} minute, ${item.production_year || "-"}`;
+      document.getElementById("detailFilmInfo").textContent = `${categoryLabel(item.category)}, ${item.duration_minutes || "-"} minute, ${item.production_year || "-"}`;
       document.getElementById("detailLink").textContent = item.short_film_link || "-";
       document.getElementById("detailLink").href = item.short_film_link || "#";
       document.getElementById("detailPresentation").textContent = item.presentation || "-";
@@ -1469,7 +1500,7 @@
         getContactName(item),
         item.contact_email || item.user?.email || "",
         item.contact_phone || item.user?.phone || "",
-        item.category,
+        categoryLabel(item.category),
         item.duration_minutes,
         item.production_year,
         statusLabel(item.status),

@@ -818,6 +818,15 @@
 
           <div class="header-actions">
             <a href="inscriere.html" class="btn btn-primary">Înscriere</a>
+
+            <a href="voluntar.html" class="btn btn-primary" id="volunteerMenuBtn" style="display:none;">
+              Meniu voluntar
+            </a>
+
+            <a href="voluntari-admin.html" class="btn btn-secondary" id="volunteerAdminBtn" style="display:none;">
+              Admin voluntari
+            </a>
+
             <button type="button" class="btn btn-danger" id="logoutBtn">Deconectare</button>
           </div>
         </div>
@@ -1109,6 +1118,16 @@
       return labels[status] || status || "Neînscris";
     }
 
+    function categoryLabel(category){
+      const labels = {
+        studenti_fictiune: "Studenți – Ficțiune",
+        studenti_documentar: "Studenți – Documentar",
+        film_amator_liceeni: "Film amator – Liceeni"
+      };
+
+      return labels[category] || category || "-";
+    }
+
     function setText(id, value){
       const element = document.getElementById(id);
 
@@ -1139,6 +1158,17 @@
       const adminBadge = document.getElementById("adminBadge");
       const roleBadge = document.getElementById("roleBadge");
       const adminPanelLink = document.getElementById("adminPanelLink");
+      const volunteerMenuBtn = document.getElementById("volunteerMenuBtn");
+      const volunteerAdminBtn = document.getElementById("volunteerAdminBtn");
+      const isVolunteer = String(safeUser.role || "").toLowerCase() === "voluntar";
+
+      if(volunteerMenuBtn){
+        volunteerMenuBtn.style.display = (isVolunteer || isAdmin) ? "inline-flex" : "none";
+      }
+
+      if(volunteerAdminBtn){
+        volunteerAdminBtn.style.display = isAdmin ? "inline-flex" : "none";
+      }
 
       if(isAdmin){
         if(adminBadge){
@@ -1158,7 +1188,7 @@
         }
 
         if(roleBadge){
-          roleBadge.textContent = safeUser.role || "Participant";
+          roleBadge.textContent = isVolunteer ? "Voluntar" : (safeUser.role || "Participant");
         }
 
         if(adminPanelLink){
@@ -1240,7 +1270,7 @@
       document.getElementById("submissionNote").textContent = "Datele de mai jos reprezintă înscrierea transmisă către festival.";
 
       document.getElementById("filmTitle").textContent = submission.title || "-";
-      document.getElementById("filmCategory").textContent = submission.category || "-";
+      document.getElementById("filmCategory").textContent = categoryLabel(submission.category);
       document.getElementById("filmDuration").textContent = submission.duration_minutes ? `${submission.duration_minutes} minute` : "-";
       document.getElementById("filmYear").textContent = submission.production_year || "-";
       document.getElementById("filmLink").innerHTML = submission.short_film_link

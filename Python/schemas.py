@@ -72,6 +72,21 @@ class SubmissionCategory(str, Enum):
     STUDENTI_DOCUMENTAR = "studenti_documentar"
     FILM_AMATOR_LICEENI = "film_amator_liceeni"
 
+class VolunteerActivity(str, Enum):
+    ORGANIZARE = "organizare"
+    PROMOVARE = "promovare"
+    LOGISTICA = "logistica"
+    SUPORT_EVENIMENT = "suport_eveniment"
+
+
+class VolunteerHourCreateRequest(BaseModel):
+    activity: VolunteerActivity
+    hours: int = Field(..., ge=1, le=24)
+
+
+class VolunteerHourStatusUpdateRequest(BaseModel):
+    status: str
+    admin_feedback: Optional[str] = None
 
 class TeamMemberInput(BaseModel):
     name: str = Field(..., min_length=1, max_length=255)

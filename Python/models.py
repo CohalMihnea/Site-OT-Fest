@@ -32,6 +32,12 @@ class User(Base):
         back_populates="user",
         cascade="all, delete-orphan"
     )
+    volunteer_hours = relationship(
+        "VolunteerHour",
+        foreign_keys="VolunteerHour.user_id",
+        back_populates="user",
+        cascade="all, delete-orphan"
+    )
 
 
 class EmailVerificationCode(Base):
@@ -207,3 +213,33 @@ class NewsPost(Base):
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     published_at = Column(DateTime, nullable=True)
+
+class VolunteerHour(Base):
+    __tablename__ = "volunteer_hours"
+
+    id = Column(Integer, primary_key=True, index=True)
+
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+
+    activity = Column(String(100), nullable=False)
+    hours = Column(Integer, nullable=False)
+
+    status = Column(String(50), default="in_asteptare", nullable=False)
+    admin_feedback = Column(Text, nullable=True)
+
+    approved_by_admin_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    reviewed_at = Column(DateTime, nullable=True)
+
+    user = relationship(
+        "User",
+        foreign_keys=[user_id],
+        back_populates="volunteer_hours"
+    )
+
+    approved_by_admin = relationship(
+        "User",
+        foreign_keys=[approved_by_admin_id]
+    )
