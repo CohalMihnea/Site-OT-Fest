@@ -83,6 +83,19 @@
     .message.success{background:rgba(24,148,67,0.15);border:1px solid rgba(24,148,67,0.35);color:#d8ffe4;}
     .message.error{background:rgba(184,6,6,0.15);border:1px solid rgba(184,6,6,0.42);color:#ffd7d7;}
 
+
+    .join-panel{display:none;margin-bottom:24px;}
+    .join-panel.visible{display:block;}
+    .volunteer-area.hidden{display:none;}
+    .checkbox-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:8px;}
+    .check-option{display:flex!important;align-items:center;gap:10px;padding:12px 13px;border-radius:15px;background:rgba(0,0,0,0.30);border:1px solid rgba(255,255,255,0.09);text-transform:none!important;letter-spacing:0!important;font-size:0.92rem!important;font-weight:800!important;color:#fff!important;cursor:pointer;transition:0.25s ease;}
+    .check-option:hover{border-color:rgba(146,4,4,0.45);transform:translateY(-1px);}
+    .check-option input{width:auto;accent-color:#920404;}
+    .profile-box{display:none;margin-bottom:24px;}
+    .profile-box.visible{display:block;}
+    .department-list{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+    .department-pill{display:inline-flex;padding:7px 10px;border-radius:999px;background:rgba(146,4,4,0.18);border:1px solid rgba(146,4,4,0.34);font-size:0.78rem;font-weight:900;}
+
     footer{background:#0d0d0d;border-top:1px solid rgba(255,255,255,0.07);padding:46px 20px 24px;}
     .footer-shell{max-width:1250px;margin:0 auto;display:grid;grid-template-columns:1.1fr 1fr 1fr;gap:28px;align-items:start;}
     .footer-brand img{height:48px;width:auto;margin-bottom:14px;filter:drop-shadow(0 0 18px rgba(146,4,4,0.25));}
@@ -116,25 +129,93 @@
   <main class="page">
     <div class="shell">
       <section class="panel restricted" id="restrictedBox">
-        <h1>Acces restricționat</h1>
-        <p>Această pagină este disponibilă doar pentru conturile activate ca voluntar de către un admin.</p>
-        <div class="actions" style="justify-content:center;"><a href="auth.html" class="btn btn-primary">Autentificare</a><a href="cont.html" class="btn btn-secondary">Înapoi la cont</a></div>
+        <h1>Autentificare necesară</h1>
+        <p>Trebuie să fii autentificat pentru a accesa zona de voluntari sau pentru a activa contul de voluntar.</p>
+        <div class="actions" style="justify-content:center;">
+          <a href="auth.html" class="btn btn-primary">Autentificare</a>
+          <a href="cont.html" class="btn btn-secondary">Înapoi la cont</a>
+        </div>
       </section>
 
-      <section class="content hidden" id="volunteerContent">
+      <section class="panel join-panel" id="joinVolunteerPanel">
+        <div class="hero" style="margin-bottom:0;">
+          <div>
+            <div class="eyebrow">Activare voluntar</div>
+            <h1>Devino voluntar</h1>
+            <p>Introdu codul primit de la un admin. Codul este valabil 15 minute. După verificare, alegi departamentele din care faci parte.</p>
+          </div>
+          <div class="actions">
+            <a href="cont.html" class="btn btn-secondary">Contul meu</a>
+          </div>
+        </div>
+
+        <form id="verifyCodeForm" style="margin-top:26px;">
+          <div class="field">
+            <label for="volunteerCodeInput">Cod voluntar</label>
+            <input id="volunteerCodeInput" type="text" maxlength="20" required placeholder="Ex: A1B2C3">
+          </div>
+
+          <button type="submit" class="btn btn-primary" id="verifyCodeBtn">Verifică codul</button>
+        </form>
+
+        <form id="joinVolunteerForm" style="display:none; margin-top:26px;">
+          <p class="note">Selectează cel puțin un departament. Poți alege mai multe departamente din festival și/sau club.</p>
+
+          <div class="field">
+            <label>Departament festival</label>
+            <div class="checkbox-grid" id="festivalDepartmentsBox">
+              <label class="check-option"><input type="checkbox" name="festivalDepartment" value="Productie"> Producție</label>
+              <label class="check-option"><input type="checkbox" name="festivalDepartment" value="Marketing"> Marketing</label>
+              <label class="check-option"><input type="checkbox" name="festivalDepartment" value="Directie artistica si continut"> Direcție artistică și conținut</label>
+              <label class="check-option"><input type="checkbox" name="festivalDepartment" value="Decor"> Decor</label>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Departament club</label>
+            <div class="checkbox-grid" id="clubDepartmentsBox">
+              <label class="check-option"><input type="checkbox" name="clubDepartment" value="Productie si Marketing"> Producție și Marketing</label>
+              <label class="check-option"><input type="checkbox" name="clubDepartment" value="Creativ"> Creativ</label>
+              <label class="check-option"><input type="checkbox" name="clubDepartment" value="Actorie"> Actorie</label>
+              <label class="check-option"><input type="checkbox" name="clubDepartment" value="Tehnic"> Tehnic</label>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary" id="joinVolunteerBtn">Activează contul de voluntar</button>
+        </form>
+
+        <div id="joinVolunteerMessage" class="message"></div>
+      </section>
+
+      <section class="content hidden volunteer-area" id="volunteerContent">
         <div class="hero">
           <div>
             <div class="eyebrow">Meniu voluntar</div>
             <h1>Ore voluntariat</h1>
-            <p>Adaugă orele lucrate pentru Overthink Film Fest. Fiecare înregistrare este trimisă spre verificare și poate fi acceptată sau respinsă de un admin.</p>
+            <p>Adaugă orele lucrate pentru Overthink Film Fest. Fiecare înregistrare este trimisă spre verificare, iar cu un cod valid de aprobare automată poate fi acceptată direct.</p>
           </div>
           <div class="actions"><a href="cont.html" class="btn btn-secondary">Contul meu</a></div>
         </div>
 
+        <section class="panel profile-box" id="volunteerProfileBox">
+          <h2>Departamentele mele</h2>
+          <p class="note">Departamentele selectate la activarea contului de voluntar.</p>
+          <div class="grid" style="grid-template-columns:1fr 1fr;">
+            <div>
+              <div class="stat-label">Festival</div>
+              <div class="department-list" id="festivalDepartmentsList"></div>
+            </div>
+            <div>
+              <div class="stat-label">Club</div>
+              <div class="department-list" id="clubDepartmentsList"></div>
+            </div>
+          </div>
+        </section>
+
         <section class="stats-grid">
           <article class="stat-card"><div class="stat-label">Ore acceptate</div><div class="stat-number" id="acceptedHours">0</div><div class="stat-text">Ore validate de admin.</div></article>
           <article class="stat-card"><div class="stat-label">În așteptare</div><div class="stat-number" id="pendingHours">0</div><div class="stat-text">Ore trimise spre aprobare.</div></article>
-          <article class="stat-card"><div class="stat-label">Respinse</div><div class="stat-number" id="rejectedHours">0</div><div class="stat-text">Ore neverificate sau respinse.</div></article>
+          <article class="stat-card"><div class="stat-label">Respinse</div><div class="stat-number" id="rejectedHours">0</div><div class="stat-text">Ore respinse.</div></article>
         </section>
 
         <div class="grid">
@@ -144,6 +225,7 @@
             <form id="hoursForm">
               <div class="field"><label for="activitySelect">Activitate</label><select id="activitySelect" required><option value="">Alege activitatea</option></select></div>
               <div class="field"><label for="hoursInput">Număr ore</label><input id="hoursInput" type="number" min="1" max="24" step="1" required placeholder="Ex: 3"></div>
+              <div class="field"><label for="autoApprovalCodeInput">Cod aprobare automată, opțional</label><input id="autoApprovalCodeInput" type="text" maxlength="20" placeholder="Introdu codul primit de la admin"></div>
               <button type="submit" class="btn btn-primary" id="submitHoursBtn">Trimite orele</button>
               <div id="messageBox" class="message"></div>
             </form>
@@ -181,41 +263,169 @@
     document.addEventListener("keydown", (event) => { if(event.key === "Escape"){ menuWrapper.classList.remove("open"); } });
 
     const token = localStorage.getItem("off_access_token");
+
     const restrictedBox = document.getElementById("restrictedBox");
+    const joinVolunteerPanel = document.getElementById("joinVolunteerPanel");
     const volunteerContent = document.getElementById("volunteerContent");
+
+    const verifyCodeForm = document.getElementById("verifyCodeForm");
+    const joinVolunteerForm = document.getElementById("joinVolunteerForm");
+    const volunteerCodeInput = document.getElementById("volunteerCodeInput");
+    const verifyCodeBtn = document.getElementById("verifyCodeBtn");
+    const joinVolunteerBtn = document.getElementById("joinVolunteerBtn");
+    const joinVolunteerMessage = document.getElementById("joinVolunteerMessage");
+
     const activitySelect = document.getElementById("activitySelect");
     const hoursForm = document.getElementById("hoursForm");
     const hoursInput = document.getElementById("hoursInput");
+    const autoApprovalCodeInput = document.getElementById("autoApprovalCodeInput");
     const hoursBody = document.getElementById("hoursBody");
     const messageBox = document.getElementById("messageBox");
     const submitHoursBtn = document.getElementById("submitHoursBtn");
 
-    function showRestricted(){ restrictedBox.classList.add("visible"); volunteerContent.classList.add("hidden"); }
-    function showContent(){ restrictedBox.classList.remove("visible"); volunteerContent.classList.remove("hidden"); }
-    function isVolunteerUser(user){ return user && (String(user.role || "").toLowerCase() === "voluntar" || user.is_admin === true || user.is_admin === 1); }
-    function showMessage(text, type="success"){ messageBox.textContent = text; messageBox.className = "message visible " + type; }
-    function clearMessage(){ messageBox.textContent = ""; messageBox.className = "message"; }
-    function statusLabel(status){ const labels = { in_asteptare:"În așteptare", acceptata:"Acceptată", respinsa:"Respinsă" }; return labels[status] || status || "-"; }
-    function formatDate(value){ if(!value){ return "-"; } try{ return new Date(value).toLocaleDateString("ro-RO", { year:"numeric", month:"short", day:"numeric" }); }catch{ return value; } }
+    let currentUser = null;
+    let verifiedVolunteerCode = null;
+
+    function hideAll(){
+      restrictedBox.classList.remove("visible");
+      joinVolunteerPanel.classList.remove("visible");
+      volunteerContent.classList.add("hidden");
+    }
+
+    function showRestricted(){
+      hideAll();
+      restrictedBox.classList.add("visible");
+    }
+
+    function showJoinPanel(){
+      hideAll();
+      joinVolunteerPanel.classList.add("visible");
+    }
+
+    function showVolunteerContent(){
+      hideAll();
+      volunteerContent.classList.remove("hidden");
+    }
+
+    function isVolunteerUser(user){
+      return user && (
+        String(user.role || "").toLowerCase() === "voluntar" ||
+        user.is_admin === true ||
+        user.is_admin === 1 ||
+        String(user.is_admin).toLowerCase() === "true"
+      );
+    }
+
+    function showMessage(box, text, type="success"){
+      box.textContent = text;
+      box.className = "message visible " + type;
+    }
+
+    function clearMessage(box){
+      box.textContent = "";
+      box.className = "message";
+    }
+
+    function statusLabel(status){
+      const labels = { in_asteptare:"În așteptare", acceptata:"Acceptată", respinsa:"Respinsă" };
+      return labels[status] || status || "-";
+    }
+
+    function formatDate(value){
+      if(!value){ return "-"; }
+      try{
+        return new Date(value).toLocaleDateString("ro-RO", { year:"numeric", month:"short", day:"numeric" });
+      }catch{
+        return value;
+      }
+    }
 
     async function apiFetch(url, options={}){
-      const response = await fetch(url, { ...options, headers:{ "Authorization":`Bearer ${token}`, "Content-Type":"application/json", ...(options.headers || {}) } });
-      let data = {}; try{ data = await response.json(); }catch{ data = {}; }
-      if(response.status === 401 || response.status === 403){ showRestricted(); }
+      const response = await fetch(url, {
+        ...options,
+        headers:{
+          "Authorization":`Bearer ${token}`,
+          "Content-Type":"application/json",
+          ...(options.headers || {})
+        }
+      });
+
+      let data = {};
+      try{ data = await response.json(); }catch{ data = {}; }
+
+      if(response.status === 401){
+        showRestricted();
+      }
+
       return { response, data };
     }
 
+    function selectedCheckboxValues(name){
+      return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(input => input.value);
+    }
+
+    function renderDepartmentList(elementId, values){
+      const box = document.getElementById(elementId);
+      box.innerHTML = "";
+
+      if(!values || !values.length){
+        box.innerHTML = '<span class="muted">Neselectat</span>';
+        return;
+      }
+
+      values.forEach(value => {
+        const pill = document.createElement("span");
+        pill.className = "department-pill";
+        pill.textContent = value;
+        box.appendChild(pill);
+      });
+    }
+
     async function verifyAccess(){
-      if(!token){ showRestricted(); return false; }
+      if(!token){
+        showRestricted();
+        return false;
+      }
+
       const { response, data } = await apiFetch("/api/account/me");
-      if(!response.ok || !isVolunteerUser(data)){ showRestricted(); return false; }
-      showContent(); return true;
+
+      if(!response.ok){
+        showRestricted();
+        return false;
+      }
+
+      currentUser = data;
+
+      if(isVolunteerUser(data)){
+        showVolunteerContent();
+        return true;
+      }
+
+      showJoinPanel();
+      return false;
+    }
+
+    async function loadVolunteerProfile(){
+      const { response, data } = await apiFetch("/api/volunteer/me");
+
+      if(!response.ok){
+        return;
+      }
+
+      const profile = data.profile || {};
+      document.getElementById("volunteerProfileBox").classList.add("visible");
+      renderDepartmentList("festivalDepartmentsList", profile.festival_departments || []);
+      renderDepartmentList("clubDepartmentsList", profile.club_departments || []);
     }
 
     async function loadActivities(){
       const { response, data } = await apiFetch("/api/volunteer/activities");
       activitySelect.innerHTML = '<option value="">Alege activitatea</option>';
-      if(!response.ok){ return; }
+
+      if(!response.ok){
+        return;
+      }
+
       (data.activities || []).forEach(activity => {
         const option = document.createElement("option");
         option.value = activity.value;
@@ -226,7 +436,12 @@
 
     function renderEntries(entries){
       hoursBody.innerHTML = "";
-      if(!entries.length){ hoursBody.innerHTML = '<tr><td colspan="5" class="muted">Nu ai adăugat încă ore de voluntariat.</td></tr>'; return; }
+
+      if(!entries.length){
+        hoursBody.innerHTML = '<tr><td colspan="5" class="muted">Nu ai adăugat încă ore de voluntariat.</td></tr>';
+        return;
+      }
+
       entries.forEach(entry => {
         const tr = document.createElement("tr");
         tr.innerHTML = `<td>${formatDate(entry.created_at)}</td><td><strong>${entry.activity_label || entry.activity || "-"}</strong></td><td>${entry.hours}</td><td><span class="status-pill ${entry.status}">${statusLabel(entry.status)}</span></td><td class="muted">${entry.admin_feedback || "-"}</td>`;
@@ -242,27 +457,142 @@
 
     async function loadHours(){
       const { response, data } = await apiFetch("/api/volunteer/hours/my");
-      if(!response.ok){ return; }
+
+      if(!response.ok){
+        return;
+      }
+
       renderTotals(data.totals || {});
       renderEntries(data.entries || []);
     }
 
+    verifyCodeForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      clearMessage(joinVolunteerMessage);
+
+      const code = volunteerCodeInput.value.trim().toUpperCase();
+
+      if(!code){
+        showMessage(joinVolunteerMessage, "Introdu codul de voluntar.", "error");
+        return;
+      }
+
+      verifyCodeBtn.disabled = true;
+
+      const { response, data } = await apiFetch("/api/volunteer/code/verify", {
+        method:"POST",
+        body:JSON.stringify({ code })
+      });
+
+      verifyCodeBtn.disabled = false;
+
+      if(!response.ok){
+        showMessage(joinVolunteerMessage, data.detail || "Codul nu este valid.", "error");
+        return;
+      }
+
+      verifiedVolunteerCode = code;
+      volunteerCodeInput.value = code;
+      joinVolunteerForm.style.display = "block";
+      showMessage(joinVolunteerMessage, data.detail || "Cod valid. Completează departamentele.", "success");
+    });
+
+    joinVolunteerForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      clearMessage(joinVolunteerMessage);
+
+      const festival_departments = selectedCheckboxValues("festivalDepartment");
+      const club_departments = selectedCheckboxValues("clubDepartment");
+
+      if(!verifiedVolunteerCode){
+        showMessage(joinVolunteerMessage, "Verifică mai întâi codul de voluntar.", "error");
+        return;
+      }
+
+      if(!festival_departments.length && !club_departments.length){
+        showMessage(joinVolunteerMessage, "Selectează cel puțin un departament.", "error");
+        return;
+      }
+
+      joinVolunteerBtn.disabled = true;
+
+      const { response, data } = await apiFetch("/api/volunteer/join", {
+        method:"POST",
+        body:JSON.stringify({
+          code: verifiedVolunteerCode,
+          festival_departments,
+          club_departments
+        })
+      });
+
+      joinVolunteerBtn.disabled = false;
+
+      if(!response.ok){
+        showMessage(joinVolunteerMessage, data.detail || "Contul nu a putut fi activat ca voluntar.", "error");
+        return;
+      }
+
+      showVolunteerContent();
+      await loadVolunteerProfile();
+      await loadActivities();
+      await loadHours();
+    });
+
     hoursForm.addEventListener("submit", async (event) => {
-      event.preventDefault(); clearMessage();
+      event.preventDefault();
+      clearMessage(messageBox);
+
       const activity = activitySelect.value;
       const hours = Number(hoursInput.value);
-      if(!activity){ showMessage("Alege activitatea.", "error"); return; }
-      if(!Number.isInteger(hours) || hours <= 0){ showMessage("Orele trebuie să fie număr întreg, mai mare decât 0.", "error"); return; }
+      const autoApprovalCode = autoApprovalCodeInput.value.trim().toUpperCase();
+
+      if(!activity){
+        showMessage(messageBox, "Alege activitatea.", "error");
+        return;
+      }
+
+      if(!Number.isInteger(hours) || hours <= 0){
+        showMessage(messageBox, "Orele trebuie să fie număr întreg, mai mare decât 0.", "error");
+        return;
+      }
+
+      const payload = { activity, hours };
+
+      if(autoApprovalCode){
+        payload.auto_approval_code = autoApprovalCode;
+      }
+
       submitHoursBtn.disabled = true;
-      const { response, data } = await apiFetch("/api/volunteer/hours", { method:"POST", body:JSON.stringify({ activity, hours }) });
+
+      const { response, data } = await apiFetch("/api/volunteer/hours", {
+        method:"POST",
+        body:JSON.stringify(payload)
+      });
+
       submitHoursBtn.disabled = false;
-      if(!response.ok){ showMessage(data.detail || "Orele nu au putut fi trimise.", "error"); return; }
-      showMessage(data.detail || "Ore trimise spre aprobare.", "success");
+
+      if(!response.ok){
+        showMessage(messageBox, data.detail || "Orele nu au putut fi trimise.", "error");
+        return;
+      }
+
+      showMessage(messageBox, data.detail || "Ore trimise spre aprobare.", "success");
       hoursForm.reset();
       await loadHours();
     });
 
-    async function init(){ const ok = await verifyAccess(); if(!ok){ return; } await loadActivities(); await loadHours(); }
+    async function init(){
+      const canLoadVolunteerArea = await verifyAccess();
+
+      if(!canLoadVolunteerArea){
+        return;
+      }
+
+      await loadVolunteerProfile();
+      await loadActivities();
+      await loadHours();
+    }
+
     init();
   </script>
 </body>

@@ -243,3 +243,44 @@ class VolunteerHour(Base):
         "User",
         foreign_keys=[approved_by_admin_id]
     )
+
+class VolunteerProfile(Base):
+    __tablename__ = "volunteer_profiles"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), unique=True, nullable=False)
+
+    festival_departments = Column(Text, nullable=True)
+    club_departments = Column(Text, nullable=True)
+
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    user = relationship("User")
+
+
+class VolunteerInviteCode(Base):
+    __tablename__ = "volunteer_invite_codes"
+
+    id = Column(Integer, primary_key=True, index=True)
+    code = Column(String(20), unique=True, index=True, nullable=False)
+
+    created_by_admin_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    used_by_user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    expires_at = Column(DateTime, nullable=False)
+    used_at = Column(DateTime, nullable=True)
+
+
+class VolunteerAutoApprovalCode(Base):
+    __tablename__ = "volunteer_auto_approval_codes"
+
+    id = Column(Integer, primary_key=True, index=True)
+    code = Column(String(20), unique=True, index=True, nullable=False)
+
+    created_by_admin_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    expires_at = Column(DateTime, nullable=False)
+    used_at = Column(DateTime, nullable=True)

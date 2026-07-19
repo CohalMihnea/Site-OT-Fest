@@ -827,6 +827,14 @@
               Admin voluntari
             </a>
 
+            <a href="voluntar.html" class="btn btn-primary" id="becomeVolunteerBtn">
+              Devin voluntar
+            </a>
+
+            <a href="voluntar.html" class="btn btn-primary" id="volunteerMenuBtn" style="display:none;">
+            Meniu voluntar
+              </a>
+
             <button type="button" class="btn btn-danger" id="logoutBtn">Deconectare</button>
           </div>
         </div>
@@ -1307,6 +1315,18 @@
 
       try{
         const meResult = await accountFetch("/api/account/me");
+        const becomeVolunteerBtn = document.getElementById("becomeVolunteerBtn");
+        const volunteerMenuBtn = document.getElementById("volunteerMenuBtn");
+
+        const isVolunteer = String(user.role || "").toLowerCase() === "voluntar";
+
+if(becomeVolunteerBtn){
+  becomeVolunteerBtn.style.display = isVolunteer ? "none" : "inline-flex";
+}
+
+if(volunteerMenuBtn){
+  volunteerMenuBtn.style.display = isVolunteer ? "inline-flex" : "none";
+}
 
         if(!meResult.response.ok){
           showLoggedOutState();

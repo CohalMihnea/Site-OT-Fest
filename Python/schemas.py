@@ -142,6 +142,32 @@ class SubmissionMaterialLinkResponse(BaseModel):
     class Config:
         from_attributes = True
 
+class VolunteerActivity(str, Enum):
+    ORGANIZARE = "organizare"
+    PROMOVARE = "promovare"
+    LOGISTICA = "logistica"
+    SUPORT_EVENIMENT = "suport_eveniment"
+
+
+class VolunteerHourCreateRequest(BaseModel):
+    activity: VolunteerActivity
+    hours: int = Field(..., ge=1, le=24)
+    auto_approval_code: Optional[str] = None
+
+
+class VolunteerHourStatusUpdateRequest(BaseModel):
+    status: str
+    admin_feedback: Optional[str] = None
+
+
+class VolunteerCodeVerifyRequest(BaseModel):
+    code: str = Field(..., min_length=4, max_length=20)
+
+
+class VolunteerJoinRequest(BaseModel):
+    code: str = Field(..., min_length=4, max_length=20)
+    festival_departments: List[str] = Field(default_factory=list)
+    club_departments: List[str] = Field(default_factory=list)
 
 class SubmissionResponse(BaseModel):
     id: int

@@ -87,6 +87,17 @@
     .message.error{background:rgba(184,6,6,0.15);border:1px solid rgba(184,6,6,0.42);color:#ffd7d7;}
     .review-box{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:start;min-width:360px;}
 
+
+    .code-panel{margin-bottom:24px;}
+    .code-result{margin-top:16px;padding:16px;border-radius:18px;background:rgba(0,0,0,0.28);border:1px solid rgba(255,255,255,0.08);}
+    .code-result span{display:block;color:#a9a9a9;font-size:0.76rem;font-weight:900;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:6px;}
+    .code-result strong{display:block;font-family:'Bebas Neue',Impact,sans-serif;font-size:2.2rem;letter-spacing:0.12em;color:#fff;}
+    .code-result p{margin-top:8px;color:#cfcfcf;line-height:1.55;}
+    .department-list{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px;}
+    .department-pill{display:inline-flex;padding:6px 9px;border-radius:999px;background:rgba(146,4,4,0.18);border:1px solid rgba(146,4,4,0.34);font-size:0.72rem;font-weight:900;}
+    .volunteer-card{padding:14px;border-radius:16px;background:rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.08);margin-bottom:12px;}
+    .volunteer-card strong{display:block;margin-bottom:4px;}
+
     footer{background:#0d0d0d;border-top:1px solid rgba(255,255,255,0.07);padding:46px 20px 24px;}
     .footer-shell{max-width:1250px;margin:0 auto;display:grid;grid-template-columns:1.1fr 1fr 1fr;gap:28px;align-items:start;}
     .footer-brand img{height:48px;width:auto;margin-bottom:14px;filter:drop-shadow(0 0 18px rgba(146,4,4,0.25));}
@@ -122,7 +133,10 @@
       <section class="panel restricted" id="restrictedBox">
         <h1>Acces restricționat</h1>
         <p>Această pagină este disponibilă doar pentru conturile de admin.</p>
-        <div class="actions" style="justify-content:center;"><a href="auth.html" class="btn btn-primary">Autentificare</a><a href="cont.html" class="btn btn-secondary">Înapoi la cont</a></div>
+        <div class="actions" style="justify-content:center;">
+          <a href="auth.html" class="btn btn-primary">Autentificare</a>
+          <a href="cont.html" class="btn btn-secondary">Înapoi la cont</a>
+        </div>
       </section>
 
       <section class="content hidden" id="adminContent">
@@ -130,10 +144,32 @@
           <div>
             <div class="eyebrow">Panou administrare</div>
             <h1>Voluntari</h1>
-            <p>Activează conturi de voluntar, vezi istoricul orelor și acceptă sau respinge orele introduse de voluntari.</p>
+            <p>Generează coduri de voluntar, vezi departamentele voluntarilor și gestionează istoricul orelor introduse.</p>
           </div>
-          <div class="actions"><a href="admin.html" class="btn btn-secondary">Admin general</a><a href="voluntar.html" class="btn btn-secondary">Pagina voluntar</a></div>
+          <div class="actions">
+            <a href="admin.html" class="btn btn-secondary">Admin general</a>
+            <a href="voluntar.html" class="btn btn-secondary">Pagina voluntar</a>
+          </div>
         </div>
+
+        <section class="panel code-panel">
+          <h2>Coduri voluntari</h2>
+          <p class="note">Codurile sunt valabile 15 minute. Codul de voluntar activează contul unui user normal, iar codul de aprobare automată aprobă direct orele introduse de voluntar.</p>
+
+          <div class="actions" style="justify-content:flex-start;">
+            <button type="button" class="btn btn-primary" id="generateVolunteerCodeBtn">Cod voluntar</button>
+            <button type="button" class="btn btn-secondary" id="generateAutoApprovalCodeBtn">Cod aprobare automată</button>
+          </div>
+
+          <div class="code-result">
+            <span>Cod generat</span>
+            <strong id="generatedCodeText">-</strong>
+            <p id="generatedCodeType">Alege tipul de cod pe care vrei să îl generezi.</p>
+            <p id="generatedCodeExpire">-</p>
+          </div>
+
+          <div id="codeMessage" class="message"></div>
+        </section>
 
         <section class="stats-grid">
           <article class="stat-card"><div class="stat-label">Voluntari</div><div class="stat-number" id="statVolunteers">0</div><div class="stat-text">Conturi activate ca voluntar.</div></article>
@@ -144,33 +180,57 @@
 
         <div class="grid">
           <section class="panel">
-            <h2>Utilizatori</h2>
-            <p class="note">Poți activa sau elimina rolul de voluntar pentru conturile normale.</p>
-            <input class="search" id="userSearch" type="search" placeholder="Caută după nume sau email...">
+            <h2>Voluntari</h2>
+            <p class="note">Lista conturilor activate prin cod de voluntar și departamentele selectate.</p>
+            <input class="search" id="volunteerSearch" type="search" placeholder="Caută după nume sau email...">
+
             <div class="table-wrap">
               <table>
-                <thead><tr><th>ID</th><th>Nume</th><th>Email</th><th>Rol</th><th>Acțiune</th></tr></thead>
-                <tbody id="usersBody"></tbody>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Voluntar</th>
+                    <th>Departamente festival</th>
+                    <th>Departamente club</th>
+                    <th>Total ore</th>
+                    <th>Acțiune</th>
+                  </tr>
+                </thead>
+                <tbody id="volunteersBody"></tbody>
               </table>
             </div>
-            <div id="userMessage" class="message"></div>
+
+            <div id="volunteerMessage" class="message"></div>
           </section>
 
           <section class="panel">
             <h2>Istoric ore</h2>
             <p class="note">Toate orele introduse de voluntari. Poți filtra după status.</p>
+
             <div class="filters" id="filters">
               <button class="filter-btn active" data-status="all">Toate</button>
               <button class="filter-btn" data-status="in_asteptare">În așteptare</button>
               <button class="filter-btn" data-status="acceptata">Acceptate</button>
               <button class="filter-btn" data-status="respinsa">Respinse</button>
             </div>
+
             <div class="table-wrap">
               <table>
-                <thead><tr><th>ID</th><th>Voluntar</th><th>Activitate</th><th>Ore</th><th>Status</th><th>Data</th><th>Administrare</th></tr></thead>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Voluntar</th>
+                    <th>Activitate</th>
+                    <th>Ore</th>
+                    <th>Status</th>
+                    <th>Data</th>
+                    <th>Administrare</th>
+                  </tr>
+                </thead>
                 <tbody id="hoursBody"></tbody>
               </table>
             </div>
+
             <div id="hoursMessage" class="message"></div>
           </section>
         </div>
@@ -195,133 +255,318 @@
     document.addEventListener("keydown", (event) => { if(event.key === "Escape"){ menuWrapper.classList.remove("open"); } });
 
     const token = localStorage.getItem("off_access_token");
+
     const restrictedBox = document.getElementById("restrictedBox");
     const adminContent = document.getElementById("adminContent");
-    const usersBody = document.getElementById("usersBody");
-    const hoursBody = document.getElementById("hoursBody");
-    const userSearch = document.getElementById("userSearch");
-    const filterButtons = document.querySelectorAll(".filter-btn");
-    const userMessage = document.getElementById("userMessage");
-    const hoursMessage = document.getElementById("hoursMessage");
 
-    let users = [];
+    const volunteersBody = document.getElementById("volunteersBody");
+    const hoursBody = document.getElementById("hoursBody");
+    const volunteerSearch = document.getElementById("volunteerSearch");
+    const filterButtons = document.querySelectorAll(".filter-btn");
+
+    const volunteerMessage = document.getElementById("volunteerMessage");
+    const hoursMessage = document.getElementById("hoursMessage");
+    const codeMessage = document.getElementById("codeMessage");
+
+    let volunteers = [];
     let entries = [];
     let currentFilter = "all";
 
-    function showRestricted(){ restrictedBox.classList.add("visible"); adminContent.classList.add("hidden"); }
-    function showAdmin(){ restrictedBox.classList.remove("visible"); adminContent.classList.remove("hidden"); }
-    function isAdminUser(user){ return user && (user.is_admin === true || user.is_admin === 1 || String(user.is_admin).toLowerCase() === "true" || String(user.role || "").toLowerCase() === "admin"); }
-    function statusLabel(status){ const labels = { in_asteptare:"În așteptare", acceptata:"Acceptată", respinsa:"Respinsă" }; return labels[status] || status || "-"; }
-    function roleLabel(role){ if(role === "voluntar"){ return "Voluntar"; } if(role === "admin"){ return "Admin"; } return "Participant"; }
-    function formatDate(value){ if(!value){ return "-"; } try{ return new Date(value).toLocaleDateString("ro-RO", { year:"numeric", month:"short", day:"numeric" }); }catch{ return value; } }
-    function showMessage(box, text, type="success"){ box.textContent = text; box.className = "message visible " + type; }
-    function clearMessage(box){ box.textContent = ""; box.className = "message"; }
+    function showRestricted(){
+      restrictedBox.classList.add("visible");
+      adminContent.classList.add("hidden");
+    }
+
+    function showAdmin(){
+      restrictedBox.classList.remove("visible");
+      adminContent.classList.remove("hidden");
+    }
+
+    function isAdminUser(user){
+      return user && (
+        user.is_admin === true ||
+        user.is_admin === 1 ||
+        String(user.is_admin).toLowerCase() === "true" ||
+        String(user.role || "").toLowerCase() === "admin"
+      );
+    }
+
+    function statusLabel(status){
+      const labels = { in_asteptare:"În așteptare", acceptata:"Acceptată", respinsa:"Respinsă" };
+      return labels[status] || status || "-";
+    }
+
+    function formatDate(value){
+      if(!value){ return "-"; }
+      try{
+        return new Date(value).toLocaleDateString("ro-RO", { year:"numeric", month:"short", day:"numeric" });
+      }catch{
+        return value;
+      }
+    }
+
+    function formatTime(value){
+      if(!value){ return "-"; }
+      try{
+        return new Date(value).toLocaleTimeString("ro-RO", { hour:"2-digit", minute:"2-digit" });
+      }catch{
+        return value;
+      }
+    }
+
+    function showMessage(box, text, type="success"){
+      box.textContent = text;
+      box.className = "message visible " + type;
+    }
+
+    function clearMessage(box){
+      box.textContent = "";
+      box.className = "message";
+    }
 
     async function adminFetch(url, options={}){
-      const response = await fetch(url, { ...options, headers:{ "Authorization":`Bearer ${token}`, "Content-Type":"application/json", ...(options.headers || {}) } });
-      let data = {}; try{ data = await response.json(); }catch{ data = {}; }
-      if(response.status === 401 || response.status === 403){ showRestricted(); }
+      const response = await fetch(url, {
+        ...options,
+        headers:{
+          "Authorization":`Bearer ${token}`,
+          "Content-Type":"application/json",
+          ...(options.headers || {})
+        }
+      });
+
+      let data = {};
+      try{ data = await response.json(); }catch{ data = {}; }
+
+      if(response.status === 401 || response.status === 403){
+        showRestricted();
+      }
+
       return { response, data };
     }
 
     async function verifyAdmin(){
-      if(!token){ showRestricted(); return false; }
+      if(!token){
+        showRestricted();
+        return false;
+      }
+
       const { response, data } = await adminFetch("/api/account/me");
-      if(!response.ok || !isAdminUser(data)){ showRestricted(); return false; }
-      showAdmin(); return true;
+
+      if(!response.ok || !isAdminUser(data)){
+        showRestricted();
+        return false;
+      }
+
+      showAdmin();
+      return true;
     }
 
-    function filteredUsers(){
-      const q = userSearch.value.trim().toLowerCase();
-      if(!q){ return users; }
-      return users.filter(user => `${user.name || ""} ${user.email || ""}`.toLowerCase().includes(q));
+    function renderDepartmentPills(values){
+      if(!values || !values.length){
+        return '<span class="muted">-</span>';
+      }
+
+      return `<div class="department-list">${values.map(value => `<span class="department-pill">${value}</span>`).join("")}</div>`;
     }
 
-    function renderUsers(){
-      usersBody.innerHTML = "";
-      const rows = filteredUsers();
-      if(!rows.length){ usersBody.innerHTML = '<tr><td colspan="5" class="muted">Nu există utilizatori.</td></tr>'; return; }
-      rows.forEach(user => {
-        const isVolunteer = user.role === "voluntar";
-        const isAdmin = user.is_admin === true || user.is_admin === 1 || String(user.role || "").toLowerCase() === "admin";
+    function filteredVolunteers(){
+      const q = volunteerSearch.value.trim().toLowerCase();
+
+      if(!q){
+        return volunteers;
+      }
+
+      return volunteers.filter(volunteer => `${volunteer.name || ""} ${volunteer.email || ""}`.toLowerCase().includes(q));
+    }
+
+    function renderVolunteers(){
+      volunteersBody.innerHTML = "";
+      const rows = filteredVolunteers();
+
+      if(!rows.length){
+        volunteersBody.innerHTML = '<tr><td colspan="6" class="muted">Nu există voluntari activați momentan.</td></tr>';
+        return;
+      }
+
+      rows.forEach(volunteer => {
+        const profile = volunteer.profile || {};
+        const totals = volunteer.totals || {};
+        const totalHours = Number(totals.accepted || 0) + Number(totals.pending || 0) + Number(totals.rejected || 0);
+
         const tr = document.createElement("tr");
-        const action = isAdmin ? '<span class="muted">Admin</span>' : isVolunteer ? `<button class="btn btn-small btn-danger" onclick="removeVolunteer(${user.id})">Elimină</button>` : `<button class="btn btn-small btn-primary" onclick="makeVolunteer(${user.id})">Activează</button>`;
-        tr.innerHTML = `<td>#${user.id}</td><td><strong>${user.name || "-"}</strong></td><td class="muted">${user.email || "-"}</td><td><span class="role-pill ${user.role || ""}">${roleLabel(user.role)}</span></td><td>${action}</td>`;
-        usersBody.appendChild(tr);
+        tr.innerHTML = `
+          <td>#${volunteer.id}</td>
+          <td><strong>${volunteer.name || "-"}</strong><br><span class="muted">${volunteer.email || "-"}</span></td>
+          <td>${renderDepartmentPills(profile.festival_departments || [])}</td>
+          <td>${renderDepartmentPills(profile.club_departments || [])}</td>
+          <td>
+            <strong>${totalHours}</strong><br>
+            <span class="muted">Acceptate: ${totals.accepted || 0} / În așteptare: ${totals.pending || 0}</span>
+          </td>
+          <td><button class="btn btn-small btn-danger" onclick="removeVolunteer(${volunteer.id})">Elimină rolul</button></td>
+        `;
+
+        volunteersBody.appendChild(tr);
       });
     }
 
     function filteredEntries(){
-      if(currentFilter === "all"){ return entries; }
+      if(currentFilter === "all"){
+        return entries;
+      }
+
       return entries.filter(entry => entry.status === currentFilter);
     }
 
     function renderEntries(){
       hoursBody.innerHTML = "";
       const rows = filteredEntries();
-      if(!rows.length){ hoursBody.innerHTML = '<tr><td colspan="7" class="muted">Nu există ore pentru filtrul selectat.</td></tr>'; return; }
+
+      if(!rows.length){
+        hoursBody.innerHTML = '<tr><td colspan="7" class="muted">Nu există ore pentru filtrul selectat.</td></tr>';
+        return;
+      }
+
       rows.forEach(entry => {
         const tr = document.createElement("tr");
         const userName = entry.user?.name || `User #${entry.user_id}`;
         const userEmail = entry.user?.email || "";
+
         const pendingActions = entry.status === "in_asteptare" ? `
           <div class="review-box">
             <textarea id="feedback-${entry.id}" placeholder="Feedback opțional"></textarea>
             <button class="btn btn-small btn-primary" onclick="updateHourStatus(${entry.id}, 'acceptata')">Acceptă</button>
             <button class="btn btn-small btn-danger" onclick="updateHourStatus(${entry.id}, 'respinsa')">Respinge</button>
           </div>` : `<span class="muted">${entry.admin_feedback || "-"}</span>`;
-        tr.innerHTML = `<td>#${entry.id}</td><td><strong>${userName}</strong><br><span class="muted">${userEmail}</span></td><td>${entry.activity_label || entry.activity || "-"}</td><td>${entry.hours}</td><td><span class="status-pill ${entry.status}">${statusLabel(entry.status)}</span></td><td>${formatDate(entry.created_at)}</td><td>${pendingActions}</td>`;
+
+        tr.innerHTML = `
+          <td>#${entry.id}</td>
+          <td><strong>${userName}</strong><br><span class="muted">${userEmail}</span></td>
+          <td>${entry.activity_label || entry.activity || "-"}</td>
+          <td>${entry.hours}</td>
+          <td><span class="status-pill ${entry.status}">${statusLabel(entry.status)}</span></td>
+          <td>${formatDate(entry.created_at)}</td>
+          <td>${pendingActions}</td>
+        `;
+
         hoursBody.appendChild(tr);
       });
     }
 
     function renderStats(){
-      document.getElementById("statVolunteers").textContent = users.filter(user => user.role === "voluntar").length;
+      document.getElementById("statVolunteers").textContent = volunteers.length;
       document.getElementById("statAccepted").textContent = entries.filter(entry => entry.status === "acceptata").reduce((sum, entry) => sum + Number(entry.hours || 0), 0);
       document.getElementById("statPending").textContent = entries.filter(entry => entry.status === "in_asteptare").reduce((sum, entry) => sum + Number(entry.hours || 0), 0);
       document.getElementById("statRejected").textContent = entries.filter(entry => entry.status === "respinsa").reduce((sum, entry) => sum + Number(entry.hours || 0), 0);
     }
 
-    async function loadUsers(){
-      const { response, data } = await adminFetch("/api/admin/users");
-      if(!response.ok){ return; }
-      users = data.users || [];
-      renderUsers(); renderStats();
+    async function loadVolunteers(){
+      const { response, data } = await adminFetch("/api/admin/volunteers");
+
+      if(!response.ok){
+        volunteers = [];
+        renderVolunteers();
+        renderStats();
+        return;
+      }
+
+      volunteers = data.volunteers || [];
+      renderVolunteers();
+      renderStats();
     }
 
     async function loadEntries(){
       const { response, data } = await adminFetch("/api/admin/volunteer-hours");
-      if(!response.ok){ return; }
+
+      if(!response.ok){
+        entries = [];
+        renderEntries();
+        renderStats();
+        return;
+      }
+
       entries = data.entries || [];
-      renderEntries(); renderStats();
+      renderEntries();
+      renderStats();
     }
 
-    async function makeVolunteer(userId){
-      clearMessage(userMessage);
-      const { response, data } = await adminFetch(`/api/admin/users/${userId}/make-volunteer`, { method:"PATCH" });
-      if(!response.ok){ showMessage(userMessage, data.detail || "Rolul nu a putut fi activat.", "error"); return; }
-      showMessage(userMessage, data.detail || "Cont activat ca voluntar.", "success");
-      await loadUsers();
+    async function generateCode(url, label){
+      clearMessage(codeMessage);
+
+      const volunteerBtn = document.getElementById("generateVolunteerCodeBtn");
+      const autoBtn = document.getElementById("generateAutoApprovalCodeBtn");
+      volunteerBtn.disabled = true;
+      autoBtn.disabled = true;
+
+      const { response, data } = await adminFetch(url, { method:"POST" });
+
+      volunteerBtn.disabled = false;
+      autoBtn.disabled = false;
+
+      if(!response.ok){
+        showMessage(codeMessage, data.detail || "Codul nu a putut fi generat.", "error");
+        return;
+      }
+
+      document.getElementById("generatedCodeText").textContent = data.code || "-";
+      document.getElementById("generatedCodeType").textContent = label;
+      document.getElementById("generatedCodeExpire").textContent = data.expires_at
+        ? `Expiră la: ${formatTime(data.expires_at)}`
+        : "Valabil 15 minute.";
+
+      showMessage(codeMessage, data.detail || "Cod generat.", "success");
     }
 
     async function removeVolunteer(userId){
-      clearMessage(userMessage);
+      clearMessage(volunteerMessage);
+
       const ok = confirm("Sigur vrei să elimini rolul de voluntar pentru acest cont?");
-      if(!ok){ return; }
-      const { response, data } = await adminFetch(`/api/admin/users/${userId}/remove-volunteer`, { method:"PATCH" });
-      if(!response.ok){ showMessage(userMessage, data.detail || "Rolul nu a putut fi eliminat.", "error"); return; }
-      showMessage(userMessage, data.detail || "Rol voluntar eliminat.", "success");
-      await loadUsers();
+
+      if(!ok){
+        return;
+      }
+
+      const { response, data } = await adminFetch(`/api/admin/users/${userId}/remove-volunteer`, {
+        method:"PATCH"
+      });
+
+      if(!response.ok){
+        showMessage(volunteerMessage, data.detail || "Rolul nu a putut fi eliminat.", "error");
+        return;
+      }
+
+      showMessage(volunteerMessage, data.detail || "Rol voluntar eliminat.", "success");
+      await loadVolunteers();
+      await loadEntries();
     }
 
     async function updateHourStatus(entryId, status){
       clearMessage(hoursMessage);
+
       const feedback = document.getElementById(`feedback-${entryId}`)?.value.trim() || null;
-      const { response, data } = await adminFetch(`/api/admin/volunteer-hours/${entryId}/status`, { method:"PATCH", body:JSON.stringify({ status, admin_feedback: feedback }) });
-      if(!response.ok){ showMessage(hoursMessage, data.detail || "Statusul nu a putut fi actualizat.", "error"); return; }
+
+      const { response, data } = await adminFetch(`/api/admin/volunteer-hours/${entryId}/status`, {
+        method:"PATCH",
+        body:JSON.stringify({ status, admin_feedback: feedback })
+      });
+
+      if(!response.ok){
+        showMessage(hoursMessage, data.detail || "Statusul nu a putut fi actualizat.", "error");
+        return;
+      }
+
       showMessage(hoursMessage, data.detail || "Status actualizat.", "success");
+      await loadVolunteers();
       await loadEntries();
     }
+
+    document.getElementById("generateVolunteerCodeBtn").addEventListener("click", () => {
+      generateCode("/api/admin/volunteer-code", "Cod voluntar pentru activarea unui cont normal.");
+    });
+
+    document.getElementById("generateAutoApprovalCodeBtn").addEventListener("click", () => {
+      generateCode("/api/admin/volunteer-auto-approval-code", "Cod pentru aprobarea automată a orelor de voluntariat.");
+    });
 
     filterButtons.forEach(button => {
       button.addEventListener("click", () => {
@@ -332,9 +577,19 @@
       });
     });
 
-    userSearch.addEventListener("input", renderUsers);
+    volunteerSearch.addEventListener("input", renderVolunteers);
 
-    async function init(){ const ok = await verifyAdmin(); if(!ok){ return; } await loadUsers(); await loadEntries(); }
+    async function init(){
+      const ok = await verifyAdmin();
+
+      if(!ok){
+        return;
+      }
+
+      await loadVolunteers();
+      await loadEntries();
+    }
+
     init();
   </script>
 </body>
