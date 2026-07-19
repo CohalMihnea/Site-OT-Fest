@@ -819,6 +819,10 @@
           <div class="header-actions">
             <a href="inscriere.html" class="btn btn-primary">Înscriere</a>
 
+            <a href="voluntar.html" class="btn btn-primary" id="becomeVolunteerBtn">
+              Devin voluntar
+            </a>
+
             <a href="voluntar.html" class="btn btn-primary" id="volunteerMenuBtn" style="display:none;">
               Meniu voluntar
             </a>
@@ -826,14 +830,6 @@
             <a href="voluntari-admin.html" class="btn btn-secondary" id="volunteerAdminBtn" style="display:none;">
               Admin voluntari
             </a>
-
-            <a href="voluntar.html" class="btn btn-primary" id="becomeVolunteerBtn">
-              Devin voluntar
-            </a>
-
-            <a href="voluntar.html" class="btn btn-primary" id="volunteerMenuBtn" style="display:none;">
-            Meniu voluntar
-              </a>
 
             <button type="button" class="btn btn-danger" id="logoutBtn">Deconectare</button>
           </div>
@@ -1166,9 +1162,14 @@
       const adminBadge = document.getElementById("adminBadge");
       const roleBadge = document.getElementById("roleBadge");
       const adminPanelLink = document.getElementById("adminPanelLink");
+      const becomeVolunteerBtn = document.getElementById("becomeVolunteerBtn");
       const volunteerMenuBtn = document.getElementById("volunteerMenuBtn");
       const volunteerAdminBtn = document.getElementById("volunteerAdminBtn");
       const isVolunteer = String(safeUser.role || "").toLowerCase() === "voluntar";
+
+      if(becomeVolunteerBtn){
+        becomeVolunteerBtn.style.display = (!isVolunteer && !isAdmin) ? "inline-flex" : "none";
+      }
 
       if(volunteerMenuBtn){
         volunteerMenuBtn.style.display = (isVolunteer || isAdmin) ? "inline-flex" : "none";
@@ -1315,18 +1316,6 @@
 
       try{
         const meResult = await accountFetch("/api/account/me");
-        const becomeVolunteerBtn = document.getElementById("becomeVolunteerBtn");
-        const volunteerMenuBtn = document.getElementById("volunteerMenuBtn");
-
-        const isVolunteer = String(user.role || "").toLowerCase() === "voluntar";
-
-if(becomeVolunteerBtn){
-  becomeVolunteerBtn.style.display = isVolunteer ? "none" : "inline-flex";
-}
-
-if(volunteerMenuBtn){
-  volunteerMenuBtn.style.display = isVolunteer ? "inline-flex" : "none";
-}
 
         if(!meResult.response.ok){
           showLoggedOutState();
