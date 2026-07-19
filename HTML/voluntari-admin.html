@@ -70,10 +70,15 @@
     .filter-btn:hover,.filter-btn.active{background:rgba(146,4,4,0.78);border-color:rgba(146,4,4,0.44);transform:translateY(-2px);}
     input,select,textarea{width:100%;border:none;outline:none;color:#fff;font-family:'Inter',Arial,sans-serif;font-size:0.95rem;background:rgba(0,0,0,0.42);border:1px solid rgba(255,255,255,0.10);border-radius:16px;padding:13px 14px;transition:0.25s ease;}
     textarea{min-height:74px;resize:vertical;line-height:1.6;}
+    select option{background:#111;color:#fff;}
     .search{margin-bottom:14px;}
+    .form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;align-items:start;}
+    .field{margin-bottom:14px;}
+    .field.full{grid-column:1/-1;}
+    .field label{display:block;color:#e7e7e7;font-size:0.8rem;font-weight:900;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px;}
     .table-wrap{overflow-x:auto;border-radius:20px;border:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.22);}
-    table{width:100%;min-width:900px;border-collapse:collapse;}
-    th,td{padding:14px 12px;border-bottom:1px solid rgba(255,255,255,0.08);text-align:left;vertical-align:middle;}
+    table{width:100%;min-width:980px;border-collapse:collapse;}
+    th,td{padding:14px 12px;border-bottom:1px solid rgba(255,255,255,0.08);text-align:left;vertical-align:top;}
     th{background:rgba(146,4,4,0.10);color:#d30707;font-size:0.78rem;font-weight:900;letter-spacing:0.10em;text-transform:uppercase;}
     tr:last-child td{border-bottom:none;}
     .muted{color:#bfbfbf;font-size:0.9rem;}
@@ -86,8 +91,6 @@
     .message.success{background:rgba(24,148,67,0.15);border:1px solid rgba(24,148,67,0.35);color:#d8ffe4;}
     .message.error{background:rgba(184,6,6,0.15);border:1px solid rgba(184,6,6,0.42);color:#ffd7d7;}
     .review-box{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:start;min-width:360px;}
-
-
     .code-panel{margin-bottom:24px;}
     .code-result{margin-top:16px;padding:16px;border-radius:18px;background:rgba(0,0,0,0.28);border:1px solid rgba(255,255,255,0.08);}
     .code-result span{display:block;color:#a9a9a9;font-size:0.76rem;font-weight:900;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:6px;}
@@ -95,8 +98,6 @@
     .code-result p{margin-top:8px;color:#cfcfcf;line-height:1.55;}
     .department-list{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px;}
     .department-pill{display:inline-flex;padding:6px 9px;border-radius:999px;background:rgba(146,4,4,0.18);border:1px solid rgba(146,4,4,0.34);font-size:0.72rem;font-weight:900;}
-    .volunteer-card{padding:14px;border-radius:16px;background:rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.08);margin-bottom:12px;}
-    .volunteer-card strong{display:block;margin-bottom:4px;}
 
     footer{background:#0d0d0d;border-top:1px solid rgba(255,255,255,0.07);padding:46px 20px 24px;}
     .footer-shell{max-width:1250px;margin:0 auto;display:grid;grid-template-columns:1.1fr 1fr 1fr;gap:28px;align-items:start;}
@@ -108,8 +109,8 @@
     .copyright{max-width:1250px;margin:28px auto 0;padding-top:18px;border-top:1px solid rgba(255,255,255,0.07);text-align:center;color:#a8a8a8;font-size:0.88rem;}
 
     @media(max-width:1180px){.grid,.footer-shell{grid-template-columns:1fr}.stats-grid{grid-template-columns:repeat(2,1fr)}.header{flex-direction:column;align-items:flex-start}.actions{justify-content:flex-start}}
-    @media(max-width:768px){.topbar{min-height:58px;padding:8px 12px;grid-template-columns:auto 1fr auto;gap:10px}.topbar-logo img{height:33px}.topbar-title{font-size:1rem;letter-spacing:0.08em}.menu-toggle{padding:8px 13px;font-size:0.84rem}.dropdown-menu{min-width:205px}.page{padding:100px 14px 64px}.panel{padding:22px 18px;border-radius:24px}.stats-grid{grid-template-columns:1fr}.review-box{grid-template-columns:1fr;min-width:280px}}
-    @media(max-width:520px){.topbar-title{max-width:145px;white-space:normal;line-height:1}.btn{width:100%}.actions{width:100%;flex-direction:column}table{min-width:860px}}
+    @media(max-width:768px){.topbar{min-height:58px;padding:8px 12px;grid-template-columns:auto 1fr auto;gap:10px}.topbar-logo img{height:33px}.topbar-title{font-size:1rem;letter-spacing:0.08em}.menu-toggle{padding:8px 13px;font-size:0.84rem}.dropdown-menu{min-width:205px}.page{padding:100px 14px 64px}.panel{padding:22px 18px;border-radius:24px}.stats-grid,.form-grid{grid-template-columns:1fr}.review-box{grid-template-columns:1fr;min-width:280px}}
+    @media(max-width:520px){.topbar-title{max-width:145px;white-space:normal;line-height:1}.btn{width:100%}.actions{width:100%;flex-direction:column}table{min-width:960px}}
   </style>
 </head>
 <body>
@@ -144,7 +145,7 @@
           <div>
             <div class="eyebrow">Panou administrare</div>
             <h1>Voluntari</h1>
-            <p>Generează coduri de voluntar, vezi departamentele voluntarilor și gestionează istoricul orelor introduse.</p>
+            <p>Generează coduri, completează coduri de aprobare automată cu datele taskului și gestionează istoricul orelor.</p>
           </div>
           <div class="actions">
             <a href="admin.html" class="btn btn-secondary">Admin general</a>
@@ -154,17 +155,55 @@
 
         <section class="panel code-panel">
           <h2>Coduri voluntari</h2>
-          <p class="note">Codurile sunt valabile 15 minute. Codul de voluntar activează contul unui user normal, iar codul de aprobare automată aprobă direct orele introduse de voluntar.</p>
+          <p class="note">Codurile sunt valabile 15 minute. Codul de voluntar activează contul unui user normal. Codul de ore conține deja evenimentul, taskul, data, orele și mențiunile, iar voluntarul doar îl introduce.</p>
 
-          <div class="actions" style="justify-content:flex-start;">
+          <div class="actions" style="justify-content:flex-start;margin-bottom:20px;">
             <button type="button" class="btn btn-primary" id="generateVolunteerCodeBtn">Cod voluntar</button>
-            <button type="button" class="btn btn-secondary" id="generateAutoApprovalCodeBtn">Cod aprobare automată</button>
           </div>
+
+          <form id="hourCodeForm">
+            <h2 style="font-size:1.8rem;">Cod aprobare automată ore</h2>
+            <div class="form-grid">
+              <div class="field">
+                <label for="codeEventType">Eveniment</label>
+                <select id="codeEventType" required>
+                  <option value="">Alege evenimentul</option>
+                  <option value="club">Club</option>
+                  <option value="festival_off">Festivalul OFF</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="codeTask">Task</label>
+                <select id="codeTask" required>
+                  <option value="">Alege taskul</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="codeDate">Data</label>
+                <input id="codeDate" type="date" required>
+              </div>
+
+              <div class="field">
+                <label for="codeHours">Ore</label>
+                <input id="codeHours" type="number" min="1" max="24" step="1" required placeholder="Ex: 3">
+              </div>
+
+              <div class="field full">
+                <label for="codeMentions">Mențiuni</label>
+                <textarea id="codeMentions" placeholder="Ce a făcut voluntarul la taskul respectiv..."></textarea>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-secondary" id="generateHourCodeBtn">Cod aprobare automată</button>
+          </form>
 
           <div class="code-result">
             <span>Cod generat</span>
             <strong id="generatedCodeText">-</strong>
             <p id="generatedCodeType">Alege tipul de cod pe care vrei să îl generezi.</p>
+            <p id="generatedCodeDetails">-</p>
             <p id="generatedCodeExpire">-</p>
           </div>
 
@@ -220,10 +259,12 @@
                   <tr>
                     <th>ID</th>
                     <th>Voluntar</th>
-                    <th>Activitate</th>
+                    <th>Data</th>
+                    <th>Eveniment</th>
+                    <th>Task</th>
                     <th>Ore</th>
                     <th>Status</th>
-                    <th>Data</th>
+                    <th>Mențiuni</th>
                     <th>Administrare</th>
                   </tr>
                 </thead>
@@ -268,6 +309,9 @@
     const hoursMessage = document.getElementById("hoursMessage");
     const codeMessage = document.getElementById("codeMessage");
 
+    const festivalTasks = ["Productie", "Marketing", "Directie artistica si continut", "Decor"];
+    const clubTasks = ["Productie si Marketing", "Creativ", "Actorie", "Tehnic"];
+
     let volunteers = [];
     let entries = [];
     let currentFilter = "all";
@@ -294,6 +338,11 @@
     function statusLabel(status){
       const labels = { in_asteptare:"În așteptare", acceptata:"Acceptată", respinsa:"Respinsă" };
       return labels[status] || status || "-";
+    }
+
+    function eventLabel(eventType){
+      const labels = { club:"Club", festival_off:"Festivalul OFF" };
+      return labels[eventType] || eventType || "-";
     }
 
     function formatDate(value){
@@ -401,7 +450,7 @@
           <td>${renderDepartmentPills(profile.club_departments || [])}</td>
           <td>
             <strong>${totalHours}</strong><br>
-            <span class="muted">Acceptate: ${totals.accepted || 0} / În așteptare: ${totals.pending || 0}</span>
+            <span class="muted">Acceptate: ${totals.accepted || 0} / În așteptare: ${totals.pending || 0} / Respinse: ${totals.rejected || 0}</span>
           </td>
           <td><button class="btn btn-small btn-danger" onclick="removeVolunteer(${volunteer.id})">Elimină rolul</button></td>
         `;
@@ -423,7 +472,7 @@
       const rows = filteredEntries();
 
       if(!rows.length){
-        hoursBody.innerHTML = '<tr><td colspan="7" class="muted">Nu există ore pentru filtrul selectat.</td></tr>';
+        hoursBody.innerHTML = '<tr><td colspan="9" class="muted">Nu există ore pentru filtrul selectat.</td></tr>';
         return;
       }
 
@@ -442,10 +491,12 @@
         tr.innerHTML = `
           <td>#${entry.id}</td>
           <td><strong>${userName}</strong><br><span class="muted">${userEmail}</span></td>
-          <td>${entry.activity_label || entry.activity || "-"}</td>
+          <td>${formatDate(entry.work_date)}</td>
+          <td>${entry.event_label || eventLabel(entry.event_type)}</td>
+          <td>${entry.task || "-"}</td>
           <td>${entry.hours}</td>
           <td><span class="status-pill ${entry.status}">${statusLabel(entry.status)}</span></td>
-          <td>${formatDate(entry.created_at)}</td>
+          <td class="muted">${entry.mentions || "-"}</td>
           <td>${pendingActions}</td>
         `;
 
@@ -490,31 +541,95 @@
       renderStats();
     }
 
-    async function generateCode(url, label){
+    function populateCodeTaskSelect(eventType){
+      const codeTask = document.getElementById("codeTask");
+      codeTask.innerHTML = '<option value="">Alege taskul</option>';
+
+      const tasks = eventType === "festival_off" ? festivalTasks : eventType === "club" ? clubTasks : [];
+
+      tasks.forEach(task => {
+        const option = document.createElement("option");
+        option.value = task;
+        option.textContent = task;
+        codeTask.appendChild(option);
+      });
+    }
+
+    function displayGeneratedCode(data, label){
+      document.getElementById("generatedCodeText").textContent = data.code || "-";
+      document.getElementById("generatedCodeType").textContent = label;
+      document.getElementById("generatedCodeDetails").textContent = data.event_type
+        ? `${data.event_label || eventLabel(data.event_type)} / ${data.task || "-"} / ${formatDate(data.work_date)} / ${data.hours || 0} ore`
+        : "-";
+      document.getElementById("generatedCodeExpire").textContent = data.expires_at
+        ? `Expiră la: ${formatTime(data.expires_at)}`
+        : "Valabil 15 minute.";
+    }
+
+    async function generateVolunteerCode(){
       clearMessage(codeMessage);
 
-      const volunteerBtn = document.getElementById("generateVolunteerCodeBtn");
-      const autoBtn = document.getElementById("generateAutoApprovalCodeBtn");
-      volunteerBtn.disabled = true;
-      autoBtn.disabled = true;
+      const btn = document.getElementById("generateVolunteerCodeBtn");
+      btn.disabled = true;
 
-      const { response, data } = await adminFetch(url, { method:"POST" });
+      const { response, data } = await adminFetch("/api/admin/volunteer-code", { method:"POST" });
 
-      volunteerBtn.disabled = false;
-      autoBtn.disabled = false;
+      btn.disabled = false;
 
       if(!response.ok){
         showMessage(codeMessage, data.detail || "Codul nu a putut fi generat.", "error");
         return;
       }
 
-      document.getElementById("generatedCodeText").textContent = data.code || "-";
-      document.getElementById("generatedCodeType").textContent = label;
-      document.getElementById("generatedCodeExpire").textContent = data.expires_at
-        ? `Expiră la: ${formatTime(data.expires_at)}`
-        : "Valabil 15 minute.";
-
+      displayGeneratedCode(data, "Cod voluntar pentru activarea unui cont normal.");
       showMessage(codeMessage, data.detail || "Cod generat.", "success");
+    }
+
+    async function generateHourCode(event){
+      event.preventDefault();
+      clearMessage(codeMessage);
+
+      const event_type = document.getElementById("codeEventType").value;
+      const task = document.getElementById("codeTask").value;
+      const work_date = document.getElementById("codeDate").value;
+      const hours = Number(document.getElementById("codeHours").value);
+      const mentions = document.getElementById("codeMentions").value.trim();
+
+      if(!event_type || !task || !work_date){
+        showMessage(codeMessage, "Completează evenimentul, taskul și data.", "error");
+        return;
+      }
+
+      if(!Number.isInteger(hours) || hours <= 0){
+        showMessage(codeMessage, "Orele trebuie să fie număr întreg, mai mare decât 0.", "error");
+        return;
+      }
+
+      const btn = document.getElementById("generateHourCodeBtn");
+      btn.disabled = true;
+
+      const { response, data } = await adminFetch("/api/admin/volunteer-hour-code", {
+        method:"POST",
+        body:JSON.stringify({
+          event_type,
+          task,
+          work_date,
+          hours,
+          mentions: mentions || null
+        })
+      });
+
+      btn.disabled = false;
+
+      if(!response.ok){
+        showMessage(codeMessage, data.detail || "Codul nu a putut fi generat.", "error");
+        return;
+      }
+
+      displayGeneratedCode(data, "Cod pentru aprobarea automată a orelor.");
+      showMessage(codeMessage, data.detail || "Cod generat.", "success");
+      document.getElementById("hourCodeForm").reset();
+      populateCodeTaskSelect("");
     }
 
     async function removeVolunteer(userId){
@@ -560,13 +675,9 @@
       await loadEntries();
     }
 
-    document.getElementById("generateVolunteerCodeBtn").addEventListener("click", () => {
-      generateCode("/api/admin/volunteer-code", "Cod voluntar pentru activarea unui cont normal.");
-    });
-
-    document.getElementById("generateAutoApprovalCodeBtn").addEventListener("click", () => {
-      generateCode("/api/admin/volunteer-auto-approval-code", "Cod pentru aprobarea automată a orelor de voluntariat.");
-    });
+    document.getElementById("generateVolunteerCodeBtn").addEventListener("click", generateVolunteerCode);
+    document.getElementById("hourCodeForm").addEventListener("submit", generateHourCode);
+    document.getElementById("codeEventType").addEventListener("change", () => populateCodeTaskSelect(document.getElementById("codeEventType").value));
 
     filterButtons.forEach(button => {
       button.addEventListener("click", () => {

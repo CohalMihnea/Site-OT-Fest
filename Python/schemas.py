@@ -2,7 +2,7 @@ from enum import Enum
 from datetime import datetime
 from typing import List, Optional
 
-from pydantic import BaseModel, EmailStr, Field, HttpUrl
+from pydantic import BaseModel, EmailStr, Field
 
 
 # -------------------------
@@ -72,21 +72,6 @@ class SubmissionCategory(str, Enum):
     STUDENTI_DOCUMENTAR = "studenti_documentar"
     FILM_AMATOR_LICEENI = "film_amator_liceeni"
 
-class VolunteerActivity(str, Enum):
-    ORGANIZARE = "organizare"
-    PROMOVARE = "promovare"
-    LOGISTICA = "logistica"
-    SUPORT_EVENIMENT = "suport_eveniment"
-
-
-class VolunteerHourCreateRequest(BaseModel):
-    activity: VolunteerActivity
-    hours: int = Field(..., ge=1, le=24)
-
-
-class VolunteerHourStatusUpdateRequest(BaseModel):
-    status: str
-    admin_feedback: Optional[str] = None
 
 class TeamMemberInput(BaseModel):
     name: str = Field(..., min_length=1, max_length=255)
@@ -142,32 +127,6 @@ class SubmissionMaterialLinkResponse(BaseModel):
     class Config:
         from_attributes = True
 
-class VolunteerActivity(str, Enum):
-    ORGANIZARE = "organizare"
-    PROMOVARE = "promovare"
-    LOGISTICA = "logistica"
-    SUPORT_EVENIMENT = "suport_eveniment"
-
-
-class VolunteerHourCreateRequest(BaseModel):
-    activity: VolunteerActivity
-    hours: int = Field(..., ge=1, le=24)
-    auto_approval_code: Optional[str] = None
-
-
-class VolunteerHourStatusUpdateRequest(BaseModel):
-    status: str
-    admin_feedback: Optional[str] = None
-
-
-class VolunteerCodeVerifyRequest(BaseModel):
-    code: str = Field(..., min_length=4, max_length=20)
-
-
-class VolunteerJoinRequest(BaseModel):
-    code: str = Field(..., min_length=4, max_length=20)
-    festival_departments: List[str] = Field(default_factory=list)
-    club_departments: List[str] = Field(default_factory=list)
 
 class SubmissionResponse(BaseModel):
     id: int
@@ -204,6 +163,64 @@ class SubmissionResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+# -------------------------
+# VOLUNTEERS
+# -------------------------
+
+class VolunteerEventType(str, Enum):
+    CLUB = "club"
+    FESTIVAL_OFF = "festival_off"
+
+
+class VolunteerManualHourCreateRequest(BaseModel):
+    event_type: VolunteerEventType
+    task: str = Field(..., min_length=1, max_length=255)
+    work_date: str = Field(..., min_length=8, max_length=20)
+    hours: int = Field(..., ge=1, le=24)
+    mentions: Optional[str] = None
+
+
+class VolunteerHourCodeUseRequest(BaseModel):
+    code: str = Field(..., min_length=4, max_length=20)
+
+
+class AdminVolunteerHourCodeCreateRequest(BaseModel):
+    event_type: VolunteerEventType
+    task: str = Field(..., min_length=1, max_length=255)
+    work_date: str = Field(..., min_length=8, max_length=20)
+    hours: int = Field(..., ge=1, le=24)
+    mentions: Optional[str] = None
+
+
+class VolunteerHourStatusUpdateRequest(BaseModel):
+    status: str
+    admin_feedback: Optional[str] = None
+
+
+class VolunteerCodeVerifyRequest(BaseModel):
+    code: str = Field(..., min_length=4, max_length=20)
+
+
+class VolunteerJoinRequest(BaseModel):
+    code: str = Field(..., min_length=4, max_length=20)
+    festival_departments: List[str] = Field(default_factory=list)
+    club_departments: List[str] = Field(default_factory=list)
+
+
+# Compatibility names used by older frontend/routes. They can remain without affecting the new flow.
+class VolunteerActivity(str, Enum):
+    ORGANIZARE = "organizare"
+    PROMOVARE = "promovare"
+    LOGISTICA = "logistica"
+    SUPORT_EVENIMENT = "suport_eveniment"
+
+
+class VolunteerHourCreateRequest(BaseModel):
+    activity: Optional[VolunteerActivity] = None
+    hours: int = Field(..., ge=1, le=24)
+    auto_approval_code: Optional[str] = None
 
 
 # -------------------------

@@ -284,3 +284,76 @@ class VolunteerAutoApprovalCode(Base):
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     expires_at = Column(DateTime, nullable=False)
     used_at = Column(DateTime, nullable=True)
+
+class VolunteerHourCode(Base):
+    __tablename__ = "volunteer_hour_codes"
+
+    id = Column(Integer, primary_key=True, index=True)
+    code = Column(String(20), unique=True, index=True, nullable=False)
+
+    event_type = Column(String(50), nullable=False)
+    task = Column(String(255), nullable=False)
+    work_date = Column(String(20), nullable=False)
+    hours = Column(Integer, nullable=False)
+    mentions = Column(Text, nullable=True)
+
+    created_by_admin_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    used_by_user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    created_hour_entry_id = Column(Integer, ForeignKey("volunteer_hour_entries.id"), nullable=True)
+
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    expires_at = Column(DateTime, nullable=False)
+    used_at = Column(DateTime, nullable=True)
+
+    created_by_admin = relationship(
+        "User",
+        foreign_keys=[created_by_admin_id]
+    )
+
+    used_by_user = relationship(
+        "User",
+        foreign_keys=[used_by_user_id]
+    )
+
+
+class VolunteerHourEntry(Base):
+    __tablename__ = "volunteer_hour_entries"
+
+    id = Column(Integer, primary_key=True, index=True)
+
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+
+    event_type = Column(String(50), nullable=False)
+    task = Column(String(255), nullable=False)
+    work_date = Column(String(20), nullable=False)
+    hours = Column(Integer, nullable=False)
+    mentions = Column(Text, nullable=True)
+
+    status = Column(String(50), default="in_asteptare", nullable=False)
+    admin_feedback = Column(Text, nullable=True)
+
+    approval_type = Column(String(50), default="manual", nullable=False)
+    used_code = Column(String(20), nullable=True)
+    created_by_code_id = Column(Integer, ForeignKey("volunteer_hour_codes.id"), nullable=True)
+
+    approved_by_admin_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    reviewed_at = Column(DateTime, nullable=True)
+
+    user = relationship(
+        "User",
+        foreign_keys=[user_id]
+    )
+
+    approved_by_admin = relationship(
+        "User",
+        foreign_keys=[approved_by_admin_id]
+    )
+
+    created_by_code = relationship(
+        "VolunteerHourCode",
+        foreign_keys=[created_by_code_id]
+    )
+

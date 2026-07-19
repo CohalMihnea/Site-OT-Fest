@@ -8,18 +8,20 @@ from sqlalchemy.orm import Session
 from database import get_db
 from models import (
     User,
-    VolunteerHour,
     VolunteerProfile,
     VolunteerInviteCode,
-    VolunteerAutoApprovalCode
+    VolunteerHourEntry,
+    VolunteerHourCode,
 )
 from routers.account_routes import get_current_user
 from routers.admin_routes import require_admin
 from schemas import (
-    VolunteerHourCreateRequest,
-    VolunteerHourStatusUpdateRequest,
+    AdminVolunteerHourCodeCreateRequest,
     VolunteerCodeVerifyRequest,
-    VolunteerJoinRequest
+    VolunteerHourCodeUseRequest,
+    VolunteerHourStatusUpdateRequest,
+    VolunteerJoinRequest,
+    VolunteerManualHourCreateRequest,
 )
 
 
@@ -29,21 +31,21 @@ router = APIRouter(tags=["Volunteers"])
 ALLOWED_VOLUNTEER_STATUSES = [
     "in_asteptare",
     "acceptata",
-    "respinsa"
+    "respinsa",
 ]
 
 FESTIVAL_DEPARTMENTS = [
     "Productie",
     "Marketing",
     "Directie artistica si continut",
-    "Decor"
+    "Decor",
 ]
 
 CLUB_DEPARTMENTS = [
     "Productie si Marketing",
     "Creativ",
     "Actorie",
-    "Tehnic"
+    "Tehnic",
 ]
 
 
@@ -55,18 +57,46 @@ def generate_code():
     return secrets.token_hex(3).upper()
 
 
-def activity_label(activity: str):
+def event_label(event_type: str):
     labels = {
-        "organizare": "Organizare",
-        "promovare": "Promovare",
-        "logistica": "Logistică",
-        "suport_eveniment": "Suport eveniment"
+        "club": "Club",
+        "festival_off": "Festivalul OFF",
+    }
+    return labels.get(event_type, event_type or "-")
+
+
+def status_label(status: str):
+    labels = {
+        "in_asteptare": "În așteptare",
+        "acceptata": "Acceptată",
+        "respinsa": "Respinsă",
+    }
+    return labels.get(status, status or "-")
+
+
+def parse_departments(raw_value: str | None):
+    try:
+        value = json.loads(raw_value or "[]")
+        return value if isinstance(value, list) else []
+    except Exception:
+        return []
+
+
+def serialize_profile(profile: VolunteerProfile | None):
+    if not profile:
+        return None
+
+    return {
+        "id": profile.id,
+        "user_id": profile.user_id,
+        "festival_departments": parse_departments(profile.festival_departments),
+        "club_departments": parse_departments(profile.club_departments),
+        "created_at": profile.created_at,
+        "updated_at": profile.updated_at,
     }
 
-    return labels.get(activity, activity)
 
-
-def serialize_volunteer_hour(entry: VolunteerHour):
+def serialize_volunteer_hour(entry: VolunteerHourEntry):
     return {
         "id": entry.id,
         "user_id": entry.user_id,
@@ -75,41 +105,23 @@ def serialize_volunteer_hour(entry: VolunteerHour):
             "name": entry.user.name,
             "email": entry.user.email,
             "phone": entry.user.phone,
-            "role": entry.user.role
+            "role": entry.user.role,
         } if entry.user else None,
-        "activity": entry.activity,
-        "activity_label": activity_label(entry.activity),
+        "event_type": entry.event_type,
+        "event_label": event_label(entry.event_type),
+        "task": entry.task,
+        "work_date": entry.work_date,
         "hours": entry.hours,
+        "mentions": entry.mentions,
         "status": entry.status,
+        "status_label": status_label(entry.status),
         "admin_feedback": entry.admin_feedback,
+        "approval_type": entry.approval_type,
+        "used_code": entry.used_code,
         "approved_by_admin_id": entry.approved_by_admin_id,
         "created_at": entry.created_at,
         "updated_at": entry.updated_at,
-        "reviewed_at": entry.reviewed_at
-    }
-
-
-def serialize_profile(profile: VolunteerProfile | None):
-    if not profile:
-        return None
-
-    try:
-        festival_departments = json.loads(profile.festival_departments or "[]")
-    except Exception:
-        festival_departments = []
-
-    try:
-        club_departments = json.loads(profile.club_departments or "[]")
-    except Exception:
-        club_departments = []
-
-    return {
-        "id": profile.id,
-        "user_id": profile.user_id,
-        "festival_departments": festival_departments,
-        "club_departments": club_departments,
-        "created_at": profile.created_at,
-        "updated_at": profile.updated_at
+        "reviewed_at": entry.reviewed_at,
     }
 
 
@@ -134,25 +146,73 @@ def get_valid_invite_code(db: Session, code: str):
     return invite
 
 
-def get_valid_auto_approval_code(db: Session, code: str):
+def get_valid_hour_code(db: Session, code: str):
     clean_code = code.strip().upper()
 
-    auto_code = (
-        db.query(VolunteerAutoApprovalCode)
-        .filter(VolunteerAutoApprovalCode.code == clean_code)
+    hour_code = (
+        db.query(VolunteerHourCode)
+        .filter(VolunteerHourCode.code == clean_code)
         .first()
     )
 
-    if not auto_code:
-        return None
+    if not hour_code:
+        raise HTTPException(status_code=404, detail="Codul pentru ore nu există.")
 
-    if auto_code.used_at is not None:
-        return None
+    if hour_code.used_at is not None:
+        raise HTTPException(status_code=400, detail="Codul pentru ore a fost deja folosit.")
 
-    if auto_code.expires_at < datetime.utcnow():
-        return None
+    if hour_code.expires_at < datetime.utcnow():
+        raise HTTPException(status_code=400, detail="Codul pentru ore a expirat.")
 
-    return auto_code
+    return hour_code
+
+
+def get_volunteer_profile_or_404(db: Session, user: User):
+    profile = (
+        db.query(VolunteerProfile)
+        .filter(VolunteerProfile.user_id == user.id)
+        .first()
+    )
+
+    if not profile:
+        raise HTTPException(
+            status_code=400,
+            detail="Contul de voluntar nu are departamente completate."
+        )
+
+    return profile
+
+
+def allowed_tasks_for_user(profile: VolunteerProfile, event_type: str):
+    if event_type == "festival_off":
+        return parse_departments(profile.festival_departments)
+
+    if event_type == "club":
+        return parse_departments(profile.club_departments)
+
+    return []
+
+
+def validate_task_for_manual_entry(db: Session, user: User, event_type: str, task: str):
+    if user.is_admin:
+        valid_tasks = FESTIVAL_DEPARTMENTS if event_type == "festival_off" else CLUB_DEPARTMENTS
+    else:
+        profile = get_volunteer_profile_or_404(db, user)
+        valid_tasks = allowed_tasks_for_user(profile, event_type)
+
+    if task not in valid_tasks:
+        raise HTTPException(
+            status_code=400,
+            detail="Taskul ales nu aparține departamentelor tale pentru evenimentul selectat."
+        )
+
+
+def totals_from_entries(entries):
+    return {
+        "accepted": sum(entry.hours for entry in entries if entry.status == "acceptata"),
+        "pending": sum(entry.hours for entry in entries if entry.status == "in_asteptare"),
+        "rejected": sum(entry.hours for entry in entries if entry.status == "respinsa"),
+    }
 
 
 @router.get("/api/volunteer/departments")
@@ -160,8 +220,12 @@ def get_volunteer_departments(
     current_user: User = Depends(get_current_user)
 ):
     return {
+        "events": [
+            {"value": "club", "label": "Club"},
+            {"value": "festival_off", "label": "Festivalul OFF"},
+        ],
         "festival_departments": FESTIVAL_DEPARTMENTS,
-        "club_departments": CLUB_DEPARTMENTS
+        "club_departments": CLUB_DEPARTMENTS,
     }
 
 
@@ -176,7 +240,7 @@ def verify_volunteer_code(
     return {
         "detail": "Cod valid. Poți completa chestionarul de voluntar.",
         "festival_departments": FESTIVAL_DEPARTMENTS,
-        "club_departments": CLUB_DEPARTMENTS
+        "club_departments": CLUB_DEPARTMENTS,
     }
 
 
@@ -225,9 +289,7 @@ def join_as_volunteer(
     )
 
     if not profile:
-        profile = VolunteerProfile(
-            user_id=current_user.id
-        )
+        profile = VolunteerProfile(user_id=current_user.id)
         db.add(profile)
 
     profile.festival_departments = json.dumps(payload.festival_departments, ensure_ascii=False)
@@ -247,9 +309,9 @@ def join_as_volunteer(
             "name": current_user.name,
             "email": current_user.email,
             "role": current_user.role,
-            "is_admin": current_user.is_admin
+            "is_admin": current_user.is_admin,
         },
-        "profile": serialize_profile(profile)
+        "profile": serialize_profile(profile),
     }
 
 
@@ -270,41 +332,31 @@ def get_my_volunteer_profile(
         .first()
     )
 
+    profile_data = serialize_profile(profile)
+
     return {
         "user": {
             "id": current_user.id,
             "name": current_user.name,
             "email": current_user.email,
             "role": current_user.role,
-            "is_admin": current_user.is_admin
+            "is_admin": current_user.is_admin,
         },
-        "profile": serialize_profile(profile)
+        "profile": profile_data,
+        "tasks": {
+            "festival_off": profile_data["festival_departments"] if profile_data else FESTIVAL_DEPARTMENTS,
+            "club": profile_data["club_departments"] if profile_data else CLUB_DEPARTMENTS,
+        },
+        "events": [
+            {"value": "club", "label": "Club"},
+            {"value": "festival_off", "label": "Festivalul OFF"},
+        ],
     }
 
 
-@router.get("/api/volunteer/activities")
-def get_volunteer_activities(
-    current_user: User = Depends(get_current_user)
-):
-    if not is_volunteer(current_user):
-        raise HTTPException(
-            status_code=403,
-            detail="Această secțiune este disponibilă doar pentru voluntari."
-        )
-
-    return {
-        "activities": [
-            {"value": "organizare", "label": "Organizare"},
-            {"value": "promovare", "label": "Promovare"},
-            {"value": "logistica", "label": "Logistică"},
-            {"value": "suport_eveniment", "label": "Suport eveniment"}
-        ]
-    }
-
-
-@router.post("/api/volunteer/hours")
-def create_volunteer_hours(
-    payload: VolunteerHourCreateRequest,
+@router.post("/api/volunteer/hours/manual")
+def create_manual_volunteer_hours(
+    payload: VolunteerManualHourCreateRequest,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
@@ -314,48 +366,81 @@ def create_volunteer_hours(
             detail="Doar conturile de voluntar pot introduce ore de voluntariat."
         )
 
-    status = "in_asteptare"
-    admin_feedback = None
-    approved_by_admin_id = None
-    reviewed_at = None
+    validate_task_for_manual_entry(
+        db=db,
+        user=current_user,
+        event_type=payload.event_type.value,
+        task=payload.task,
+    )
 
-    if payload.auto_approval_code:
-        auto_code = get_valid_auto_approval_code(db, payload.auto_approval_code)
-
-        if not auto_code:
-            raise HTTPException(
-                status_code=400,
-                detail="Codul de aprobare automată este invalid sau expirat."
-            )
-
-        status = "acceptata"
-        admin_feedback = "Aprobat automat prin cod generat de admin."
-        approved_by_admin_id = auto_code.created_by_admin_id
-        reviewed_at = datetime.utcnow()
-        auto_code.used_at = datetime.utcnow()
-
-    entry = VolunteerHour(
+    entry = VolunteerHourEntry(
         user_id=current_user.id,
-        activity=payload.activity.value,
+        event_type=payload.event_type.value,
+        task=payload.task,
+        work_date=payload.work_date,
         hours=payload.hours,
-        status=status,
-        admin_feedback=admin_feedback,
-        approved_by_admin_id=approved_by_admin_id,
-        reviewed_at=reviewed_at
+        mentions=payload.mentions,
+        status="in_asteptare",
+        admin_feedback=None,
+        approval_type="manual",
+        used_code=None,
+        approved_by_admin_id=None,
+        reviewed_at=None,
     )
 
     db.add(entry)
     db.commit()
     db.refresh(entry)
 
-    if status == "acceptata":
-        message = "Orele de voluntariat au fost aprobate automat."
-    else:
-        message = "Orele de voluntariat au fost trimise spre aprobare."
+    return {
+        "detail": "Orele au fost trimise spre aprobare.",
+        "entry": serialize_volunteer_hour(entry),
+    }
+
+
+@router.post("/api/volunteer/hours/code")
+def create_volunteer_hours_with_code(
+    payload: VolunteerHourCodeUseRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    if not is_volunteer(current_user):
+        raise HTTPException(
+            status_code=403,
+            detail="Doar conturile de voluntar pot introduce ore de voluntariat."
+        )
+
+    hour_code = get_valid_hour_code(db, payload.code)
+
+    entry = VolunteerHourEntry(
+        user_id=current_user.id,
+        event_type=hour_code.event_type,
+        task=hour_code.task,
+        work_date=hour_code.work_date,
+        hours=hour_code.hours,
+        mentions=hour_code.mentions,
+        status="acceptata",
+        admin_feedback="Aprobat automat prin cod generat de admin.",
+        approval_type="cod",
+        used_code=hour_code.code,
+        created_by_code_id=hour_code.id,
+        approved_by_admin_id=hour_code.created_by_admin_id,
+        reviewed_at=datetime.utcnow(),
+    )
+
+    db.add(entry)
+    db.flush()
+
+    hour_code.used_by_user_id = current_user.id
+    hour_code.created_hour_entry_id = entry.id
+    hour_code.used_at = datetime.utcnow()
+
+    db.commit()
+    db.refresh(entry)
 
     return {
-        "detail": message,
-        "entry": serialize_volunteer_hour(entry)
+        "detail": "Orele au fost adăugate și aprobate automat.",
+        "entry": serialize_volunteer_hour(entry),
     }
 
 
@@ -371,23 +456,15 @@ def get_my_volunteer_hours(
         )
 
     entries = (
-        db.query(VolunteerHour)
-        .filter(VolunteerHour.user_id == current_user.id)
-        .order_by(VolunteerHour.created_at.desc())
+        db.query(VolunteerHourEntry)
+        .filter(VolunteerHourEntry.user_id == current_user.id)
+        .order_by(VolunteerHourEntry.created_at.desc())
         .all()
     )
 
-    accepted_total = sum(entry.hours for entry in entries if entry.status == "acceptata")
-    pending_total = sum(entry.hours for entry in entries if entry.status == "in_asteptare")
-    rejected_total = sum(entry.hours for entry in entries if entry.status == "respinsa")
-
     return {
         "entries": [serialize_volunteer_hour(entry) for entry in entries],
-        "totals": {
-            "accepted": accepted_total,
-            "pending": pending_total,
-            "rejected": rejected_total
-        }
+        "totals": totals_from_entries(entries),
     }
 
 
@@ -404,7 +481,7 @@ def generate_volunteer_invite_code(
     entry = VolunteerInviteCode(
         code=code,
         created_by_admin_id=admin.id,
-        expires_at=datetime.utcnow() + timedelta(minutes=15)
+        expires_at=datetime.utcnow() + timedelta(minutes=15),
     )
 
     db.add(entry)
@@ -414,24 +491,38 @@ def generate_volunteer_invite_code(
     return {
         "detail": "Cod de voluntar generat.",
         "code": entry.code,
-        "expires_at": entry.expires_at
+        "expires_at": entry.expires_at,
     }
 
 
-@router.post("/api/admin/volunteer-auto-approval-code")
-def generate_volunteer_auto_approval_code(
+@router.post("/api/admin/volunteer-hour-code")
+def generate_volunteer_hour_code(
+    payload: AdminVolunteerHourCodeCreateRequest,
     db: Session = Depends(get_db),
     admin: User = Depends(require_admin)
 ):
+    valid_tasks = FESTIVAL_DEPARTMENTS if payload.event_type.value == "festival_off" else CLUB_DEPARTMENTS
+
+    if payload.task not in valid_tasks:
+        raise HTTPException(
+            status_code=400,
+            detail="Task invalid pentru evenimentul selectat."
+        )
+
     code = generate_code()
 
-    while db.query(VolunteerAutoApprovalCode).filter(VolunteerAutoApprovalCode.code == code).first():
+    while db.query(VolunteerHourCode).filter(VolunteerHourCode.code == code).first():
         code = generate_code()
 
-    entry = VolunteerAutoApprovalCode(
+    entry = VolunteerHourCode(
         code=code,
+        event_type=payload.event_type.value,
+        task=payload.task,
+        work_date=payload.work_date,
+        hours=payload.hours,
+        mentions=payload.mentions,
         created_by_admin_id=admin.id,
-        expires_at=datetime.utcnow() + timedelta(minutes=15)
+        expires_at=datetime.utcnow() + timedelta(minutes=15),
     )
 
     db.add(entry)
@@ -439,9 +530,15 @@ def generate_volunteer_auto_approval_code(
     db.refresh(entry)
 
     return {
-        "detail": "Cod de aprobare automată generat.",
+        "detail": "Cod de ore generat.",
         "code": entry.code,
-        "expires_at": entry.expires_at
+        "expires_at": entry.expires_at,
+        "event_type": entry.event_type,
+        "event_label": event_label(entry.event_type),
+        "task": entry.task,
+        "work_date": entry.work_date,
+        "hours": entry.hours,
+        "mentions": entry.mentions,
     }
 
 
@@ -466,10 +563,10 @@ def get_all_volunteers(
             .first()
         )
 
-        hours = (
-            db.query(VolunteerHour)
-            .filter(VolunteerHour.user_id == volunteer.id)
-            .order_by(VolunteerHour.created_at.desc())
+        entries = (
+            db.query(VolunteerHourEntry)
+            .filter(VolunteerHourEntry.user_id == volunteer.id)
+            .order_by(VolunteerHourEntry.created_at.desc())
             .all()
         )
 
@@ -480,16 +577,12 @@ def get_all_volunteers(
             "phone": volunteer.phone,
             "role": volunteer.role,
             "profile": serialize_profile(profile),
-            "hours": [serialize_volunteer_hour(entry) for entry in hours],
-            "totals": {
-                "accepted": sum(entry.hours for entry in hours if entry.status == "acceptata"),
-                "pending": sum(entry.hours for entry in hours if entry.status == "in_asteptare"),
-                "rejected": sum(entry.hours for entry in hours if entry.status == "respinsa")
-            }
+            "hours": [serialize_volunteer_hour(entry) for entry in entries],
+            "totals": totals_from_entries(entries),
         })
 
     return {
-        "volunteers": result
+        "volunteers": result,
     }
 
 
@@ -525,8 +618,8 @@ def remove_user_volunteer(
             "name": user.name,
             "email": user.email,
             "role": user.role,
-            "is_admin": user.is_admin
-        }
+            "is_admin": user.is_admin,
+        },
     }
 
 
@@ -536,15 +629,15 @@ def get_all_volunteer_hours(
     db: Session = Depends(get_db),
     admin: User = Depends(require_admin)
 ):
-    query = db.query(VolunteerHour).order_by(VolunteerHour.created_at.desc())
+    query = db.query(VolunteerHourEntry).order_by(VolunteerHourEntry.created_at.desc())
 
     if status:
-        query = query.filter(VolunteerHour.status == status)
+        query = query.filter(VolunteerHourEntry.status == status)
 
     entries = query.all()
 
     return {
-        "entries": [serialize_volunteer_hour(entry) for entry in entries]
+        "entries": [serialize_volunteer_hour(entry) for entry in entries],
     }
 
 
@@ -561,7 +654,7 @@ def update_volunteer_hour_status(
             detail="Status invalid."
         )
 
-    entry = db.query(VolunteerHour).filter(VolunteerHour.id == entry_id).first()
+    entry = db.query(VolunteerHourEntry).filter(VolunteerHourEntry.id == entry_id).first()
 
     if not entry:
         raise HTTPException(
@@ -579,5 +672,5 @@ def update_volunteer_hour_status(
 
     return {
         "detail": "Statusul orelor de voluntariat a fost actualizat.",
-        "entry": serialize_volunteer_hour(entry)
+        "entry": serialize_volunteer_hour(entry),
     }
