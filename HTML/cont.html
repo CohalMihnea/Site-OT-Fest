@@ -841,8 +841,8 @@
           <aside class="panel profile-card">
             <img class="profile-logo" src="Foto/overthink-alb.svg" alt="Logo Overthink Film Fest">
 
-            <div class="profile-name" id="profileName">Utilizator</div>
-            <div class="profile-email" id="profileEmail">email@exemplu.com</div>
+            <div class="profile-name" id="profileName">Se încarcă...</div>
+            <div class="profile-email" id="profileEmail">Se încarcă datele contului...</div>
 
             <div class="badge-row">
               <span class="badge" id="roleBadge">Participant</span>
@@ -1312,7 +1312,7 @@
         return;
       }
 
-      showLoggedInState();
+      let currentUser = null;
 
       try{
         const meResult = await accountFetch("/api/account/me");
@@ -1322,8 +1322,18 @@
           return;
         }
 
-        setProfile(meResult.data);
+        currentUser = meResult.data;
+      }catch(error){
+        console.error(error);
+        clearAuthStorage();
+        showLoggedOutState();
+        return;
+      }
 
+      setProfile(currentUser);
+      showLoggedInState();
+
+      try{
         const submissionResult = await accountFetch("/api/submissions/my");
 
         if(!submissionResult.response.ok){
