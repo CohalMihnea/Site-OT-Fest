@@ -477,6 +477,62 @@
       color:#fff;
     }
 
+
+    /* ---------- PASSWORD VISIBILITY ---------- */
+    .password-field{
+      position:relative;
+      width:100%;
+      display:block;
+    }
+
+    .password-field input{
+      width:100%;
+      padding-right:104px !important;
+    }
+
+    .password-toggle{
+      position:absolute;
+      right:10px;
+      top:50%;
+      transform:translateY(-50%);
+      z-index:20;
+      border:none;
+      outline:none;
+      cursor:pointer;
+      border-radius:999px;
+      padding:7px 12px;
+      background:#b80606;
+      color:#fff;
+      font-family:'Inter', Arial, sans-serif;
+      font-size:0.72rem;
+      font-weight:900;
+      letter-spacing:0.04em;
+      text-transform:uppercase;
+      line-height:1;
+      width:auto;
+      min-width:58px;
+      height:30px;
+      box-shadow:0 0 14px rgba(146,4,4,0.35);
+    }
+
+    .password-toggle:hover{
+      background:#d30707;
+      transform:translateY(-50%);
+    }
+
+    @media(max-width:520px){
+      .password-field input{
+        padding-right:90px !important;
+      }
+
+      .password-toggle{
+        right:8px;
+        min-width:52px;
+        padding:7px 9px;
+        font-size:0.68rem;
+      }
+    }
+
     /* ---------- FOOTER ---------- */
     footer{
       background:#0d0d0d;
@@ -1246,6 +1302,55 @@
         showMessage("Eroare de conexiune la server.");
       }
     }
+
+    function initPasswordToggles(){
+      const passwordInputs = document.querySelectorAll('input[type="password"], input[data-password-input="1"]');
+
+      passwordInputs.forEach((input) => {
+        if(input.dataset.passwordToggleReady === "1"){
+          return;
+        }
+
+        input.dataset.passwordInput = "1";
+
+        let wrapper = input.parentElement;
+
+        if(!wrapper || !wrapper.classList.contains("password-field")){
+          wrapper = document.createElement("div");
+          wrapper.className = "password-field";
+          input.parentNode.insertBefore(wrapper, input);
+          wrapper.appendChild(input);
+        }
+
+        let button = wrapper.querySelector(".password-toggle");
+
+        if(!button){
+          button = document.createElement("button");
+          button.type = "button";
+          button.className = "password-toggle";
+          button.textContent = "Vezi";
+          button.setAttribute("aria-label", "Arată parola");
+          wrapper.appendChild(button);
+        }
+
+        button.addEventListener("click", () => {
+          const isHidden = input.type === "password";
+
+          input.type = isHidden ? "text" : "password";
+          button.textContent = isHidden ? "Ascunde" : "Vezi";
+          button.setAttribute(
+            "aria-label",
+            isHidden ? "Ascunde parola" : "Arată parola"
+          );
+        });
+
+        input.dataset.passwordToggleReady = "1";
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", initPasswordToggles);
+    initPasswordToggles();
+
   </script>
 
 </body>
