@@ -18,7 +18,7 @@ if not HTML_DIR.exists():
 
 STATIC_DIR = HTML_DIR
 
-DB_PATH = os.getenv("SQLITE_DB_PATH", "/var/data/festival.db")
+DB_PATH = os.getenv("SQLITE_DB_PATH", "festival.db")
 DATABASE_URL = f"sqlite:///{DB_PATH}"
 
 
@@ -28,7 +28,7 @@ SECRET_KEY = os.getenv(
 )
 
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7
+ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 * 90
 
 
 RESEND_API_KEY = os.getenv("RESEND_API_KEY", "")
