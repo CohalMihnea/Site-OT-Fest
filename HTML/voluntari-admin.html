@@ -62,7 +62,7 @@
     .stat-label{color:#bfbfbf;font-size:0.78rem;font-weight:900;letter-spacing:0.10em;text-transform:uppercase;margin-bottom:12px;}
     .stat-number{font-family:'Bebas Neue',Impact,sans-serif;font-size:3.3rem;line-height:1;letter-spacing:0.04em;text-shadow:0 0 22px rgba(146,4,4,0.35);}
     .stat-text{margin-top:8px;color:#cfcfcf;font-size:0.86rem;line-height:1.45;}
-    .grid{display:grid;grid-template-columns:0.8fr 1.2fr;gap:24px;align-items:start;}
+    .grid{display:grid;grid-template-columns:0.42fr 1.58fr;gap:24px;align-items:start;}
     .panel h2{font-family:'Bebas Neue',Impact,sans-serif;font-size:2.25rem;letter-spacing:0.06em;line-height:1;margin-bottom:16px;text-transform:uppercase;}
     .note{color:#cfcfcf;line-height:1.65;margin-bottom:20px;font-size:0.94rem;}
     .filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;}
@@ -100,8 +100,10 @@
     .department-pill{display:inline-flex;padding:6px 9px;border-radius:999px;background:rgba(146,4,4,0.18);border:1px solid rgba(146,4,4,0.34);font-size:0.72rem;font-weight:900;}
 
 
-    .card-list{display:none;gap:14px;margin-top:14px;}
-    .mobile-card{padding:16px;border-radius:18px;background:rgba(0,0,0,0.28);border:1px solid rgba(255,255,255,0.09);box-shadow:0 10px 28px rgba(0,0,0,0.25);}
+    .card-list{display:grid;gap:14px;margin-top:14px;}
+    .mobile-card{padding:16px;border-radius:18px;background:rgba(0,0,0,0.28);border:1px solid rgba(255,255,255,0.09);box-shadow:0 10px 28px rgba(0,0,0,0.25);transition:0.25s ease;}
+    .volunteer-card-click{cursor:pointer;}
+    .volunteer-card-click:hover{border-color:rgba(146,4,4,0.55);transform:translateY(-2px);background:rgba(146,4,4,0.08);}
     .mobile-card.selected{border-color:rgba(146,4,4,0.65);background:rgba(146,4,4,0.12);}
     .mobile-card h3{font-size:1rem;margin-bottom:6px;line-height:1.35;}
     .mobile-card .line{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-top:1px solid rgba(255,255,255,0.07);color:#d8d8d8;font-size:0.9rem;}
@@ -109,6 +111,8 @@
     .mobile-card .line span:first-child{color:#a9a9a9;font-weight:900;text-transform:uppercase;font-size:0.72rem;letter-spacing:0.07em;}
     .mobile-card .line span:last-child{text-align:right;}
     .mobile-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
+    .desktop-hidden{display:none;}
+    .hours-placeholder{padding:30px;border-radius:22px;background:rgba(0,0,0,0.24);border:1px dashed rgba(255,255,255,0.16);text-align:center;color:#cfcfcf;line-height:1.7;}
     .selected-box{display:none;margin-bottom:18px;padding:16px;border-radius:20px;background:rgba(146,4,4,0.12);border:1px solid rgba(146,4,4,0.34);}
     .selected-box.visible{display:block;}
     .selected-box h3{font-family:'Bebas Neue',Impact,sans-serif;font-size:1.9rem;letter-spacing:0.06em;margin-bottom:8px;}
@@ -123,7 +127,7 @@
     .footer-col a:hover{color:#fff;transform:translateX(3px);}
     .copyright{max-width:1250px;margin:28px auto 0;padding-top:18px;border-top:1px solid rgba(255,255,255,0.07);text-align:center;color:#a8a8a8;font-size:0.88rem;}
 
-    @media(max-width:820px){.table-wrap{display:none}.card-list{display:grid}.review-box{min-width:0}.mobile-actions .btn{width:auto;flex:1}.grid{gap:16px}.code-result strong{font-size:1.8rem;word-break:break-all}.stats-grid{gap:12px}.stat-card{min-height:auto;padding:16px}.stat-number{font-size:2.6rem}.panel h2{font-size:2rem}.header p,.note{font-size:0.9rem}.form-grid{gap:12px}}
+    @media(max-width:820px){.hours-table-wrap{display:none!important}.desktop-hidden{display:grid}.review-box{min-width:0}.mobile-actions .btn{width:auto;flex:1}.grid{gap:16px}.code-result strong{font-size:1.8rem;word-break:break-all}.stats-grid{gap:12px}.stat-card{min-height:auto;padding:16px}.stat-number{font-size:2.6rem}.panel h2{font-size:2rem}.header p,.note{font-size:0.9rem}.form-grid{gap:12px}}
 
     @media(max-width:1180px){.grid,.footer-shell{grid-template-columns:1fr}.stats-grid{grid-template-columns:repeat(2,1fr)}.header{flex-direction:column;align-items:flex-start}.actions{justify-content:flex-start}}
     @media(max-width:768px){.topbar{min-height:58px;padding:8px 12px;grid-template-columns:auto 1fr auto;gap:10px}.topbar-logo img{height:33px}.topbar-title{font-size:1rem;letter-spacing:0.08em}.menu-toggle{padding:8px 13px;font-size:0.84rem}.dropdown-menu{min-width:205px}.page{padding:100px 14px 64px}.panel{padding:22px 18px;border-radius:24px}.stats-grid,.form-grid{grid-template-columns:1fr}.review-box{grid-template-columns:1fr;min-width:280px}}
@@ -237,24 +241,8 @@
         <div class="grid">
           <section class="panel">
             <h2>Voluntari</h2>
-            <p class="note">Lista conturilor activate prin cod de voluntar și departamentele selectate.</p>
+            <p class="note">Alege un voluntar din listă. După click, în dreapta apar doar orele introduse de acel voluntar.</p>
             <input class="search" id="volunteerSearch" type="search" placeholder="Caută după nume sau email...">
-
-            <div class="table-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Voluntar</th>
-                    <th>Departamente festival</th>
-                    <th>Departamente club</th>
-                    <th>Total ore</th>
-                    <th>Acțiune</th>
-                  </tr>
-                </thead>
-                <tbody id="volunteersBody"></tbody>
-              </table>
-            </div>
 
             <div class="card-list" id="volunteersCards"></div>
 
@@ -262,8 +250,8 @@
           </section>
 
           <section class="panel">
-            <h2>Istoric ore</h2>
-            <p class="note">Toate orele introduse de voluntari. Poți filtra după status.</p>
+            <h2>Ore voluntar</h2>
+            <p class="note">Selectează un voluntar din stânga pentru a vedea istoricul lui de ore. Așa pagina rămâne mai curată și mai ușor de folosit.</p>
 
             <div class="filters" id="filters">
               <button class="filter-btn active" data-status="all">Toate</button>
@@ -276,17 +264,17 @@
               <h3 id="selectedVolunteerName">Voluntar selectat</h3>
               <p class="selected-meta" id="selectedVolunteerInfo">-</p>
               <div id="selectedVolunteerDepartments"></div>
-              <div class="mobile-actions">
-                <button type="button" class="btn btn-secondary btn-small" id="clearSelectedVolunteerBtn">Vezi toate orele</button>
-              </div>
+
             </div>
 
-            <div class="table-wrap">
+            <div id="hoursPlaceholder" class="hours-placeholder">
+              Selectează un voluntar din listă pentru a vedea orele lui.
+            </div>
+
+            <div class="table-wrap hours-table-wrap" id="hoursTableWrap" style="display:none;">
               <table>
                 <thead>
                   <tr>
-                    <th>ID</th>
-                    <th>Voluntar</th>
                     <th>Data</th>
                     <th>Eveniment</th>
                     <th>Task</th>
@@ -300,7 +288,7 @@
               </table>
             </div>
 
-            <div class="card-list" id="hoursCards"></div>
+            <div class="card-list desktop-hidden" id="hoursCards"></div>
 
             <div id="hoursMessage" class="message"></div>
           </section>
@@ -313,7 +301,7 @@
     <div class="footer-shell">
       <div class="footer-brand"><img src="Foto/LOGO Overthink 2 (1).svg" alt="Logo Overthink Film Fest"><h3>Overthink Film Fest</h3><p>Festival de film independent organizat de Clubul de Film Overthink.</p></div>
       <div class="footer-col"><h3>Admin</h3><a href="admin.html">Admin general</a><a href="noutati-admin.html">Noutăți admin</a><a href="voluntari-admin.html">Voluntari</a></div>
-      <div class="footer-col"><h3>Contact</h3><p>Email: office@overthink-jr.com</p><p>Telefon: 0773 746 372</p><a href="https://www.instagram.com/overthink.jr" target="_blank">Instagram: @overthink.jr</a></div>
+      <div class="footer-col"><h3>Contact</h3><p>Email: staff@overthink-jr.com</p><p>Telefon: 0773 746 372</p><a href="https://www.instagram.com/overthink.jr" target="_blank">Instagram: @overthink.jr</a></div>
     </div>
     <div class="copyright">© 2026 Overthink Film Fest. Toate drepturile rezervate.</div>
   </footer>
@@ -330,12 +318,14 @@
     const restrictedBox = document.getElementById("restrictedBox");
     const adminContent = document.getElementById("adminContent");
 
-    const volunteersBody = document.getElementById("volunteersBody");
     const volunteersCards = document.getElementById("volunteersCards");
     const hoursBody = document.getElementById("hoursBody");
     const hoursCards = document.getElementById("hoursCards");
+    const hoursPlaceholder = document.getElementById("hoursPlaceholder");
+    const hoursTableWrap = document.getElementById("hoursTableWrap");
     const volunteerSearch = document.getElementById("volunteerSearch");
     const filterButtons = document.querySelectorAll(".filter-btn");
+    const filtersBar = document.getElementById("filters");
 
     const volunteerMessage = document.getElementById("volunteerMessage");
     const hoursMessage = document.getElementById("hoursMessage");
@@ -453,7 +443,7 @@
 
     function entryBelongsToSelectedVolunteer(entry){
       if(!selectedVolunteerId){
-        return true;
+        return false;
       }
       return Number(entry.user_id) === Number(selectedVolunteerId);
     }
@@ -495,7 +485,7 @@
       renderSelectedVolunteerBox();
       renderVolunteers();
       renderEntries();
-      document.getElementById("selectedVolunteerBox")?.scrollIntoView({ behavior:"smooth", block:"start" });
+      document.getElementById("selectedVolunteerBox")?.scrollIntoView({ behavior:"smooth", block:"center" });
     }
 
     function clearSelectedVolunteer(){
@@ -516,12 +506,10 @@
     }
 
     function renderVolunteers(){
-      volunteersBody.innerHTML = "";
       volunteersCards.innerHTML = "";
       const rows = filteredVolunteers();
 
       if(!rows.length){
-        volunteersBody.innerHTML = '<tr><td colspan="6" class="muted">Nu există voluntari activați momentan.</td></tr>';
         volunteersCards.innerHTML = '<div class="mobile-card"><p class="muted">Nu există voluntari activați momentan.</p></div>';
         return;
       }
@@ -532,39 +520,21 @@
         const totalHours = Number(totals.accepted || 0) + Number(totals.pending || 0) + Number(totals.rejected || 0);
         const isSelected = Number(selectedVolunteerId) === Number(volunteer.id);
 
-        const tr = document.createElement("tr");
-        if(isSelected){ tr.classList.add("selected"); }
-        tr.innerHTML = `
-          <td>#${volunteer.id}</td>
-          <td><strong>${volunteer.name || "-"}</strong><br><span class="muted">${volunteer.email || "-"}</span></td>
-          <td>${renderDepartmentPills(profile.festival_departments || [])}</td>
-          <td>${renderDepartmentPills(profile.club_departments || [])}</td>
-          <td>
-            <strong>${totalHours}</strong><br>
-            <span class="muted">Acceptate: ${totals.accepted || 0} / În așteptare: ${totals.pending || 0} / Respinse: ${totals.rejected || 0}</span>
-          </td>
-          <td>
-            <button class="btn btn-small btn-primary" onclick="selectVolunteer(${volunteer.id})">Vezi orele</button>
-            <button class="btn btn-small btn-danger" onclick="removeVolunteer(${volunteer.id})" style="margin-top:8px;">Elimină</button>
-          </td>
-        `;
-
-        volunteersBody.appendChild(tr);
-
         const card = document.createElement("article");
-        card.className = "mobile-card" + (isSelected ? " selected" : "");
+        card.className = "mobile-card volunteer-card-click" + (isSelected ? " selected" : "");
+        card.addEventListener("click", () => selectVolunteer(volunteer.id));
         card.innerHTML = `
           <h3>${volunteer.name || "-"}</h3>
           <p class="muted">${volunteer.email || "-"}</p>
-          <div class="line"><span>Total</span><span>${totalHours} ore</span></div>
+          <div class="line"><span>Total ore</span><span>${totalHours}</span></div>
           <div class="line"><span>Acceptate</span><span>${totals.accepted || 0}</span></div>
           <div class="line"><span>În așteptare</span><span>${totals.pending || 0}</span></div>
           <div class="line"><span>Respinse</span><span>${totals.rejected || 0}</span></div>
           <div style="margin-top:10px;"><span class="stat-label">Festival</span>${renderDepartmentPills(profile.festival_departments || [])}</div>
           <div style="margin-top:10px;"><span class="stat-label">Club</span>${renderDepartmentPills(profile.club_departments || [])}</div>
           <div class="mobile-actions">
-            <button class="btn btn-small btn-primary" onclick="selectVolunteer(${volunteer.id})">Vezi orele</button>
-            <button class="btn btn-small btn-danger" onclick="removeVolunteer(${volunteer.id})">Elimină</button>
+            <button class="btn btn-small btn-primary" type="button" onclick="event.stopPropagation(); selectVolunteer(${volunteer.id})">Vezi orele</button>
+            <button class="btn btn-small btn-danger" type="button" onclick="event.stopPropagation(); removeVolunteer(${volunteer.id})">Elimină rolul</button>
           </div>
         `;
         volunteersCards.appendChild(card);
@@ -586,16 +556,26 @@
       hoursCards.innerHTML = "";
       const rows = filteredEntries();
 
+      if(!selectedVolunteerId){
+        hoursPlaceholder.style.display = "block";
+        hoursTableWrap.style.display = "none";
+        if(filtersBar){ filtersBar.style.display = "none"; }
+        hoursCards.innerHTML = "";
+        return;
+      }
+
+      hoursPlaceholder.style.display = "none";
+      hoursTableWrap.style.display = "block";
+      if(filtersBar){ filtersBar.style.display = "flex"; }
+
       if(!rows.length){
-        const emptyText = selectedVolunteerId ? "Voluntarul selectat nu are ore pentru filtrul ales." : "Nu există ore pentru filtrul selectat.";
-        hoursBody.innerHTML = `<tr><td colspan="9" class="muted">${emptyText}</td></tr>`;
+        const emptyText = "Voluntarul selectat nu are ore pentru filtrul ales.";
+        hoursBody.innerHTML = `<tr><td colspan="7" class="muted">${emptyText}</td></tr>`;
         hoursCards.innerHTML = `<div class="mobile-card"><p class="muted">${emptyText}</p></div>`;
         return;
       }
 
       rows.forEach(entry => {
-        const userName = entry.user?.name || `User #${entry.user_id}`;
-        const userEmail = entry.user?.email || "";
         const pendingActions = entry.status === "in_asteptare" ? `
           <div class="review-box">
             <textarea id="feedback-${entry.id}" placeholder="Feedback opțional"></textarea>
@@ -605,8 +585,6 @@
 
         const tr = document.createElement("tr");
         tr.innerHTML = `
-          <td>#${entry.id}</td>
-          <td><strong>${userName}</strong><br><span class="muted">${userEmail}</span></td>
           <td>${formatDate(entry.work_date)}</td>
           <td>${entry.event_label || eventLabel(entry.event_type)}</td>
           <td>${entry.task || "-"}</td>
@@ -621,7 +599,7 @@
         card.className = "mobile-card";
         card.innerHTML = `
           <h3>${entry.task || "-"}</h3>
-          <p class="muted">${userName} • ${userEmail}</p>
+          <p class="muted">${entry.event_label || eventLabel(entry.event_type)} • ${formatDate(entry.work_date)}</p>
           <div class="line"><span>Data</span><span>${formatDate(entry.work_date)}</span></div>
           <div class="line"><span>Eveniment</span><span>${entry.event_label || eventLabel(entry.event_type)}</span></div>
           <div class="line"><span>Ore</span><span>${entry.hours}</span></div>
@@ -790,6 +768,26 @@
       clearMessage(hoursMessage);
 
       const feedback = document.getElementById(`feedback-${entryId}`)?.value.trim() || null;
+
+      const { response, data } = await adminFetch(`/api/admin/volunteer-hours/${entryId}/status`, {
+        method:"PATCH",
+        body:JSON.stringify({ status, admin_feedback: feedback })
+      });
+
+      if(!response.ok){
+        showMessage(hoursMessage, data.detail || "Statusul nu a putut fi actualizat.", "error");
+        return;
+      }
+
+      showMessage(hoursMessage, data.detail || "Status actualizat.", "success");
+      await loadVolunteers();
+      await loadEntries();
+    }
+
+
+    async function updateHourStatusFromMobile(entryId, status){
+      const feedback = document.getElementById(`feedback-mobile-${entryId}`)?.value.trim() || null;
+      clearMessage(hoursMessage);
 
       const { response, data } = await adminFetch(`/api/admin/volunteer-hours/${entryId}/status`, {
         method:"PATCH",
