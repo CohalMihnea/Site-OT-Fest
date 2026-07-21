@@ -102,6 +102,14 @@
     .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
     .full{grid-column:1/-1;}
 
+    .history-cards{display:none;gap:14px;margin-top:14px;}
+    .history-card{padding:16px;border-radius:18px;background:rgba(0,0,0,0.28);border:1px solid rgba(255,255,255,0.09);box-shadow:0 10px 28px rgba(0,0,0,0.25);}
+    .history-card h3{font-size:1rem;margin-bottom:6px;line-height:1.35;}
+    .history-card .line{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-top:1px solid rgba(255,255,255,0.07);color:#d8d8d8;font-size:0.9rem;}
+    .history-card .line:first-of-type{border-top:none;}
+    .history-card .line span:first-child{color:#a9a9a9;font-weight:900;text-transform:uppercase;font-size:0.72rem;letter-spacing:0.07em;}
+    .history-card .line span:last-child{text-align:right;}
+
     footer{background:#0d0d0d;border-top:1px solid rgba(255,255,255,0.07);padding:46px 20px 24px;}
     .footer-shell{max-width:1250px;margin:0 auto;display:grid;grid-template-columns:1.1fr 1fr 1fr;gap:28px;align-items:start;}
     .footer-brand img{height:48px;width:auto;margin-bottom:14px;filter:drop-shadow(0 0 18px rgba(146,4,4,0.25));}
@@ -111,7 +119,7 @@
     .footer-col a:hover{color:#fff;transform:translateX(3px);}
     .copyright{max-width:1250px;margin:28px auto 0;padding-top:18px;border-top:1px solid rgba(255,255,255,0.07);text-align:center;color:#a8a8a8;font-size:0.88rem;}
 
-    @media(max-width:900px){.hero{flex-direction:column;align-items:flex-start}.actions{justify-content:flex-start}.grid,.stats-grid,.footer-shell,.menu-card,.form-grid{grid-template-columns:1fr}.page{padding:100px 14px 64px}.panel{padding:22px 18px;border-radius:24px}.checkbox-grid{grid-template-columns:1fr}}
+    @media(max-width:900px){.hero{flex-direction:column;align-items:flex-start}.actions{justify-content:flex-start}.grid,.stats-grid,.footer-shell,.menu-card,.form-grid{grid-template-columns:1fr}.page{padding:100px 14px 64px}.panel{padding:22px 18px;border-radius:24px}.checkbox-grid{grid-template-columns:1fr}.table-wrap{display:none}.history-cards{display:grid}.big-choice{min-height:130px;padding:20px}.big-choice strong{font-size:2.1rem}.stat-card{min-height:auto}.stat-number{font-size:2.7rem}.panel h2{font-size:2rem}.note{font-size:.9rem}}
     @media(max-width:768px){.topbar{min-height:58px;padding:8px 12px;grid-template-columns:auto 1fr auto;gap:10px}.topbar-logo img{height:33px}.topbar-title{font-size:1rem;letter-spacing:0.08em}.menu-toggle{padding:8px 13px;font-size:0.84rem}.dropdown-menu{min-width:205px}}
     @media(max-width:520px){.topbar-title{max-width:145px;white-space:normal;line-height:1}.btn{width:100%}.actions,.subnav{width:100%;flex-direction:column}table{min-width:860px}}
   </style>
@@ -311,6 +319,7 @@
                 <tbody id="hoursBody"></tbody>
               </table>
             </div>
+            <div class="history-cards" id="hoursCards"></div>
           </section>
         </section>
       </section>
@@ -321,7 +330,7 @@
     <div class="footer-shell">
       <div class="footer-brand"><img src="Foto/LOGO Overthink 2 (1).svg" alt="Logo Overthink Film Fest"><h3>Overthink Film Fest</h3><p>Festival de film independent organizat de Clubul de Film Overthink.</p></div>
       <div class="footer-col"><h3>Linkuri</h3><a href="noutati.html">Noutăți</a><a href="program.html">Program</a><a href="inscriere.html">Înscrie-te</a></div>
-      <div class="footer-col"><h3>Contact</h3><p>Email: staff@overthink-jr.com</p><p>Telefon: 0773 746 372</p><a href="https://www.instagram.com/overthink.jr" target="_blank">Instagram: @overthink.jr</a></div>
+      <div class="footer-col"><h3>Contact</h3><p>Email: office@overthink-jr.com</p><p>Telefon: 0773 746 372</p><a href="https://www.instagram.com/overthink.jr" target="_blank">Instagram: @overthink.jr</a></div>
     </div>
     <div class="copyright">© 2026 Overthink Film Fest. Toate drepturile rezervate.</div>
   </footer>
@@ -361,6 +370,7 @@
     const codeMessageBox = document.getElementById("codeMessageBox");
     const hourCodeInput = document.getElementById("hourCodeInput");
     const hoursBody = document.getElementById("hoursBody");
+    const hoursCards = document.getElementById("hoursCards");
 
     let currentUser = null;
     let verifiedVolunteerCode = null;
@@ -546,9 +556,11 @@
 
     function renderEntries(entries){
       hoursBody.innerHTML = "";
+      hoursCards.innerHTML = "";
 
       if(!entries.length){
         hoursBody.innerHTML = '<tr><td colspan="7" class="muted">Nu ai adăugat încă ore de voluntariat.</td></tr>';
+        hoursCards.innerHTML = '<article class="history-card"><p class="muted">Nu ai adăugat încă ore de voluntariat.</p></article>';
         return;
       }
 
@@ -564,6 +576,18 @@
           <td class="muted">${entry.admin_feedback || "-"}</td>
         `;
         hoursBody.appendChild(tr);
+
+        const card = document.createElement("article");
+        card.className = "history-card";
+        card.innerHTML = `
+          <h3>${entry.task || "-"}</h3>
+          <p class="muted">${entry.event_label || eventLabel(entry.event_type)} • ${formatDate(entry.work_date)}</p>
+          <div class="line"><span>Ore</span><span>${entry.hours}</span></div>
+          <div class="line"><span>Status</span><span><span class="status-pill ${entry.status}">${statusLabel(entry.status)}</span></span></div>
+          <div class="line"><span>Mențiuni</span><span>${entry.mentions || "-"}</span></div>
+          <div class="line"><span>Feedback</span><span>${entry.admin_feedback || "-"}</span></div>
+        `;
+        hoursCards.appendChild(card);
       });
     }
 

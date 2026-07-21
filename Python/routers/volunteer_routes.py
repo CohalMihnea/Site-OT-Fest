@@ -137,9 +137,6 @@ def get_valid_invite_code(db: Session, code: str):
     if not invite:
         raise HTTPException(status_code=404, detail="Codul de voluntar nu există.")
 
-    if invite.used_at is not None:
-        raise HTTPException(status_code=400, detail="Codul de voluntar a fost deja folosit.")
-
     if invite.expires_at < datetime.utcnow():
         raise HTTPException(status_code=400, detail="Codul de voluntar a expirat.")
 
@@ -157,9 +154,6 @@ def get_valid_hour_code(db: Session, code: str):
 
     if not hour_code:
         raise HTTPException(status_code=404, detail="Codul pentru ore nu există.")
-
-    if hour_code.used_at is not None:
-        raise HTTPException(status_code=400, detail="Codul pentru ore a fost deja folosit.")
 
     if hour_code.expires_at < datetime.utcnow():
         raise HTTPException(status_code=400, detail="Codul pentru ore a expirat.")
@@ -295,8 +289,8 @@ def join_as_volunteer(
     profile.festival_departments = json.dumps(payload.festival_departments, ensure_ascii=False)
     profile.club_departments = json.dumps(payload.club_departments, ensure_ascii=False)
 
-    invite.used_by_user_id = current_user.id
-    invite.used_at = datetime.utcnow()
+    # Codurile de voluntar sunt reutilizabile până la expirare.
+    # Nu marcăm codul ca folosit, ca să poată fi dat mai multor voluntari.
 
     db.commit()
     db.refresh(current_user)
@@ -431,9 +425,8 @@ def create_volunteer_hours_with_code(
     db.add(entry)
     db.flush()
 
-    hour_code.used_by_user_id = current_user.id
-    hour_code.created_hour_entry_id = entry.id
-    hour_code.used_at = datetime.utcnow()
+    # Codurile de ore sunt reutilizabile până la expirare.
+    # Nu marcăm codul ca folosit, ca mai mulți voluntari să poată folosi același cod.
 
     db.commit()
     db.refresh(entry)
