@@ -408,6 +408,16 @@
               </div>
 
               <div class="input-group">
+                <label for="externalUrl">Link extern / Forms</label>
+                <input id="externalUrl" name="external_url" type="url" placeholder="ex: https://forms.gle/xxxxxxxx">
+              </div>
+
+              <div class="input-group">
+                <label for="externalButtonLabel">Text buton link extern</label>
+                <input id="externalButtonLabel" name="external_button_label" type="text" maxlength="120" placeholder="ex: Completează formularul">
+              </div>
+
+              <div class="input-group">
                 <label for="summary">Rezumat scurt</label>
                 <textarea id="summary" name="summary" maxlength="500" placeholder="Text scurt afișat pe card..."></textarea>
               </div>
@@ -511,6 +521,8 @@
       slug: document.getElementById("slug"),
       category: document.getElementById("category"),
       coverImageUrl: document.getElementById("coverImageUrl"),
+      externalUrl: document.getElementById("externalUrl"),
+      externalButtonLabel: document.getElementById("externalButtonLabel"),
       summary: document.getElementById("summary"),
       content: document.getElementById("content"),
       isPublished: document.getElementById("isPublished"),
@@ -647,6 +659,8 @@
       fields.slug.value = post.slug || "";
       fields.category.value = post.category || "Anunț";
       fields.coverImageUrl.value = post.cover_image_url || "";
+      fields.externalUrl.value = post.external_url || "";
+      fields.externalButtonLabel.value = post.external_button_label || "";
       fields.summary.value = post.summary || "";
       fields.content.value = post.content || "";
       fields.isPublished.checked = Boolean(post.is_published);
@@ -664,6 +678,8 @@
         slug,
         category: fields.category.value,
         cover_image_url: fields.coverImageUrl.value.trim() || null,
+        external_url: fields.externalUrl.value.trim() || null,
+        external_button_label: fields.externalButtonLabel.value.trim() || null,
         summary: fields.summary.value.trim() || null,
         content: fields.content.value.trim(),
         is_published: fields.isPublished.checked,
@@ -700,6 +716,7 @@
           </div>
 
           <div class="news-summary">${escapeHtml(post.summary || "Fără rezumat.")}</div>
+          ${post.external_url ? `<div class="news-meta" style="margin-top:10px;">Link extern: ${escapeHtml(post.external_url)}</div>` : ""}
 
           <div class="item-actions">
             <button type="button" class="btn btn-small btn-secondary" data-action="edit" data-id="${post.id}">Editează</button>

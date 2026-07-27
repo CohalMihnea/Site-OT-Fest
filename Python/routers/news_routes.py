@@ -23,6 +23,8 @@ class NewsPostCreate(BaseModel):
     content: str = Field(..., min_length=1)
     category: str = Field("Anunț", max_length=100)
     cover_image_url: Optional[str] = None
+    external_url: Optional[str] = None
+    external_button_label: Optional[str] = None
     is_published: bool = False
     is_featured: bool = False
 
@@ -33,6 +35,8 @@ class NewsPostUpdate(BaseModel):
     content: Optional[str] = Field(None, min_length=1)
     category: Optional[str] = Field(None, max_length=100)
     cover_image_url: Optional[str] = None
+    external_url: Optional[str] = None
+    external_button_label: Optional[str] = None
     is_published: Optional[bool] = None
     is_featured: Optional[bool] = None
 
@@ -95,6 +99,8 @@ def serialize_news_post(news_post: NewsPost):
         "content": news_post.content,
         "category": news_post.category,
         "cover_image_url": news_post.cover_image_url,
+        "external_url": news_post.external_url,
+        "external_button_label": news_post.external_button_label,
         "is_published": news_post.is_published,
         "is_featured": news_post.is_featured,
         "created_by_user_id": news_post.created_by_user_id,
@@ -189,6 +195,8 @@ def create_news_post(
         content=payload.content.strip(),
         category=payload.category.strip() if payload.category else "Anunț",
         cover_image_url=payload.cover_image_url.strip() if payload.cover_image_url else None,
+        external_url=payload.external_url.strip() if payload.external_url else None,
+        external_button_label=payload.external_button_label.strip() if payload.external_button_label else None,
         is_published=payload.is_published,
         is_featured=payload.is_featured,
         created_by_user_id=admin.id,
@@ -237,6 +245,12 @@ def update_news_post(
 
     if payload.cover_image_url is not None:
         news_post.cover_image_url = payload.cover_image_url.strip() if payload.cover_image_url else None
+
+    if payload.external_url is not None:
+        news_post.external_url = payload.external_url.strip() if payload.external_url else None
+
+    if payload.external_button_label is not None:
+        news_post.external_button_label = payload.external_button_label.strip() if payload.external_button_label else None
 
     if payload.is_published is not None:
         news_post.is_published = payload.is_published

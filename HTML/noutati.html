@@ -266,7 +266,9 @@
     .featured-card.visible{display:grid;}
 
     .featured-image{
-      min-height:310px;
+      width:100%;
+      aspect-ratio:4 / 3;
+      min-height:0;
       background:radial-gradient(circle at center, rgba(146,4,4,0.45), transparent 48%), rgba(0,0,0,0.35);
     }
 
@@ -330,7 +332,11 @@
 
     .news-card:hover{transform:translateY(-6px);border-color:rgba(146,4,4,0.35);box-shadow:0 20px 58px rgba(0,0,0,0.5),0 0 24px rgba(146,4,4,0.15);}
 
-    .card-image{height:180px;background:radial-gradient(circle at center, rgba(146,4,4,0.38), transparent 46%), rgba(0,0,0,0.35);}
+    .card-image{
+      width:100%;
+      aspect-ratio:4 / 3;
+      background:radial-gradient(circle at center, rgba(146,4,4,0.38), transparent 46%), rgba(0,0,0,0.35);
+    }
     .card-image img{width:100%;height:100%;object-fit:cover;opacity:0.92;}
 
     .card-content{padding:22px;}
@@ -384,12 +390,18 @@
       box-shadow:0 24px 80px rgba(0,0,0,0.65),0 0 36px rgba(146,4,4,0.18);
     }
 
-    .modal-image{height:300px;background:radial-gradient(circle at center, rgba(146,4,4,0.42), transparent 48%), #050505;}
+    .modal-image{
+      width:100%;
+      aspect-ratio:4 / 3;
+      background:radial-gradient(circle at center, rgba(146,4,4,0.42), transparent 48%), #050505;
+    }
     .modal-image img{width:100%;height:100%;object-fit:cover;}
 
     .modal-content{padding:30px;}
     .modal-content h2{font-family:'Bebas Neue', Impact, sans-serif;font-size:clamp(2.4rem, 6vw, 4rem);line-height:1;letter-spacing:0.06em;margin-bottom:12px;text-transform:uppercase;}
     .modal-text{white-space:pre-wrap;color:#e0e0e0;line-height:1.75;font-size:1rem;margin-top:18px;}
+    .external-link-btn{display:inline-flex;align-items:center;justify-content:center;margin-top:22px;padding:13px 18px;border-radius:999px;background:rgba(146,4,4,0.95);border:1px solid rgba(255,255,255,0.14);color:#fff;font-weight:900;box-shadow:0 0 24px rgba(146,4,4,0.25);transition:0.25s ease;}
+    .external-link-btn:hover{background:#c00606;transform:translateY(-2px);}
 
     .close-btn{
       position:sticky;
@@ -419,7 +431,7 @@
 
     @keyframes fadeUp{from{opacity:0;transform:translateY(28px) scale(0.98);}to{opacity:1;transform:translateY(0) scale(1);}}
 
-    @media(max-width:1050px){.news-grid{grid-template-columns:repeat(2, 1fr);}.footer-shell{grid-template-columns:1fr 1fr;}.featured-card{grid-template-columns:1fr;}.featured-image{min-height:250px;}}
+    @media(max-width:1050px){.news-grid{grid-template-columns:repeat(2, 1fr);}.footer-shell{grid-template-columns:1fr 1fr;}.featured-card{grid-template-columns:1fr;}}
 
     @media(max-width:768px){
       .topbar{min-height:58px;padding:8px 12px;grid-template-columns:auto 1fr auto;gap:10px;}
@@ -437,7 +449,6 @@
       .featured-content{padding:26px 20px;}
       .news-grid{grid-template-columns:1fr;}
       .footer-shell{grid-template-columns:1fr;}
-      .modal-image{height:220px;}
       .modal-content{padding:24px 18px;}
     }
 
@@ -525,7 +536,7 @@
 
       <div class="footer-col">
         <h3>Contact</h3>
-        <p>Email: office@overthink-jr.com</p>
+        <p>Email: staff@overthink-jr.com</p>
         <p>Telefon: 0773 746 372</p>
         <a href="https://www.instagram.com/overthink.jr" target="_blank" rel="noopener noreferrer">Instagram: @overthink.jr</a>
       </div>
@@ -594,12 +605,32 @@
         .replaceAll("'", "&#039;");
     }
 
-    function imageHtml(src, alt){
-      if(!src){
+    function normalizeImagePath(src){
+      const value = String(src || "").trim();
+
+      if(!value){
         return "";
       }
 
-      return `<img src="${escapeHtml(src)}" alt="${escapeHtml(alt)}">`;
+      if(value.startsWith("FOTO/")){
+        return "Foto/" + value.substring(5);
+      }
+
+      if(value.startsWith("/FOTO/")){
+        return "/Foto/" + value.substring(6);
+      }
+
+      return value;
+    }
+
+    function imageHtml(src, alt){
+      const cleanSrc = normalizeImagePath(src);
+
+      if(!cleanSrc){
+        return "";
+      }
+
+      return `<img src="${escapeHtml(cleanSrc)}" alt="${escapeHtml(alt)}" loading="lazy">`;
     }
 
     function getPublishedDate(post){
@@ -622,6 +653,16 @@
       return [];
     }
 
+    function externalLinkHtml(post){
+      if(!post || !post.external_url){
+        return "";
+      }
+
+      const label = post.external_button_label || "Deschide linkul";
+
+      return `<a href="${escapeHtml(post.external_url)}" target="_blank" rel="noopener noreferrer" class="external-link-btn">${escapeHtml(label)}</a>`;
+    }
+
     function openModal(post){
       modalBody.innerHTML = `
         <div class="modal-image">${imageHtml(post.cover_image_url, post.title)}</div>
@@ -630,6 +671,7 @@
           <h2>${escapeHtml(post.title)}</h2>
           <div class="news-date">${escapeHtml(formatDate(getPublishedDate(post)))}</div>
           <div class="modal-text">${escapeHtml(post.content || post.summary || "")}</div>
+          ${externalLinkHtml(post)}
         </div>
       `;
 
@@ -667,7 +709,7 @@
           <div class="news-date">${escapeHtml(formatDate(getPublishedDate(featured)))}</div>
           <h2>${escapeHtml(featured.title)}</h2>
           <p>${escapeHtml(featured.summary || "")}</p>
-          <span class="read-more">Citește mai mult</span>
+          <span class="read-more">${featured.external_url ? escapeHtml(featured.external_button_label || "Deschide linkul") : "Citește mai mult"}</span>
         </div>
       `;
 
@@ -710,7 +752,7 @@
             <div class="news-date">${escapeHtml(formatDate(getPublishedDate(post)))}</div>
             <h3>${escapeHtml(post.title)}</h3>
             <p>${escapeHtml(post.summary || "")}</p>
-            <span class="read-more">Citește mai mult</span>
+            <span class="read-more">${post.external_url ? escapeHtml(post.external_button_label || "Deschide linkul") : "Citește mai mult"}</span>
           </div>
         `;
 

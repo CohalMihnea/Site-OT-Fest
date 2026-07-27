@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import Boolean, CheckConstraint, Column, DateTime, ForeignKey, Integer, String, Text
+from sqlalchemy import Boolean, CheckConstraint, Column, Date, DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import relationship
 
 from database import Base
@@ -32,6 +32,8 @@ class User(Base):
         back_populates="user",
         cascade="all, delete-orphan"
     )
+
+    # Tabela veche de ore voluntari. O păstrăm pentru compatibilitate.
     volunteer_hours = relationship(
         "VolunteerHour",
         foreign_keys="VolunteerHour.user_id",
@@ -39,14 +41,22 @@ class User(Base):
         cascade="all, delete-orphan"
     )
 
+    # Tabela nouă de ore voluntari, folosită de noul UI.
+    volunteer_hour_entries = relationship(
+        "VolunteerHourEntry",
+        foreign_keys="VolunteerHourEntry.user_id",
+        back_populates="user",
+        cascade="all, delete-orphan"
+    )
+
 
 class EmailVerificationCode(Base):
-        __tablename__ = "email_verification_codes"
+    __tablename__ = "email_verification_codes"
 
-        id = Column(Integer, primary_key=True, index=True)
-        email = Column(String(255), index=True, nullable=False)
-        code = Column(String(6), nullable=False)
-        created_at = Column(DateTime, default=datetime.utcnow)
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String(255), index=True, nullable=False)
+    code = Column(String(6), nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
 
 
 class PasswordResetCode(Base):
@@ -102,7 +112,6 @@ class Submission(Base):
 
     can_edit = Column(Boolean, default=False, nullable=False)
 
-
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
@@ -119,6 +128,7 @@ class Submission(Base):
         back_populates="submission",
         cascade="all, delete-orphan"
     )
+
 
 class SubmissionTeamMember(Base):
     __tablename__ = "submission_team_members"
@@ -193,6 +203,7 @@ class AdminAction(Base):
 
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
 
+
 class NewsPost(Base):
     __tablename__ = "news_posts"
 
@@ -205,6 +216,10 @@ class NewsPost(Base):
     category = Column(String(100), default="Anunț", nullable=False)
     cover_image_url = Column(String(500), nullable=True)
 
+    # Câmpuri noi pentru buton extern / Forms.
+    external_url = Column(String(500), nullable=True)
+    external_button_label = Column(String(120), nullable=True)
+
     is_published = Column(Boolean, default=False, nullable=False)
     is_featured = Column(Boolean, default=False, nullable=False)
 
@@ -214,7 +229,12 @@ class NewsPost(Base):
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     published_at = Column(DateTime, nullable=True)
 
+
 class VolunteerHour(Base):
+    """
+    Tabela veche de ore voluntari.
+    O păstrăm pentru compatibilitate, chiar dacă noul flux folosește VolunteerHourEntry.
+    """
     __tablename__ = "volunteer_hours"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -243,6 +263,7 @@ class VolunteerHour(Base):
         "User",
         foreign_keys=[approved_by_admin_id]
     )
+
 
 class VolunteerProfile(Base):
     __tablename__ = "volunteer_profiles"
@@ -274,6 +295,10 @@ class VolunteerInviteCode(Base):
 
 
 class VolunteerAutoApprovalCode(Base):
+    """
+    Tabela veche de coduri automate.
+    O păstrăm pentru compatibilitate, dar noul flux folosește VolunteerHourCode.
+    """
     __tablename__ = "volunteer_auto_approval_codes"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -285,38 +310,12 @@ class VolunteerAutoApprovalCode(Base):
     expires_at = Column(DateTime, nullable=False)
     used_at = Column(DateTime, nullable=True)
 
-class VolunteerHourCode(Base):
-    __tablename__ = "volunteer_hour_codes"
-
-    id = Column(Integer, primary_key=True, index=True)
-    code = Column(String(20), unique=True, index=True, nullable=False)
-
-    event_type = Column(String(50), nullable=False)
-    task = Column(String(255), nullable=False)
-    work_date = Column(String(20), nullable=False)
-    hours = Column(Integer, nullable=False)
-    mentions = Column(Text, nullable=True)
-
-    created_by_admin_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    used_by_user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
-    created_hour_entry_id = Column(Integer, ForeignKey("volunteer_hour_entries.id"), nullable=True)
-
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-    expires_at = Column(DateTime, nullable=False)
-    used_at = Column(DateTime, nullable=True)
-
-    created_by_admin = relationship(
-        "User",
-        foreign_keys=[created_by_admin_id]
-    )
-
-    used_by_user = relationship(
-        "User",
-        foreign_keys=[used_by_user_id]
-    )
-
 
 class VolunteerHourEntry(Base):
+    """
+    Tabela nouă pentru ore voluntari:
+    eveniment + task + dată + ore + mențiuni.
+    """
     __tablename__ = "volunteer_hour_entries"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -324,8 +323,8 @@ class VolunteerHourEntry(Base):
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 
     event_type = Column(String(50), nullable=False)
-    task = Column(String(255), nullable=False)
-    work_date = Column(String(20), nullable=False)
+    task = Column(String(100), nullable=False)
+    work_date = Column(Date, nullable=False)
     hours = Column(Integer, nullable=False)
     mentions = Column(Text, nullable=True)
 
@@ -334,7 +333,6 @@ class VolunteerHourEntry(Base):
 
     approval_type = Column(String(50), default="manual", nullable=False)
     used_code = Column(String(20), nullable=True)
-    created_by_code_id = Column(Integer, ForeignKey("volunteer_hour_codes.id"), nullable=True)
 
     approved_by_admin_id = Column(Integer, ForeignKey("users.id"), nullable=True)
 
@@ -344,7 +342,8 @@ class VolunteerHourEntry(Base):
 
     user = relationship(
         "User",
-        foreign_keys=[user_id]
+        foreign_keys=[user_id],
+        back_populates="volunteer_hour_entries"
     )
 
     approved_by_admin = relationship(
@@ -352,8 +351,26 @@ class VolunteerHourEntry(Base):
         foreign_keys=[approved_by_admin_id]
     )
 
-    created_by_code = relationship(
-        "VolunteerHourCode",
-        foreign_keys=[created_by_code_id]
-    )
 
+class VolunteerHourCode(Base):
+    """
+    Cod generat de admin pentru ore acceptate automat.
+    Codurile nu sunt de unică folosință; rămân valabile până expiră.
+    """
+    __tablename__ = "volunteer_hour_codes"
+
+    id = Column(Integer, primary_key=True, index=True)
+    code = Column(String(20), unique=True, index=True, nullable=False)
+
+    event_type = Column(String(50), nullable=False)
+    task = Column(String(100), nullable=False)
+    work_date = Column(Date, nullable=False)
+    hours = Column(Integer, nullable=False)
+    mentions = Column(Text, nullable=True)
+
+    created_by_admin_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    used_by_user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    expires_at = Column(DateTime, nullable=False)
+    used_at = Column(DateTime, nullable=True)
