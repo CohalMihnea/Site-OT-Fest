@@ -105,13 +105,14 @@ def voluntar_page():
 def voluntari_admin_page():
     return serve_html_file("voluntari-admin.html")
 
+@app.get("/regulament.html")
+def regulament_page():
+    return serve_html_file("regulament.html")
+
 @app.get("/noutati-admin.html")
 def noutati_admin_page():
     return serve_html_file("noutati-admin.html")
 
-@app.get("/download-db-now")
-def download_db():
-    return FileResponse("/var/data/festival.db", filename="festival.db")
 
 @app.get("/api/health")
 def health_check():
