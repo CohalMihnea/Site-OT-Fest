@@ -314,131 +314,83 @@
       font-size:1rem;
     }
 
-    /* ---------- DEADLINE ---------- */
-    .deadline-section{
-      padding:88px 0 48px;
-      background:
-        radial-gradient(circle at center, rgba(146,4,4,0.18), transparent 38%),
-        #000;
-    }
-
-    .deadline-card{
-      position:relative;
-      overflow:hidden;
-      max-width:1050px;
-      margin:0 auto;
-      padding:34px 30px;
-      border-radius:28px;
-      background:rgba(255,255,255,0.045);
-      border:1px solid rgba(255,255,255,0.08);
-      box-shadow:0 18px 55px rgba(0,0,0,0.38);
-      transition:0.3s ease;
-    }
-
-    .deadline-card::before{
-      content:"";
-      position:absolute;
-      inset:-1px;
-      background:radial-gradient(circle at 50% 0%, rgba(146,4,4,0.24), transparent 46%);
-      pointer-events:none;
-    }
-
-    .deadline-card:hover{
-      transform:translateY(-5px);
-      border-color:rgba(146,4,4,0.36);
-      box-shadow:
-        0 18px 55px rgba(0,0,0,0.45),
-        0 0 28px rgba(146,4,4,0.18);
-    }
-
-    .deadline-content{
-      position:relative;
-      z-index:2;
-      text-align:center;
-    }
-
-    .deadline-label{
-      color:#d30707;
-      font-weight:900;
-      font-size:0.88rem;
-      letter-spacing:0.14em;
-      text-transform:uppercase;
-      margin-bottom:12px;
-    }
-
-    .deadline-card h3{
-      font-family:'Bebas Neue', Impact, sans-serif;
-      font-size:clamp(2rem, 5vw, 3.1rem);
-      letter-spacing:0.06em;
-      line-height:1;
-      margin-bottom:14px;
-      color:#fff;
-      text-transform:uppercase;
-      text-shadow:0 0 22px rgba(146,4,4,0.30);
-    }
-
-    .deadline-note{
-      max-width:780px;
-      margin:0 auto;
-      color:#d8d8d8;
-      line-height:1.7;
-      font-size:0.98rem;
-    }
-
-    .timer{
-      display:grid;
-      grid-template-columns:repeat(4, 1fr);
-      gap:12px;
-      margin:28px auto 0;
-      max-width:850px;
-    }
-
-    .time-box{
-      padding:19px 10px;
-      border-radius:20px;
-      background:rgba(0,0,0,0.42);
-      border:1px solid rgba(255,255,255,0.08);
-      text-align:center;
-      box-shadow:inset 0 0 24px rgba(146,4,4,0.08);
-    }
-
-    .time-box strong{
-      display:block;
-      font-family:'Bebas Neue', Impact, sans-serif;
-      font-size:clamp(2rem, 5vw, 3.4rem);
-      letter-spacing:0.04em;
-      line-height:1;
-      color:#fff;
-      text-shadow:0 0 22px rgba(146,4,4,0.42);
-    }
-
-    .time-box span{
-      display:block;
-      margin-top:8px;
-      color:#cfcfcf;
-      font-size:0.78rem;
-      font-weight:900;
-      letter-spacing:0.12em;
-      text-transform:uppercase;
-    }
-
-    /* ---------- PROGRAM TIMELINE ---------- */
+    /* ---------- PROGRAM SECTION ---------- */
     .program-section{
-      padding:48px 0 96px;
+      padding:80px 0 96px;
       background:
         radial-gradient(circle at center, rgba(146,4,4,0.16), transparent 38%),
         #000;
     }
 
+    .day-tabs{
+      display:flex;
+      justify-content:center;
+      flex-wrap:wrap;
+      gap:12px;
+      margin:0 auto 34px;
+    }
+
+    .day-tab{
+      border:1px solid rgba(255,255,255,0.10);
+      background:rgba(255,255,255,0.055);
+      color:#fff;
+      padding:13px 22px;
+      border-radius:999px;
+      font-family:'Inter', Arial, sans-serif;
+      font-size:0.95rem;
+      font-weight:900;
+      cursor:pointer;
+      transition:0.25s ease;
+    }
+
+    .day-tab:hover,
+    .day-tab.active{
+      background:#b80606;
+      border-color:#b80606;
+      box-shadow:0 0 24px rgba(184,6,6,0.32);
+      transform:translateY(-2px);
+    }
+
+    .festival-day{
+      display:none;
+      max-width:1100px;
+      margin:0 auto;
+    }
+
+    .festival-day.active{
+      display:block;
+      animation:programDayFade 0.4s ease forwards;
+    }
+
+    .day-heading{
+      text-align:center;
+      margin-bottom:30px;
+    }
+
+    .day-heading span{
+      display:block;
+      margin-bottom:7px;
+      color:#d30707;
+      font-size:0.82rem;
+      font-weight:900;
+      letter-spacing:0.15em;
+      text-transform:uppercase;
+    }
+
+    .day-heading h3{
+      font-family:'Bebas Neue', Impact, sans-serif;
+      font-size:clamp(2.4rem, 5vw, 3.8rem);
+      letter-spacing:0.06em;
+      line-height:1;
+      text-transform:uppercase;
+      text-shadow:0 0 20px rgba(146,4,4,0.26);
+    }
+
     .timeline{
       position:relative;
-      max-width:1050px;
+      max-width:1040px;
       margin:0 auto;
-      padding:34px 0 40px;
-      min-height:330px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
+      padding:18px 0 10px;
     }
 
     .timeline::before{
@@ -451,114 +403,154 @@
       transform:translateX(-50%);
       background:linear-gradient(
         transparent,
-        rgba(146,4,4,0.70),
+        rgba(146,4,4,0.80),
         rgba(255,255,255,0.14),
-        rgba(146,4,4,0.70),
+        rgba(146,4,4,0.80),
         transparent
       );
       box-shadow:0 0 22px rgba(146,4,4,0.38);
-      animation:timelineQuickFade 1.1s ease forwards;
       z-index:1;
     }
 
-    .timeline-dots{
-      position:absolute;
-      inset:0;
-      pointer-events:none;
+    .timeline-item{
+      position:relative;
+      display:flex;
+      width:100%;
+      margin:0 0 26px 0;
+      min-height:108px;
       z-index:2;
-      animation:timelineQuickFade 1.1s ease forwards;
     }
 
-    .timeline-dot{
+    .timeline-item.left{
+      justify-content:flex-start;
+      padding-right:calc(50% + 34px);
+    }
+
+    .timeline-item.right{
+      justify-content:flex-end;
+      padding-left:calc(50% + 34px);
+    }
+
+    .timeline-item.center{
+      justify-content:center;
+      padding-left:90px;
+      padding-right:90px;
+    }
+
+    .timeline-item::before{
+      content:"";
       position:absolute;
+      top:42px;
       left:50%;
-      width:16px;
-      height:16px;
+      width:18px;
+      height:18px;
       border-radius:50%;
+      transform:translateX(-50%);
       background:#b80606;
       box-shadow:0 0 22px rgba(184,6,6,0.72);
-      border:1px solid rgba(255,255,255,0.12);
-      transform:translateX(-50%);
-    }
-
-    .timeline-dot:nth-child(1){
-      top:28px;
-    }
-
-    .timeline-dot:nth-child(2){
-      top:50%;
-      transform:translate(-50%, -50%);
-    }
-
-    .timeline-dot:nth-child(3){
-      bottom:28px;
-    }
-
-    .program-card{
-      position:relative;
+      border:1px solid rgba(255,255,255,0.14);
       z-index:3;
-      width:min(760px, 100%);
-      min-height:220px;
-      padding:36px 32px;
-      border-radius:26px;
-      background:rgba(255,255,255,0.055);
+    }
+
+    .timeline-card{
+      position:relative;
+      width:100%;
+      max-width:430px;
+      padding:20px 22px;
+      border-radius:22px;
+      background:rgba(255,255,255,0.05);
       border:1px solid rgba(255,255,255,0.09);
       box-shadow:
-        0 18px 55px rgba(0,0,0,0.42),
-        0 0 28px rgba(146,4,4,0.12);
-      text-align:center;
+        0 18px 55px rgba(0,0,0,0.38),
+        0 0 24px rgba(146,4,4,0.10);
+      transition:0.25s ease;
       overflow:hidden;
-      transition:0.3s ease;
     }
 
-    .program-card::before{
+    .timeline-card::before{
       content:"";
       position:absolute;
       inset:-1px;
-      background:radial-gradient(circle at 50% 0%, rgba(146,4,4,0.24), transparent 45%);
+      background:radial-gradient(circle at 50% 0%, rgba(146,4,4,0.20), transparent 44%);
       pointer-events:none;
     }
 
-    .program-card:hover{
+    .timeline-item:hover .timeline-card{
       transform:translateY(-4px);
       border-color:rgba(146,4,4,0.36);
       box-shadow:
-        0 18px 55px rgba(0,0,0,0.48),
-        0 0 30px rgba(146,4,4,0.17);
+        0 18px 55px rgba(0,0,0,0.44),
+        0 0 30px rgba(146,4,4,0.18);
     }
 
-    .program-card-content{
+    .timeline-card-content{
       position:relative;
       z-index:2;
     }
 
-    .program-label{
-      color:#d30707;
-      font-weight:900;
-      font-size:0.92rem;
-      letter-spacing:0.14em;
-      text-transform:uppercase;
+    .timeline-time{
+      display:inline-block;
+      margin-bottom:10px;
+      color:#fff;
+      font-family:'Bebas Neue', Impact, sans-serif;
+      font-size:1.7rem;
+      letter-spacing:0.06em;
+      line-height:1;
+      text-shadow:0 0 16px rgba(146,4,4,0.36);
+    }
+
+    .timeline-card h4{
+      margin-bottom:7px;
+      color:#fff;
+      font-size:1rem;
+      line-height:1.45;
+    }
+
+    .timeline-card p{
+      color:#cfcfcf;
+      font-size:0.9rem;
+      line-height:1.55;
       margin-bottom:10px;
     }
 
-    .program-card h3{
-      font-family:'Bebas Neue', Impact, sans-serif;
-      font-size:clamp(2.3rem, 5vw, 3.5rem);
-      letter-spacing:0.06em;
-      text-transform:uppercase;
+    .timeline-location{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:34px;
+      padding:8px 12px;
+      border-radius:999px;
+      text-align:center;
       color:#fff;
-      margin-bottom:12px;
-      text-shadow:
-        0 0 10px rgba(255,255,255,0.10),
-        0 0 24px rgba(146,4,4,0.44);
+      background:rgba(146,4,4,0.20);
+      border:1px solid rgba(146,4,4,0.32);
+      font-size:0.78rem;
+      font-weight:900;
+      line-height:1.3;
     }
 
-    .program-card p{
-      max-width:600px;
-      margin:0 auto;
-      color:#d8d8d8;
-      line-height:1.7;
-      font-size:0.98rem;
+    .timeline-card.highlight{
+      background:
+        radial-gradient(circle at 100% 0%, rgba(211,7,7,0.18), transparent 42%),
+        rgba(255,255,255,0.06);
+      border-color:rgba(211,7,7,0.26);
+    }
+
+    .timeline-card.highlight .timeline-time{
+      color:#fff0f0;
+    }
+
+    .program-note{
+      max-width:1050px;
+      margin:28px auto 0;
+      padding:16px 18px;
+      border-radius:17px;
+      color:#d4d4d4;
+      background:rgba(146,4,4,0.10);
+      border:1px solid rgba(146,4,4,0.26);
+      font-size:0.9rem;
+      line-height:1.6;
+      text-align:center;
     }
 
     /* ---------- FOOTER ---------- */
@@ -632,7 +624,6 @@
       transform:translateY(0);
     }
 
-    /* ---------- ANIMATIONS ---------- */
     @keyframes heroFadeUp{
       from{
         opacity:0;
@@ -644,13 +635,9 @@
       }
     }
 
-    @keyframes timelineQuickFade{
-      from{
-        opacity:0;
-      }
-      to{
-        opacity:1;
-      }
+    @keyframes programDayFade{
+      from{ opacity:0; transform:translateY(10px); }
+      to{ opacity:1; transform:translateY(0); }
     }
 
     /* ---------- RESPONSIVE ---------- */
@@ -662,16 +649,26 @@
 
     @media(max-width:900px){
       .timeline::before{
-        left:18px;
+        left:20px;
+        transform:none;
       }
 
-      .timeline{
+      .timeline-item,
+      .timeline-item.left,
+      .timeline-item.right,
+      .timeline-item.center{
         justify-content:flex-start;
-        padding-left:48px;
+        padding-left:56px;
+        padding-right:0;
       }
 
-      .timeline-dot{
-        left:18px;
+      .timeline-item::before{
+        left:20px;
+        transform:translateX(-50%);
+      }
+
+      .timeline-card{
+        max-width:none;
       }
     }
 
@@ -734,31 +731,17 @@
         white-space:nowrap;
       }
 
-      .deadline-section{
-        padding:62px 0 38px;
-      }
-
-      .deadline-card{
-        padding:26px 18px;
-        border-radius:24px;
-      }
-
-      .timer{
-        grid-template-columns:repeat(2, 1fr);
-        gap:10px;
-      }
-
-      .time-box{
-        padding:16px 8px;
-      }
-
       .program-section{
-        padding:38px 0 70px;
+        padding:62px 0 70px;
       }
 
-      .program-card{
-        padding:28px 20px;
-        border-radius:22px;
+      .day-tabs{
+        display:grid;
+        grid-template-columns:1fr;
+      }
+
+      .day-tab{
+        width:100%;
       }
 
       .footer-shell{
@@ -781,8 +764,12 @@
         width:100%;
       }
 
-      .timer{
-        grid-template-columns:repeat(2, 1fr);
+      .timeline-time{
+        font-size:1.45rem;
+      }
+
+      .timeline-card{
+        padding:18px;
       }
 
       footer{
@@ -794,7 +781,6 @@
 
 <body>
 
-  <!-- HEADER -->
   <header class="topbar">
     <a href="index.html" class="topbar-logo" aria-label="Overthink Film Fest - pagina principală">
       <img src="Foto/overthink-alb.svg" alt="Logo Overthink Film Fest">
@@ -817,7 +803,6 @@
     </div>
   </header>
 
-  <!-- HERO -->
   <section class="hero">
     <div class="hero-content">
       <div class="hero-label">OVERTHINK FILM FEST</div>
@@ -825,85 +810,181 @@
       <h1>Program</h1>
 
       <p>
-        Programul complet al festivalului va fi actualizat în curând.
+        Descoperă programul complet al primei ediții Overthink Film Fest, desfășurată în perioada 7–9 august 2026.
       </p>
 
       <div class="hero-actions">
-        <a href="#inscrieri" class="hero-btn primary">Înscrieri</a>
-        <a href="#program" class="hero-btn secondary">Program festival</a>
+        <a href="#program" class="hero-btn primary">Vezi programul</a>
       </div>
     </div>
   </section>
 
-  <!-- DEADLINE -->
-  <section class="deadline-section" id="inscrieri">
-    <div class="section-shell">
-      <h2 class="section-title reveal">Înscrierea scurtmetrajelor</h2>
-
-      <p class="section-subtitle reveal">
-        Înscrierea scurtmetrajelor este deschisă până la data de 1 august 2026.
-      </p>
-
-      <article class="deadline-card reveal">
-        <div class="deadline-content">
-          <div class="deadline-label">Deadline înscrieri</div>
-
-          <h3>1 august</h3>
-
-          <div class="timer" id="inscriereTimer" aria-label="Timer înscriere scurtmetraje">
-            <div class="time-box">
-              <strong id="days">00</strong>
-              <span>Zile</span>
-            </div>
-
-            <div class="time-box">
-              <strong id="hours">00</strong>
-              <span>Ore</span>
-            </div>
-
-            <div class="time-box">
-              <strong id="minutes">00</strong>
-              <span>Minute</span>
-            </div>
-
-            <div class="time-box">
-              <strong id="seconds">00</strong>
-              <span>Secunde</span>
-            </div>
-          </div>
-        </div>
-      </article>
-    </div>
-  </section>
-
-  <!-- PROGRAM -->
   <section class="program-section" id="program">
     <div class="section-shell">
       <h2 class="section-title reveal">Programul festivalului</h2>
 
       <p class="section-subtitle reveal">
-        Programul complet va fi publicat în curând.
+        Trei zile de proiecții, ateliere, teatru, muzică și întâlniri cu invitați din lumea filmului.
       </p>
 
-      <div class="timeline reveal">
-        <div class="timeline-dots" aria-hidden="true">
-          <span class="timeline-dot"></span>
-          <span class="timeline-dot"></span>
-          <span class="timeline-dot"></span>
+      <div class="day-tabs reveal" role="tablist" aria-label="Selectează ziua festivalului">
+        <button class="day-tab active" type="button" data-day="day-1">7 august</button>
+        <button class="day-tab" type="button" data-day="day-2">8 august</button>
+        <button class="day-tab" type="button" data-day="day-3">9 august</button>
+      </div>
+
+      <section class="festival-day active reveal" id="day-1">
+        <div class="day-heading">
+          <span>Ziua 1</span>
+          <h3>Vineri, 7 august 2026</h3>
         </div>
 
-        <article class="program-card">
-          <div class="program-card-content">
-            <div class="program-label" id="programLabel">Program</div>
-            <h3 id="programTitlu">Va fi anunțat</h3>
-          </div>
-        </article>
-      </div>
+        <div class="timeline">
+          <article class="timeline-item left">
+            <div class="timeline-card">
+              <div class="timeline-card-content">
+                <span class="timeline-time">15:00</span>
+                <h4>Deschiderea festivalului pe Insula de Agrement</h4>
+                <span class="timeline-location">Insula de Agrement</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="timeline-item right">
+            <div class="timeline-card">
+              <div class="timeline-card-content">
+                <span class="timeline-time">15:00–18:00</span>
+                <h4>Proiecția scurtmetrajelor din concurs</h4>
+                <span class="timeline-location">Orizont Hub</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="timeline-item left">
+            <div class="timeline-card">
+              <div class="timeline-card-content">
+                <span class="timeline-time">17:00–18:30</span>
+                <h4>Atelier de introducere în fotografie și concurs foto</h4>
+                <span class="timeline-location">Insula – Corner foto</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="timeline-item right">
+            <div class="timeline-card">
+              <div class="timeline-card-content">
+                <span class="timeline-time">17:30–20:00</span>
+                <h4>Deschiderea scenei și concert DJ</h4>
+                <span class="timeline-location">Insula de Agrement</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="timeline-item left">
+            <div class="timeline-card highlight">
+              <div class="timeline-card-content">
+                <span class="timeline-time">20:00–20:30</span>
+                <h4>Gala de deschidere</h4>
+                <p>Prezentată de Denisa Mușat și Matei Eleșei</p>
+                <span class="timeline-location">Insula de Agrement</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="timeline-item right">
+            <div class="timeline-card">
+              <div class="timeline-card-content">
+                <span class="timeline-time">20:30–20:45</span>
+                <h4>Discurs Victor și Luana Canache</h4>
+                <span class="timeline-location">Insula de Agrement</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="timeline-item left">
+            <div class="timeline-card">
+              <div class="timeline-card-content">
+                <span class="timeline-time">20:45–21:10</span>
+                <h4>Proiecția scurtmetrajului „Magicianul”</h4>
+                <span class="timeline-location">Insula de Agrement</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="timeline-item right">
+            <div class="timeline-card highlight">
+              <div class="timeline-card-content">
+                <span class="timeline-time">21:10–22:40</span>
+                <h4>Proiecția lungmetrajului „Capra cu trei iezi”</h4>
+                <span class="timeline-location">Insula de Agrement</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="festival-day reveal" id="day-2">
+        <div class="day-heading">
+          <span>Ziua 2</span>
+          <h3>Sâmbătă, 8 august 2026</h3>
+        </div>
+
+        <div class="timeline">
+          <article class="timeline-item left"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">09:30</span><h4>Deschiderea festivalului pe Insula de Agrement</h4><span class="timeline-location">Insula de Agrement</span></div></div></article>
+          <article class="timeline-item right"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">10:00–11:30</span><h4>Atelier de cascadorie cu Cosmin Pădureanu</h4><span class="timeline-location">Teatrul Municipal Bacovia</span></div></div></article>
+          <article class="timeline-item left"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">10:00–12:00</span><h4>Atelier de leadership cu Doru Huțuțui</h4><span class="timeline-location">Orizont Hub</span></div></div></article>
+          <article class="timeline-item right"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">11:30–13:00</span><h4>Atelier cu Armine Vosganian</h4><span class="timeline-location">Teatrul Municipal Bacovia</span></div></div></article>
+          <article class="timeline-item left"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">12:15–13:45</span><h4>Atelier de jurnalism cu Laura Huiban</h4><span class="timeline-location">Orizont Hub</span></div></div></article>
+          <article class="timeline-item right"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">13:00–15:00</span><h4>Pauză</h4><span class="timeline-location">Toate locațiile</span></div></div></article>
+          <article class="timeline-item left"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">15:00–18:00</span><h4>Proiecția scurtmetrajelor din concurs</h4><span class="timeline-location">Orizont Hub</span></div></div></article>
+          <article class="timeline-item right"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">15:00–16:30</span><h4>Atelier de literatură cu Adrian Jicu</h4><span class="timeline-location">Insula de Agrement</span></div></div></article>
+          <article class="timeline-item left"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">15:00–16:30</span><h4>Atelier de producție cu Victor și Luana Canache</h4><span class="timeline-location">Centrul „George Apostu”</span></div></div></article>
+          <article class="timeline-item right"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">17:00–18:30</span><h4>„Povești din lumea cinematografiei” cu Marian Țuțui</h4><span class="timeline-location">Insula de Agrement</span></div></div></article>
+          <article class="timeline-item left"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">17:00–18:30</span><h4>Atelier cu Ovidiu Ungureanu</h4><span class="timeline-location">Centrul „George Apostu”</span></div></div></article>
+          <article class="timeline-item right"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">17:00–18:30</span><h4>Spectacol de teatru cu Nobody's Group</h4><span class="timeline-location">Teatrul Municipal Bacovia</span></div></div></article>
+          <article class="timeline-item left"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">17:30–20:30</span><h4>Deschiderea scenei și concert DJ</h4><span class="timeline-location">Insula de Agrement</span></div></div></article>
+          <article class="timeline-item right"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">18:30–20:00</span><h4>Spectacol de teatru cu In the Spot</h4><span class="timeline-location">Teatrul Municipal Bacovia</span></div></div></article>
+          <article class="timeline-item left"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">19:00–21:00</span><h4>Proiecții de scurtmetraje și documentare</h4><span class="timeline-location">Centrul „George Apostu”</span></div></div></article>
+          <article class="timeline-item right"><div class="timeline-card highlight"><div class="timeline-card-content"><span class="timeline-time">20:30–20:45</span><h4>Prezentarea zilei a doua</h4><p>Denisa Mușat</p><span class="timeline-location">Insula de Agrement</span></div></div></article>
+          <article class="timeline-item left"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">20:45–21:15</span><h4>Proiecția scurtmetrajului „Ultima Cascadă”</h4><span class="timeline-location">Insula de Agrement</span></div></div></article>
+          <article class="timeline-item right"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">21:15–21:35</span><h4>Momentul invitatului special – Adria Ștefănescu</h4><span class="timeline-location">Insula de Agrement</span></div></div></article>
+          <article class="timeline-item left"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">21:35–21:50</span><h4>Discurs Daniel Baliș</h4><span class="timeline-location">Insula de Agrement</span></div></div></article>
+          <article class="timeline-item right"><div class="timeline-card highlight"><div class="timeline-card-content"><span class="timeline-time">21:50–23:20</span><h4>Proiecția lungmetrajului „Warboy”</h4><span class="timeline-location">Insula de Agrement</span></div></div></article>
+        </div>
+      </section>
+
+      <section class="festival-day reveal" id="day-3">
+        <div class="day-heading">
+          <span>Ziua 3</span>
+          <h3>Duminică, 9 august 2026</h3>
+        </div>
+
+        <div class="timeline">
+          <article class="timeline-item left"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">10:00–11:30</span><h4>Atelier de compoziție a coloanei sonore cu Eduard Fulga</h4><span class="timeline-location">Teatrul Municipal Bacovia</span></div></div></article>
+          <article class="timeline-item right"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">11:00</span><h4>Deschiderea festivalului pe Insula de Agrement</h4><span class="timeline-location">Insula de Agrement</span></div></div></article>
+          <article class="timeline-item left"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">11:30–13:00</span><h4>Atelier de actorie cu Denisa Mușat</h4><span class="timeline-location">Insula de Agrement</span></div></div></article>
+          <article class="timeline-item right"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">11:30–13:00</span><h4>Atelier cu Lulu de Hillerin</h4><span class="timeline-location">Teatrul Municipal Bacovia</span></div></div></article>
+          <article class="timeline-item left"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">13:00–15:00</span><h4>Pauză</h4><span class="timeline-location">Toate locațiile</span></div></div></article>
+          <article class="timeline-item right"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">15:00–16:30</span><h4>Atelier cu Cristina Frânculescu</h4><span class="timeline-location">Teatrul Municipal Bacovia</span></div></div></article>
+          <article class="timeline-item left"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">15:00–16:30</span><h4>Atelier cu Raluca Nechifor</h4><span class="timeline-location">Orizont Hub</span></div></div></article>
+          <article class="timeline-item right"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">17:00–18:30</span><h4>Atelier de actorie cu Theodor Nechita și Ioana Verman</h4><span class="timeline-location">Teatrul Municipal Bacovia</span></div></div></article>
+          <article class="timeline-item left"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">17:00–18:30</span><h4>Workshop de muzică cu Adi Năstase și Brothers of Rock</h4><span class="timeline-location">Insula de Agrement</span></div></div></article>
+          <article class="timeline-item right"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">17:00–19:30</span><h4>Deschiderea scenei și concert DJ</h4><span class="timeline-location">Insula de Agrement</span></div></div></article>
+          <article class="timeline-item left"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">18:30–20:00</span><h4>Spectacol de teatru cu In the Spot</h4><span class="timeline-location">Teatrul Municipal Bacovia</span></div></div></article>
+          <article class="timeline-item right"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">19:30–20:15</span><h4>Concert Drift Wood</h4><span class="timeline-location">Insula de Agrement</span></div></div></article>
+          <article class="timeline-item left"><div class="timeline-card highlight"><div class="timeline-card-content"><span class="timeline-time">20:15–21:15</span><h4>Festivitatea de premiere</h4><span class="timeline-location">Insula de Agrement</span></div></div></article>
+          <article class="timeline-item right"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">21:15–21:35</span><h4>Premiera scurtmetrajului „Pe celălalt mal”</h4><span class="timeline-location">Insula de Agrement</span></div></div></article>
+          <article class="timeline-item left"><div class="timeline-card highlight"><div class="timeline-card-content"><span class="timeline-time">21:35–23:00</span><h4>Proiecția lungmetrajului „Băieții buni ajung în rai”</h4><span class="timeline-location">Insula de Agrement</span></div></div></article>
+        </div>
+      </section>
+
+      <p class="program-note reveal">
+        Programul poate suferi modificări. Urmărește canalele oficiale Overthink Film Fest pentru eventuale actualizări.
+      </p>
     </div>
   </section>
 
-  <!-- FOOTER -->
- <footer>
+  <footer>
     <div class="footer-shell">
       <div class="footer-brand">
         <img src="Foto/LOGO Overthink 2 (1).svg" alt="Logo Overthink Film Fest">
@@ -926,7 +1007,7 @@
         <h3>Contact</h3>
         <p>Email: office@overthink-jr.com</p>
         <p>Telefon: 0773 746 372</p>
-        <a href="https://www.instagram.com/overthink.jr" target="_blank">Instagram: @overthink.jr</a>
+        <a href="https://www.instagram.com/overthink.jr" target="_blank" rel="noopener noreferrer">Instagram: @overthink.jr</a>
       </div>
     </div>
 
@@ -936,21 +1017,6 @@
   </footer>
 
   <script>
-    /*
-      VARIABILE UȘOR DE MODIFICAT
-      --------------------------------------------------
-      deadlineInscriereScurtmetraj controlează timerul.
-      programFestival controlează cadranul unic din timeline.
-    */
-
-    const deadlineInscriereScurtmetraj = "2026-08-01T23:59:59";
-
-    const programFestival = {
-      label: "Program",
-      titlu: "Va fi anunțat",
-      text: "Programul complet al festivalului va fi publicat în curând."
-    };
-
     // DROPDOWN MENU
     const menuWrapper = document.getElementById("menuWrapper");
     const menuToggle = document.getElementById("menuToggle");
@@ -975,75 +1041,35 @@
     // REVEAL ON SCROLL
     const revealElements = document.querySelectorAll(".reveal");
 
-    const revealObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if(entry.isIntersecting){
-          entry.target.classList.add("visible");
-        }
+    if("IntersectionObserver" in window){
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if(entry.isIntersecting){
+            entry.target.classList.add("visible");
+          }
+        });
+      }, { threshold:0.10 });
+
+      revealElements.forEach(el => revealObserver.observe(el));
+    }else{
+      revealElements.forEach(el => el.classList.add("visible"));
+    }
+
+    // SELECTAREA ZILEI
+    const dayTabs = document.querySelectorAll(".day-tab");
+    const festivalDays = document.querySelectorAll(".festival-day");
+
+    dayTabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        const targetDay = tab.dataset.day;
+
+        dayTabs.forEach(item => item.classList.remove("active"));
+        festivalDays.forEach(day => day.classList.remove("active"));
+
+        tab.classList.add("active");
+        document.getElementById(targetDay).classList.add("active");
       });
-    }, {
-      threshold:0.15
     });
-
-    revealElements.forEach(el => revealObserver.observe(el));
-
-    // COUNTDOWN - copiat după timerul funcțional din index.html
-    const countdownDeadline = new Date("2026-08-01T23:59:59").getTime();
-
-    const daysEl = document.getElementById("days");
-    const hoursEl = document.getElementById("hours");
-    const minutesEl = document.getElementById("minutes");
-    const secondsEl = document.getElementById("seconds");
-
-    function updateCountdown(){
-      const now = new Date().getTime();
-      const distance = countdownDeadline - now;
-
-      if(!daysEl || !hoursEl || !minutesEl || !secondsEl){
-        return;
-      }
-
-      if(distance <= 0){
-        daysEl.textContent = "00";
-        hoursEl.textContent = "00";
-        minutesEl.textContent = "00";
-        secondsEl.textContent = "00";
-        return;
-      }
-
-      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-      daysEl.textContent = String(days).padStart(2, "0");
-      hoursEl.textContent = String(hours).padStart(2, "0");
-      minutesEl.textContent = String(minutes).padStart(2, "0");
-      secondsEl.textContent = String(seconds).padStart(2, "0");
-    }
-
-    // COMPLETARE PROGRAM DIN VARIABILE
-    function fillProgram(){
-      const programLabel = document.getElementById("programLabel");
-      const programTitlu = document.getElementById("programTitlu");
-      const programText = document.getElementById("programText");
-
-      if(programLabel){
-        programLabel.textContent = programFestival.label || "Program";
-      }
-
-      if(programTitlu){
-        programTitlu.textContent = programFestival.titlu || "Va fi anunțat";
-      }
-
-      if(programText){
-        programText.textContent = programFestival.text || "Programul complet al festivalului va fi publicat în curând.";
-      }
-    }
-
-    updateCountdown();
-    setInterval(updateCountdown, 1000);
-    fillProgram();
   </script>
 
 </body>
