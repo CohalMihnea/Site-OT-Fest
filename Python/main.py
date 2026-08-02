@@ -5,7 +5,7 @@ from fastapi.staticfiles import StaticFiles
 from routers import auth_routes, account_routes, submission_routes, admin_routes, news_routes, volunteer_routes
 from config import HTML_DIR, STATIC_DIR
 from database import Base, engine
-
+from fastapi import HTTPException
 
 Base.metadata.create_all(bind=engine)
 
@@ -37,6 +37,7 @@ if STATIC_DIR.exists():
         name="foto"
     )
 
+INSCRIERI_DESCHISE = False
 
 def serve_html_file(filename: str):
     file_path = HTML_DIR / filename
@@ -71,7 +72,7 @@ def program_page():
 
 @app.get("/inscriere.html")
 def inscriere_page():
-    return serve_html_file("inscriere.html")
+    return serve_html_file("inscrieri_inchise.html")
 
 
 @app.get("/auth.html")

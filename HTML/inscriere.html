@@ -889,6 +889,43 @@
       }
     }
 
+
+    /* ---------- ÎNSCRIERI ÎNCHISE ---------- */
+    .registrations-closed{
+      display:none;
+      max-width:900px;
+      margin:0 auto;
+      padding:42px 30px;
+      border-radius:28px;
+      text-align:center;
+      background:rgba(255,255,255,0.045);
+      border:1px solid rgba(255,255,255,0.10);
+      box-shadow:0 18px 55px rgba(0,0,0,0.38);
+    }
+
+    .registrations-closed.visible{
+      display:block;
+      animation:fadeIn 0.35s ease forwards;
+    }
+
+    .registrations-closed h3{
+      font-family:'Bebas Neue', Impact, sans-serif;
+      font-size:clamp(2.4rem, 5vw, 3.7rem);
+      letter-spacing:0.06em;
+      margin-bottom:14px;
+      color:#fff;
+      text-transform:uppercase;
+      text-shadow:0 0 22px rgba(146,4,4,0.32);
+    }
+
+    .registrations-closed p{
+      max-width:720px;
+      margin:0 auto;
+      color:#d8d8d8;
+      line-height:1.75;
+      font-size:1rem;
+    }
+
     /* ---------- FOOTER ---------- */
     footer{
       background:#0d0d0d;
@@ -1140,12 +1177,12 @@
 
       <h1>Înscriere</h1>
 
-      <p>
+      <p id="heroRegistrationText">
         Completează formularul pentru înscrierea scurtmetrajului tău în prima ediție Overthink Film Fest.
         Înscrierile sunt deschise până pe 1 august 2026.
       </p>
 
-      <div class="hero-actions">
+      <div class="hero-actions" id="heroRegistrationActions">
         <a href="#formular" class="hero-btn primary">Completează formularul</a>
       </div>
     </div>
@@ -1154,13 +1191,13 @@
   <!-- FORMULAR -->
   <section class="form-section" id="formular">
     <div class="section-shell">
-      <h2 class="section-title reveal">Formular înscriere</h2>
+      <h2 class="section-title reveal" id="formSectionTitle">Formular înscriere</h2>
 
-      <p class="section-subtitle reveal">
+      <p class="section-subtitle reveal" id="formSectionSubtitle">
         Câmpurile marcate cu steluță sunt obligatorii. Dacă filmul depășește 25 de minute, îl poți trimite, iar includerea lui în concurs va rămâne la decizia echipei de selecție.
       </p>
 
-      <article class="form-card reveal">
+      <article class="form-card reveal" id="registrationFormCard">
         <div class="form-content">
           <form id="submissionForm" autocomplete="off" novalidate>
 
@@ -1459,6 +1496,14 @@
           </form>
         </div>
       </article>
+
+      <div class="registrations-closed" id="registrationsClosed" role="status" aria-live="polite">
+        <h3>Înscrierile s-au încheiat</h3>
+        <p>
+          Perioada de înscriere a scurtmetrajelor la Overthink Film Fest 2026 s-a încheiat.
+          Vă mulțumim pentru interes și pentru toate proiectele transmise.
+        </p>
+      </div>
     </div>
   </section>
 
@@ -1496,6 +1541,9 @@
   </footer>
 
   <script>
+    // 1 = înscrieri deschise, 0 = înscrieri închise
+    const INSCRIERI_DESCHISE = 0;
+
     // DROPDOWN MENU
     const menuWrapper = document.getElementById("menuWrapper");
     const menuToggle = document.getElementById("menuToggle");
@@ -1541,6 +1589,49 @@
     const existingAccountBlock = document.getElementById("existingAccountBlock");
     const newAccountBlock = document.getElementById("newAccountBlock");
     const sendCodeBtn = document.getElementById("sendCodeBtn");
+    const registrationFormCard = document.getElementById("registrationFormCard");
+    const registrationsClosed = document.getElementById("registrationsClosed");
+    const heroRegistrationText = document.getElementById("heroRegistrationText");
+    const heroRegistrationActions = document.getElementById("heroRegistrationActions");
+    const formSectionTitle = document.getElementById("formSectionTitle");
+    const formSectionSubtitle = document.getElementById("formSectionSubtitle");
+
+    function applyRegistrationState(){
+      const registrationsAreOpen = INSCRIERI_DESCHISE === 1;
+
+      if(registrationFormCard){
+        registrationFormCard.style.display = registrationsAreOpen ? "" : "none";
+      }
+
+      if(registrationsClosed){
+        registrationsClosed.classList.toggle("visible", !registrationsAreOpen);
+      }
+
+      if(heroRegistrationActions){
+        heroRegistrationActions.style.display = registrationsAreOpen ? "" : "none";
+      }
+
+      if(heroRegistrationText && !registrationsAreOpen){
+        heroRegistrationText.textContent =
+          "Perioada de înscriere a scurtmetrajelor la Overthink Film Fest 2026 s-a încheiat.";
+      }
+
+      if(formSectionTitle && !registrationsAreOpen){
+        formSectionTitle.textContent = "Înscrieri încheiate";
+      }
+
+      if(formSectionSubtitle){
+        formSectionSubtitle.style.display = registrationsAreOpen ? "" : "none";
+      }
+
+      if(form){
+        form.querySelectorAll("input, select, textarea, button").forEach((element) => {
+          element.disabled = !registrationsAreOpen;
+        });
+      }
+
+      return registrationsAreOpen;
+    }
 
     let existingSubmission = null;
     let editMode = false;
@@ -1969,6 +2060,11 @@
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
 
+      if(INSCRIERI_DESCHISE !== 1){
+        showStatus("Perioada de înscriere s-a încheiat.", "error");
+        return;
+      }
+
       if(!requireLogin()){
         return;
       }
@@ -2012,9 +2108,13 @@
       }
     });
 
-    hideAccountBlocksForLoggedUser();
-    requireLogin();
-    loadExistingSubmissionForEdit();
+    const registrationsAreOpen = applyRegistrationState();
+
+    if(registrationsAreOpen){
+      hideAccountBlocksForLoggedUser();
+      requireLogin();
+      loadExistingSubmissionForEdit();
+    }
 
     function initPasswordToggles(){
       const passwordInputs = document.querySelectorAll('input[type="password"], input[data-password-input="1"]');
