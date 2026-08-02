@@ -415,51 +415,36 @@
     .timeline-item{
       position:relative;
       display:flex;
+      align-items:center;
+      justify-content:center;
       width:100%;
-      margin:0 0 26px 0;
+      margin:0 0 30px 0;
       min-height:108px;
+      padding:0 70px;
       z-index:2;
     }
 
-    .timeline-item.left{
-      justify-content:flex-start;
-      padding-right:calc(50% + 34px);
-    }
-
-    .timeline-item.right{
-      justify-content:flex-end;
-      padding-left:calc(50% + 34px);
-    }
-
+    .timeline-item.left,
+    .timeline-item.right,
     .timeline-item.center{
       justify-content:center;
-      padding-left:90px;
-      padding-right:90px;
+      padding-left:70px;
+      padding-right:70px;
     }
 
+    /* Chenarul evenimentului înlocuiește punctul de pe timeline */
     .timeline-item::before{
-      content:"";
-      position:absolute;
-      top:42px;
-      left:50%;
-      width:18px;
-      height:18px;
-      border-radius:50%;
-      transform:translateX(-50%);
-      background:#b80606;
-      box-shadow:0 0 22px rgba(184,6,6,0.72);
-      border:1px solid rgba(255,255,255,0.14);
-      z-index:3;
+      display:none;
     }
 
     .timeline-card{
       position:relative;
       width:100%;
-      max-width:430px;
+      max-width:760px;
       padding:20px 22px;
       border-radius:22px;
-      background:rgba(255,255,255,0.05);
-      border:1px solid rgba(255,255,255,0.09);
+      background:rgba(13,13,13,0.96);
+      border:1px solid rgba(255,255,255,0.10);
       box-shadow:
         0 18px 55px rgba(0,0,0,0.38),
         0 0 24px rgba(146,4,4,0.10);
@@ -649,26 +634,21 @@
 
     @media(max-width:900px){
       .timeline::before{
-        left:20px;
-        transform:none;
+        left:50%;
+        transform:translateX(-50%);
       }
 
       .timeline-item,
       .timeline-item.left,
       .timeline-item.right,
       .timeline-item.center{
-        justify-content:flex-start;
-        padding-left:56px;
-        padding-right:0;
-      }
-
-      .timeline-item::before{
-        left:20px;
-        transform:translateX(-50%);
+        justify-content:center;
+        padding-left:22px;
+        padding-right:22px;
       }
 
       .timeline-card{
-        max-width:none;
+        max-width:760px;
       }
     }
 
