@@ -1,3 +1,5 @@
+import os
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
@@ -113,6 +115,20 @@ def regulament_page():
 @app.get("/noutati-admin.html")
 def noutati_admin_page():
     return serve_html_file("noutati-admin.html")
+
+FILE_PATH = "/var/data/festival.db"
+
+@app.get("/download-db")
+async def download_database():
+    # Verificăm dacă fișierul există pe disk pentru a evita o eroare internă 500
+    if not os.path.exists(FILE_PATH):
+        raise HTTPException(status_code=404, detail="Fișierul bazei de date nu a fost găsit.")
+
+    return FileResponse(
+        path=FILE_PATH,
+        filename="festival.db",  # Numele fișierului salvat pe calculatorul clientului
+        media_type="application/octet-stream"
+    )
 
 
 @app.get("/api/health")
