@@ -1,16 +1,14 @@
 <!DOCTYPE html>
+
 <html lang="ro">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <title>Program | Overthink Film Fest</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Program | Overthink Film Fest</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<style>
     *{
       margin:0;
       padding:0;
@@ -386,144 +384,31 @@
       text-shadow:0 0 20px rgba(146,4,4,0.26);
     }
 
-    .timeline{
-      position:relative;
-      max-width:1040px;
-      margin:0 auto;
-      padding:18px 0 10px;
-    }
-
-    .timeline::before{
-      content:"";
-      position:absolute;
-      top:0;
-      bottom:0;
-      left:50%;
-      width:2px;
-      transform:translateX(-50%);
-      background:linear-gradient(
-        transparent,
-        rgba(146,4,4,0.80),
-        rgba(255,255,255,0.14),
-        rgba(146,4,4,0.80),
-        transparent
-      );
-      box-shadow:0 0 22px rgba(146,4,4,0.38);
-      z-index:1;
-    }
-
-    .timeline-item{
-      position:relative;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      width:100%;
-      margin:0 0 30px 0;
-      min-height:108px;
-      padding:0 70px;
-      z-index:2;
-    }
-
-    .timeline-item.left,
-    .timeline-item.right,
-    .timeline-item.center{
-      justify-content:center;
-      padding-left:70px;
-      padding-right:70px;
-    }
-
-    /* Chenarul evenimentului înlocuiește punctul de pe timeline */
-    .timeline-item::before{
-      display:none;
-    }
-
-    .timeline-card{
-      position:relative;
-      width:100%;
-      max-width:760px;
-      padding:20px 22px;
-      border-radius:22px;
-      background:rgba(13,13,13,0.96);
-      border:1px solid rgba(255,255,255,0.10);
-      box-shadow:
-        0 18px 55px rgba(0,0,0,0.38),
-        0 0 24px rgba(146,4,4,0.10);
-      transition:0.25s ease;
-      overflow:hidden;
-    }
-
-    .timeline-card::before{
-      content:"";
-      position:absolute;
-      inset:-1px;
-      background:radial-gradient(circle at 50% 0%, rgba(146,4,4,0.20), transparent 44%);
-      pointer-events:none;
-    }
-
-    .timeline-item:hover .timeline-card{
-      transform:translateY(-4px);
-      border-color:rgba(146,4,4,0.36);
-      box-shadow:
-        0 18px 55px rgba(0,0,0,0.44),
-        0 0 30px rgba(146,4,4,0.18);
-    }
-
-    .timeline-card-content{
-      position:relative;
-      z-index:2;
-    }
-
-    .timeline-time{
-      display:inline-block;
-      margin-bottom:10px;
-      color:#fff;
-      font-family:'Bebas Neue', Impact, sans-serif;
-      font-size:1.7rem;
-      letter-spacing:0.06em;
-      line-height:1;
-      text-shadow:0 0 16px rgba(146,4,4,0.36);
-    }
-
-    .timeline-card h4{
-      margin-bottom:7px;
-      color:#fff;
-      font-size:1rem;
-      line-height:1.45;
-    }
-
-    .timeline-card p{
-      color:#cfcfcf;
-      font-size:0.9rem;
-      line-height:1.55;
-      margin-bottom:10px;
-    }
-
-    .timeline-location{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      min-height:34px;
-      padding:8px 12px;
-      border-radius:999px;
-      text-align:center;
-      color:#fff;
-      background:rgba(146,4,4,0.20);
-      border:1px solid rgba(146,4,4,0.32);
-      font-size:0.78rem;
-      font-weight:900;
-      line-height:1.3;
-    }
-
-    .timeline-card.highlight{
-      background:
-        radial-gradient(circle at 100% 0%, rgba(211,7,7,0.18), transparent 42%),
-        rgba(255,255,255,0.06);
-      border-color:rgba(211,7,7,0.26);
-    }
-
-    .timeline-card.highlight .timeline-time{
-      color:#fff0f0;
-    }
+    .schedule-groups{display:grid;gap:16px;max-width:1000px;margin:0 auto;}
+    .schedule-group{border:1px solid rgba(255,255,255,0.09);border-radius:22px;overflow:hidden;background:rgba(255,255,255,0.035);box-shadow:0 14px 42px rgba(0,0,0,0.30);}
+    .group-toggle{width:100%;border:none;color:#fff;cursor:pointer;padding:18px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;background:radial-gradient(circle at 0 0, rgba(146,4,4,0.22), transparent 42%),rgba(255,255,255,0.045);font-family:'Inter',Arial,sans-serif;text-align:left;transition:0.25s ease;}
+    .group-toggle:hover{background:radial-gradient(circle at 0 0, rgba(146,4,4,0.30), transparent 44%),rgba(255,255,255,0.065);}
+    .group-title{display:flex;flex-direction:column;gap:4px;}
+    .group-title strong{font-family:'Bebas Neue',Impact,sans-serif;font-size:1.85rem;letter-spacing:0.06em;text-transform:uppercase;}
+    .group-title span{color:#cfcfcf;font-size:0.84rem;font-weight:700;}
+    .group-arrow{font-size:1.1rem;transition:0.25s ease;}
+    .schedule-group.open .group-arrow{transform:rotate(180deg);}
+    .group-content{display:none;padding:8px 14px 14px;}
+    .schedule-group.open .group-content{display:block;animation:programDayFade 0.28s ease forwards;}
+    .compact-event{display:grid;grid-template-columns:130px minmax(0,1fr) auto;gap:16px;align-items:center;padding:14px 8px;border-bottom:1px solid rgba(255,255,255,0.07);}
+    .compact-event:last-child{border-bottom:none;}
+    .compact-event.highlight{margin:8px 0;padding:16px 14px;border:1px solid rgba(211,7,7,0.28);border-radius:16px;background:radial-gradient(circle at 100% 0, rgba(211,7,7,0.16), transparent 46%),rgba(255,255,255,0.04);}
+    .compact-time{color:#fff;font-family:'Bebas Neue',Impact,sans-serif;font-size:1.42rem;letter-spacing:0.05em;white-space:nowrap;text-shadow:0 0 14px rgba(146,4,4,0.34);}
+    .compact-main h4{margin:0;color:#fff;font-size:0.98rem;line-height:1.42;}
+    .compact-main p{margin:5px 0 0;color:#c9c9c9;font-size:0.86rem;line-height:1.45;}
+    .compact-location{max-width:180px;padding:7px 11px;border-radius:999px;text-align:center;color:#fff;background:rgba(146,4,4,0.18);border:1px solid rgba(146,4,4,0.30);font-size:0.74rem;font-weight:900;line-height:1.25;}
+    .location-filters{display:flex;justify-content:center;flex-wrap:wrap;gap:9px;margin:0 auto 26px;}
+    .location-filter{border:1px solid rgba(255,255,255,0.10);background:rgba(255,255,255,0.045);color:#fff;padding:9px 14px;border-radius:999px;font-family:'Inter',Arial,sans-serif;font-size:0.82rem;font-weight:900;cursor:pointer;transition:0.22s ease;}
+    .location-filter:hover,.location-filter.active{background:rgba(146,4,4,0.86);border-color:rgba(146,4,4,0.55);transform:translateY(-2px);}
+    .compact-event.hidden{display:none;}
+    .group-empty{display:none;padding:18px;text-align:center;color:#bbb;font-size:0.9rem;}
+    .schedule-group.no-results .group-empty{display:block;}
+    @media(max-width:760px){.compact-event{grid-template-columns:1fr;gap:7px;padding:14px 6px;}.compact-location{width:max-content;max-width:100%;text-align:left;}.group-toggle{padding:16px;}.group-title strong{font-size:1.55rem;}}
 
     .program-note{
       max-width:1050px;
@@ -758,245 +643,101 @@
     }
   </style>
 </head>
-
 <body>
-
-  <header class="topbar">
-    <a href="index.html" class="topbar-logo" aria-label="Overthink Film Fest - pagina principală">
-      <img src="Foto/overthink-alb.svg" alt="Logo Overthink Film Fest">
-    </a>
-
-    <div class="topbar-title">OVERTHINK FILM FEST</div>
-
-    <div class="menu-wrapper" id="menuWrapper">
-      <button class="menu-toggle" id="menuToggle" type="button" aria-label="Deschide meniul">
+<header class="topbar">
+<a aria-label="Overthink Film Fest - pagina principală" class="topbar-logo" href="index.html">
+<img alt="Logo Overthink Film Fest" src="Foto/overthink-alb.svg"/>
+</a>
+<div class="topbar-title">OVERTHINK FILM FEST</div>
+<div class="menu-wrapper" id="menuWrapper">
+<button aria-label="Deschide meniul" class="menu-toggle" id="menuToggle" type="button">
         Meniu <span class="menu-arrow">▾</span>
-      </button>
-
-      <nav class="dropdown-menu" id="dropdownMenu">
-        <a href="index.html">Acasă</a>
-        <a href="contact.html">Contact</a>
-        <a href="program.html" class="active">Program</a>
-        <a href="cont.html">Cont</a>
-        <a href="inscriere.html">Înscrie-te</a>
-      </nav>
-    </div>
-  </header>
-
-  <section class="hero">
-    <div class="hero-content">
-      <div class="hero-label">OVERTHINK FILM FEST</div>
-
-      <h1>Program</h1>
-
-      <p>
+</button>
+<nav class="dropdown-menu" id="dropdownMenu">
+<a href="index.html">Acasă</a>
+<a href="contact.html">Contact</a>
+<a class="active" href="program.html">Program</a>
+<a href="cont.html">Cont</a>
+<a href="inscriere.html">Înscrie-te</a>
+</nav>
+</div>
+</header>
+<section class="hero">
+<div class="hero-content">
+<div class="hero-label">OVERTHINK FILM FEST</div>
+<h1>Program</h1>
+<p>
         Descoperă programul complet al primei ediții Overthink Film Fest, desfășurată în perioada 7–9 august 2026.
       </p>
-
-      <div class="hero-actions">
-        <a href="#program" class="hero-btn primary">Vezi programul</a>
-      </div>
-    </div>
-  </section>
-
-  <section class="program-section" id="program">
-    <div class="section-shell">
-      <h2 class="section-title reveal">Programul festivalului</h2>
-
-      <p class="section-subtitle reveal">
+<div class="hero-actions">
+<a class="hero-btn primary" href="#program">Vezi programul</a>
+</div>
+</div>
+</section>
+<section class="program-section" id="program">
+<div class="section-shell">
+<h2 class="section-title reveal">Programul festivalului</h2>
+<p class="section-subtitle reveal">
         Trei zile de proiecții, ateliere, teatru, muzică și întâlniri cu invitați din lumea filmului.
       </p>
-
-      <div class="day-tabs reveal" role="tablist" aria-label="Selectează ziua festivalului">
-        <button class="day-tab active" type="button" data-day="day-1">7 august</button>
-        <button class="day-tab" type="button" data-day="day-2">8 august</button>
-        <button class="day-tab" type="button" data-day="day-3">9 august</button>
-      </div>
-
-      <section class="festival-day active reveal" id="day-1">
-        <div class="day-heading">
-          <span>Ziua 1</span>
-          <h3>Vineri, 7 august 2026</h3>
-        </div>
-
-        <div class="timeline">
-          <article class="timeline-item left">
-            <div class="timeline-card">
-              <div class="timeline-card-content">
-                <span class="timeline-time">15:00</span>
-                <h4>Deschiderea festivalului pe Insula de Agrement</h4>
-                <span class="timeline-location">Insula de Agrement</span>
-              </div>
-            </div>
-          </article>
-
-          <article class="timeline-item right">
-            <div class="timeline-card">
-              <div class="timeline-card-content">
-                <span class="timeline-time">15:00–18:00</span>
-                <h4>Proiecția scurtmetrajelor din concurs</h4>
-                <span class="timeline-location">Orizont Hub</span>
-              </div>
-            </div>
-          </article>
-
-          <article class="timeline-item left">
-            <div class="timeline-card">
-              <div class="timeline-card-content">
-                <span class="timeline-time">17:00–18:30</span>
-                <h4>Atelier de introducere în fotografie și concurs foto</h4>
-                <span class="timeline-location">Insula – Corner foto</span>
-              </div>
-            </div>
-          </article>
-
-          <article class="timeline-item right">
-            <div class="timeline-card">
-              <div class="timeline-card-content">
-                <span class="timeline-time">17:30–20:00</span>
-                <h4>Deschiderea scenei și concert DJ</h4>
-                <span class="timeline-location">Insula de Agrement</span>
-              </div>
-            </div>
-          </article>
-
-          <article class="timeline-item left">
-            <div class="timeline-card highlight">
-              <div class="timeline-card-content">
-                <span class="timeline-time">20:00–20:30</span>
-                <h4>Gala de deschidere</h4>
-                <p>Prezentată de Denisa Musat și Elesei Matei</p>
-                <span class="timeline-location">Insula de Agrement</span>
-              </div>
-            </div>
-          </article>
-
-          <article class="timeline-item right">
-            <div class="timeline-card">
-              <div class="timeline-card-content">
-                <span class="timeline-time">20:30–20:45</span>
-                <h4>Discurs Victor și Luana Canache</h4>
-                <span class="timeline-location">Insula de Agrement</span>
-              </div>
-            </div>
-          </article>
-
-          <article class="timeline-item left">
-            <div class="timeline-card">
-              <div class="timeline-card-content">
-                <span class="timeline-time">20:45–21:10</span>
-                <h4>Proiecția scurtmetrajului „Magicianul”</h4>
-                <span class="timeline-location">Insula de Agrement</span>
-              </div>
-            </div>
-          </article>
-
-          <article class="timeline-item right">
-            <div class="timeline-card highlight">
-              <div class="timeline-card-content">
-                <span class="timeline-time">21:10–22:40</span>
-                <h4>Proiecția lungmetrajului „Capra cu trei iezi”</h4>
-                <span class="timeline-location">Insula de Agrement</span>
-              </div>
-            </div>
-          </article>
-        </div>
-      </section>
-
-      <section class="festival-day reveal" id="day-2">
-        <div class="day-heading">
-          <span>Ziua 2</span>
-          <h3>Sâmbătă, 8 august 2026</h3>
-        </div>
-
-        <div class="timeline">
-          <article class="timeline-item left"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">09:30</span><h4>Deschiderea festivalului pe Insula de Agrement</h4><span class="timeline-location">Insula de Agrement</span></div></div></article>
-          <article class="timeline-item right"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">10:00–11:30</span><h4>Atelier de cascadorie cu Comin Padureanu</h4><span class="timeline-location">Teatrul Municipal Bacovia</span></div></div></article>
-          <article class="timeline-item left"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">10:00–12:00</span><h4>Atelier de leadership cu Doru Hututui</h4><span class="timeline-location">Orizont Hub</span></div></div></article>
-          <article class="timeline-item right"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">11:30–13:00</span><h4>Atelier cu Armine Vosgonian</h4><span class="timeline-location">Teatrul Municipal Bacovia</span></div></div></article>
-          <article class="timeline-item left"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">12:15–13:45</span><h4>Atelier de jurnalism cu Laura Huiban</h4><span class="timeline-location">Orizont Hub</span></div></div></article>
-          <article class="timeline-item right"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">13:00–15:00</span><h4>Pauză</h4><span class="timeline-location">Toate locațiile</span></div></div></article>
-          <article class="timeline-item left"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">15:00–18:00</span><h4>Proiecția scurtmetrajelor din concurs</h4><span class="timeline-location">Orizont Hub</span></div></div></article>
-          <article class="timeline-item right"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">15:00–16:30</span><h4>Atelier de literatură cu Adrian Jicu</h4><span class="timeline-location">Insula de Agrement</span></div></div></article>
-          <article class="timeline-item left"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">15:00–16:30</span><h4>Atelier de producție cu Victor și Luana Canache</h4><span class="timeline-location">Centrul „George Apostu”</span></div></div></article>
-          <article class="timeline-item right"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">17:00–18:30</span><h4>„Povești din lumea cinematografiei” cu Marian Tutui</h4><span class="timeline-location">Insula de Agrement</span></div></div></article>
-          <article class="timeline-item left"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">17:00–18:30</span><h4>Atelier cu Ovidiu Ungureanu</h4><span class="timeline-location">Centrul „George Apostu”</span></div></div></article>
-          <article class="timeline-item right"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">17:00–18:30</span><h4>Spectacol de teatru cu Noboyd's Group</h4><span class="timeline-location">Teatrul Municipal Bacovia</span></div></div></article>
-          <article class="timeline-item left"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">17:30–20:30</span><h4>Deschiderea scenei și concert DJ</h4><span class="timeline-location">Insula de Agrement</span></div></div></article>
-          <article class="timeline-item right"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">18:30–20:00</span><h4>Spectacol de teatru cu In the Spot</h4><span class="timeline-location">Teatrul Municipal Bacovia</span></div></div></article>
-          <article class="timeline-item left"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">19:00–21:00</span><h4>Proiecții de scurtmetraje și documentare</h4><span class="timeline-location">Centrul „George Apostu”</span></div></div></article>
-          <article class="timeline-item right"><div class="timeline-card highlight"><div class="timeline-card-content"><span class="timeline-time">20:30–20:45</span><h4>Prezentarea zilei a doua</h4><p>Denisa Musat</p><span class="timeline-location">Insula de Agrement</span></div></div></article>
-          <article class="timeline-item left"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">20:45–21:15</span><h4>Proiecția scurtmetrajului „Ultima Cascadă”</h4><span class="timeline-location">Insula de Agrement</span></div></div></article>
-          <article class="timeline-item right"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">21:15–21:35</span><h4>Momentul invitatului special – Adria Stefanescu</h4><span class="timeline-location">Insula de Agrement</span></div></div></article>
-          <article class="timeline-item left"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">21:35–21:50</span><h4>Discurs Daniel Balis</h4><span class="timeline-location">Insula de Agrement</span></div></div></article>
-          <article class="timeline-item right"><div class="timeline-card highlight"><div class="timeline-card-content"><span class="timeline-time">21:50–23:20</span><h4>Proiecția lungmetrajului „Warboy”</h4><span class="timeline-location">Insula de Agrement</span></div></div></article>
-        </div>
-      </section>
-
-      <section class="festival-day reveal" id="day-3">
-        <div class="day-heading">
-          <span>Ziua 3</span>
-          <h3>Duminică, 9 august 2026</h3>
-        </div>
-
-        <div class="timeline">
-          <article class="timeline-item left"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">10:00–11:30</span><h4>Atelier de compoziție a coloanei sonore cu Eduard Fulga</h4><span class="timeline-location">Teatrul Municipal Bacovia</span></div></div></article>
-          <article class="timeline-item right"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">11:00</span><h4>Deschiderea festivalului pe Insula de Agrement</h4><span class="timeline-location">Insula de Agrement</span></div></div></article>
-          <article class="timeline-item left"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">11:30–13:00</span><h4>Atelier de actorie cu Denisa Musat</h4><span class="timeline-location">Insula de Agrement</span></div></div></article>
-          <article class="timeline-item right"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">11:30–13:00</span><h4>Atelier cu Lulu De Hilerin</h4><span class="timeline-location">Teatrul Municipal Bacovia</span></div></div></article>
-          <article class="timeline-item left"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">13:00–15:00</span><h4>Pauză</h4><span class="timeline-location">Toate locațiile</span></div></div></article>
-          <article class="timeline-item right"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">15:00–16:30</span><h4>Atelier cu Franculescu Cristina</h4><span class="timeline-location">Teatrul Municipal Bacovia</span></div></div></article>
-          <article class="timeline-item left"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">15:00–16:30</span><h4>Atelier cu Nechifor Raluca</h4><span class="timeline-location">Orizont Hub</span></div></div></article>
-          <article class="timeline-item right"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">17:00–18:30</span><h4>Atelier de actorie cu Theodor Nechita și Ioana Verman</h4><span class="timeline-location">Teatrul Municipal Bacovia</span></div></div></article>
-          <article class="timeline-item left"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">17:00–18:30</span><h4>Workshop de muzică cu Nastase Adi și Brothers of Rock</h4><span class="timeline-location">Insula de Agrement</span></div></div></article>
-          <article class="timeline-item right"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">17:00–19:30</span><h4>Deschiderea scenei și concert DJ</h4><span class="timeline-location">Insula de Agrement</span></div></div></article>
-          <article class="timeline-item left"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">18:30–20:00</span><h4>Spectacol de teatru cu In the Spot</h4><span class="timeline-location">Teatrul Municipal Bacovia</span></div></div></article>
-          <article class="timeline-item right"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">19:30–20:15</span><h4>Concert Drift Wood</h4><span class="timeline-location">Insula de Agrement</span></div></div></article>
-          <article class="timeline-item left"><div class="timeline-card highlight"><div class="timeline-card-content"><span class="timeline-time">20:15–21:15</span><h4>Festivitatea de premiere</h4><span class="timeline-location">Insula de Agrement</span></div></div></article>
-          <article class="timeline-item right"><div class="timeline-card"><div class="timeline-card-content"><span class="timeline-time">21:15–21:35</span><h4>Premiera scurtmetrajului „Pe celălalt mal”</h4><span class="timeline-location">Insula de Agrement</span></div></div></article>
-          <article class="timeline-item left"><div class="timeline-card highlight"><div class="timeline-card-content"><span class="timeline-time">21:35–23:00</span><h4>Proiecția lungmetrajului „Băieții buni ajung în rai”</h4><span class="timeline-location">Insula de Agrement</span></div></div></article>
-        </div>
-      </section>
-
-      <p class="program-note reveal">
+<div aria-label="Selectează ziua festivalului" class="day-tabs reveal" role="tablist">
+<button class="day-tab active" data-day="day-1" type="button">7 august</button>
+<button class="day-tab" data-day="day-2" type="button">8 august</button>
+<button class="day-tab" data-day="day-3" type="button">9 august</button>
+</div><div aria-label="Filtrează după locație" class="location-filters reveal"><button class="location-filter active" data-location="all" type="button">Toate</button><button class="location-filter" data-location="insula" type="button">Insula</button><button class="location-filter" data-location="teatrul" type="button">Teatrul Bacovia</button><button class="location-filter" data-location="orizont" type="button">Orizont Hub</button><button class="location-filter" data-location="apostu" type="button">George Apostu</button></div>
+<section class="festival-day active reveal" id="day-1">
+<div class="day-heading">
+<span>Ziua 1</span>
+<h3>Vineri, 7 august 2026</h3>
+</div>
+<div class="schedule-groups"><section class="schedule-group"><button aria-expanded="false" class="group-toggle" type="button"><span class="group-title"><strong>Dimineață</strong><span>0 activități · Până la ora 13:00</span></span><span aria-hidden="true" class="group-arrow">▾</span></button><div class="group-content"><div class="group-empty">Nu există activități în acest interval pentru filtrul selectat.</div></div></section><section class="schedule-group open"><button aria-expanded="true" class="group-toggle" type="button"><span class="group-title"><strong>După-amiază</strong><span>4 activități · 13:00–18:00</span></span><span aria-hidden="true" class="group-arrow">▾</span></button><div class="group-content"><article class="compact-event" data-location="insula de agrement"><div class="compact-time">15:00</div><div class="compact-main"><h4>Deschiderea festivalului pe Insula de Agrement</h4></div><div class="compact-location">Insula de Agrement</div></article><article class="compact-event" data-location="orizont hub"><div class="compact-time">15:00–18:00</div><div class="compact-main"><h4>Proiecția scurtmetrajelor din concurs</h4></div><div class="compact-location">Orizont Hub</div></article><article class="compact-event" data-location="insula – corner foto"><div class="compact-time">17:00–18:30</div><div class="compact-main"><h4>Atelier de introducere în fotografie și concurs foto</h4></div><div class="compact-location">Insula – Corner foto</div></article><article class="compact-event" data-location="insula de agrement"><div class="compact-time">17:30–20:00</div><div class="compact-main"><h4>Deschiderea scenei și concert DJ</h4></div><div class="compact-location">Insula de Agrement</div></article><div class="group-empty">Nu există activități în acest interval pentru filtrul selectat.</div></div></section><section class="schedule-group"><button aria-expanded="false" class="group-toggle" type="button"><span class="group-title"><strong>Seară</strong><span>4 activități · După ora 18:00</span></span><span aria-hidden="true" class="group-arrow">▾</span></button><div class="group-content"><article class="compact-event highlight" data-location="insula de agrement"><div class="compact-time">20:00–20:30</div><div class="compact-main"><h4>Gala de deschidere</h4><p>Prezentată de Denisa Musat și Elesei Matei</p></div><div class="compact-location">Insula de Agrement</div></article><article class="compact-event" data-location="insula de agrement"><div class="compact-time">20:30–20:45</div><div class="compact-main"><h4>Discurs Victor și Luana Canache</h4></div><div class="compact-location">Insula de Agrement</div></article><article class="compact-event" data-location="insula de agrement"><div class="compact-time">20:45–21:10</div><div class="compact-main"><h4>Proiecția scurtmetrajului „Magicianul”</h4></div><div class="compact-location">Insula de Agrement</div></article><article class="compact-event highlight" data-location="insula de agrement"><div class="compact-time">21:10–22:40</div><div class="compact-main"><h4>Proiecția lungmetrajului „Capra cu trei iezi”</h4></div><div class="compact-location">Insula de Agrement</div></article><div class="group-empty">Nu există activități în acest interval pentru filtrul selectat.</div></div></section></div>
+</section>
+<section class="festival-day reveal" id="day-2">
+<div class="day-heading">
+<span>Ziua 2</span>
+<h3>Sâmbătă, 8 august 2026</h3>
+</div>
+<div class="schedule-groups"><section class="schedule-group open"><button aria-expanded="true" class="group-toggle" type="button"><span class="group-title"><strong>Dimineață</strong><span>5 activități · Până la ora 13:00</span></span><span aria-hidden="true" class="group-arrow">▾</span></button><div class="group-content"><article class="compact-event" data-location="insula de agrement"><div class="compact-time">09:30</div><div class="compact-main"><h4>Deschiderea festivalului pe Insula de Agrement</h4></div><div class="compact-location">Insula de Agrement</div></article><article class="compact-event" data-location="teatrul municipal bacovia"><div class="compact-time">10:00–11:30</div><div class="compact-main"><h4>Atelier de cascadorie cu Comin Padureanu</h4></div><div class="compact-location">Teatrul Municipal Bacovia</div></article><article class="compact-event" data-location="orizont hub"><div class="compact-time">10:00–12:00</div><div class="compact-main"><h4>Atelier de leadership cu Doru Hututui</h4></div><div class="compact-location">Orizont Hub</div></article><article class="compact-event" data-location="teatrul municipal bacovia"><div class="compact-time">11:30–13:00</div><div class="compact-main"><h4>Atelier cu Armine Vosgonian</h4></div><div class="compact-location">Teatrul Municipal Bacovia</div></article><article class="compact-event" data-location="orizont hub"><div class="compact-time">12:15–13:45</div><div class="compact-main"><h4>Atelier de jurnalism cu Laura Huiban</h4></div><div class="compact-location">Orizont Hub</div></article><div class="group-empty">Nu există activități în acest interval pentru filtrul selectat.</div></div></section><section class="schedule-group"><button aria-expanded="false" class="group-toggle" type="button"><span class="group-title"><strong>După-amiază</strong><span>8 activități · 13:00–18:00</span></span><span aria-hidden="true" class="group-arrow">▾</span></button><div class="group-content"><article class="compact-event" data-location="toate locațiile"><div class="compact-time">13:00–15:00</div><div class="compact-main"><h4>Pauză</h4></div><div class="compact-location">Toate locațiile</div></article><article class="compact-event" data-location="orizont hub"><div class="compact-time">15:00–18:00</div><div class="compact-main"><h4>Proiecția scurtmetrajelor din concurs</h4></div><div class="compact-location">Orizont Hub</div></article><article class="compact-event" data-location="insula de agrement"><div class="compact-time">15:00–16:30</div><div class="compact-main"><h4>Atelier de literatură cu Adrian Jicu</h4></div><div class="compact-location">Insula de Agrement</div></article><article class="compact-event" data-location="centrul „george apostu”"><div class="compact-time">15:00–16:30</div><div class="compact-main"><h4>Atelier de producție cu Victor și Luana Canache</h4></div><div class="compact-location">Centrul „George Apostu”</div></article><article class="compact-event" data-location="insula de agrement"><div class="compact-time">17:00–18:30</div><div class="compact-main"><h4>„Povești din lumea cinematografiei” cu Marian Tutui</h4></div><div class="compact-location">Insula de Agrement</div></article><article class="compact-event" data-location="centrul „george apostu”"><div class="compact-time">17:00–18:30</div><div class="compact-main"><h4>Atelier cu Ovidiu Ungureanu</h4></div><div class="compact-location">Centrul „George Apostu”</div></article><article class="compact-event" data-location="teatrul municipal bacovia"><div class="compact-time">17:00–18:30</div><div class="compact-main"><h4>Spectacol de teatru cu Noboyd's Group</h4></div><div class="compact-location">Teatrul Municipal Bacovia</div></article><article class="compact-event" data-location="insula de agrement"><div class="compact-time">17:30–20:30</div><div class="compact-main"><h4>Deschiderea scenei și concert DJ</h4></div><div class="compact-location">Insula de Agrement</div></article><div class="group-empty">Nu există activități în acest interval pentru filtrul selectat.</div></div></section><section class="schedule-group"><button aria-expanded="false" class="group-toggle" type="button"><span class="group-title"><strong>Seară</strong><span>7 activități · După ora 18:00</span></span><span aria-hidden="true" class="group-arrow">▾</span></button><div class="group-content"><article class="compact-event" data-location="teatrul municipal bacovia"><div class="compact-time">18:30–20:00</div><div class="compact-main"><h4>Spectacol de teatru cu In the Spot</h4></div><div class="compact-location">Teatrul Municipal Bacovia</div></article><article class="compact-event" data-location="centrul „george apostu”"><div class="compact-time">19:00–21:00</div><div class="compact-main"><h4>Proiecții de scurtmetraje și documentare</h4></div><div class="compact-location">Centrul „George Apostu”</div></article><article class="compact-event highlight" data-location="insula de agrement"><div class="compact-time">20:30–20:45</div><div class="compact-main"><h4>Prezentarea zilei a doua</h4><p>Denisa Musat</p></div><div class="compact-location">Insula de Agrement</div></article><article class="compact-event" data-location="insula de agrement"><div class="compact-time">20:45–21:15</div><div class="compact-main"><h4>Proiecția scurtmetrajului „Ultima Cascadă”</h4></div><div class="compact-location">Insula de Agrement</div></article><article class="compact-event" data-location="insula de agrement"><div class="compact-time">21:15–21:35</div><div class="compact-main"><h4>Momentul invitatului special – Adria Stefanescu</h4></div><div class="compact-location">Insula de Agrement</div></article><article class="compact-event" data-location="insula de agrement"><div class="compact-time">21:35–21:50</div><div class="compact-main"><h4>Discurs Daniel Balis</h4></div><div class="compact-location">Insula de Agrement</div></article><article class="compact-event highlight" data-location="insula de agrement"><div class="compact-time">21:50–23:20</div><div class="compact-main"><h4>Proiecția lungmetrajului „Warboy”</h4></div><div class="compact-location">Insula de Agrement</div></article><div class="group-empty">Nu există activități în acest interval pentru filtrul selectat.</div></div></section></div>
+</section>
+<section class="festival-day reveal" id="day-3">
+<div class="day-heading">
+<span>Ziua 3</span>
+<h3>Duminică, 9 august 2026</h3>
+</div>
+<div class="schedule-groups"><section class="schedule-group open"><button aria-expanded="true" class="group-toggle" type="button"><span class="group-title"><strong>Dimineață</strong><span>4 activități · Până la ora 13:00</span></span><span aria-hidden="true" class="group-arrow">▾</span></button><div class="group-content"><article class="compact-event" data-location="teatrul municipal bacovia"><div class="compact-time">10:00–11:30</div><div class="compact-main"><h4>Atelier de compoziție a coloanei sonore cu Eduard Fulga</h4></div><div class="compact-location">Teatrul Municipal Bacovia</div></article><article class="compact-event" data-location="insula de agrement"><div class="compact-time">11:00</div><div class="compact-main"><h4>Deschiderea festivalului pe Insula de Agrement</h4></div><div class="compact-location">Insula de Agrement</div></article><article class="compact-event" data-location="insula de agrement"><div class="compact-time">11:30–13:00</div><div class="compact-main"><h4>Atelier de actorie cu Denisa Musat</h4></div><div class="compact-location">Insula de Agrement</div></article><article class="compact-event" data-location="teatrul municipal bacovia"><div class="compact-time">11:30–13:00</div><div class="compact-main"><h4>Atelier cu Lulu De Hilerin</h4></div><div class="compact-location">Teatrul Municipal Bacovia</div></article><div class="group-empty">Nu există activități în acest interval pentru filtrul selectat.</div></div></section><section class="schedule-group"><button aria-expanded="false" class="group-toggle" type="button"><span class="group-title"><strong>După-amiază</strong><span>6 activități · 13:00–18:00</span></span><span aria-hidden="true" class="group-arrow">▾</span></button><div class="group-content"><article class="compact-event" data-location="toate locațiile"><div class="compact-time">13:00–15:00</div><div class="compact-main"><h4>Pauză</h4></div><div class="compact-location">Toate locațiile</div></article><article class="compact-event" data-location="teatrul municipal bacovia"><div class="compact-time">15:00–16:30</div><div class="compact-main"><h4>Atelier cu Franculescu Cristina</h4></div><div class="compact-location">Teatrul Municipal Bacovia</div></article><article class="compact-event" data-location="orizont hub"><div class="compact-time">15:00–16:30</div><div class="compact-main"><h4>Atelier cu Nechifor Raluca</h4></div><div class="compact-location">Orizont Hub</div></article><article class="compact-event" data-location="teatrul municipal bacovia"><div class="compact-time">17:00–18:30</div><div class="compact-main"><h4>Atelier de actorie cu Theodor Nechita și Ioana Verman</h4></div><div class="compact-location">Teatrul Municipal Bacovia</div></article><article class="compact-event" data-location="insula de agrement"><div class="compact-time">17:00–18:30</div><div class="compact-main"><h4>Workshop de muzică cu Nastase Adi și Brothers of Rock</h4></div><div class="compact-location">Insula de Agrement</div></article><article class="compact-event" data-location="insula de agrement"><div class="compact-time">17:00–19:30</div><div class="compact-main"><h4>Deschiderea scenei și concert DJ</h4></div><div class="compact-location">Insula de Agrement</div></article><div class="group-empty">Nu există activități în acest interval pentru filtrul selectat.</div></div></section><section class="schedule-group"><button aria-expanded="false" class="group-toggle" type="button"><span class="group-title"><strong>Seară</strong><span>5 activități · După ora 18:00</span></span><span aria-hidden="true" class="group-arrow">▾</span></button><div class="group-content"><article class="compact-event" data-location="teatrul municipal bacovia"><div class="compact-time">18:30–20:00</div><div class="compact-main"><h4>Spectacol de teatru cu In the Spot</h4></div><div class="compact-location">Teatrul Municipal Bacovia</div></article><article class="compact-event" data-location="insula de agrement"><div class="compact-time">19:30–20:15</div><div class="compact-main"><h4>Concert Drift Wood</h4></div><div class="compact-location">Insula de Agrement</div></article><article class="compact-event highlight" data-location="insula de agrement"><div class="compact-time">20:15–21:15</div><div class="compact-main"><h4>Festivitatea de premiere</h4></div><div class="compact-location">Insula de Agrement</div></article><article class="compact-event" data-location="insula de agrement"><div class="compact-time">21:15–21:35</div><div class="compact-main"><h4>Premiera scurtmetrajului „Pe celălalt mal”</h4></div><div class="compact-location">Insula de Agrement</div></article><article class="compact-event highlight" data-location="insula de agrement"><div class="compact-time">21:35–23:00</div><div class="compact-main"><h4>Proiecția lungmetrajului „Băieții buni ajung în rai”</h4></div><div class="compact-location">Insula de Agrement</div></article><div class="group-empty">Nu există activități în acest interval pentru filtrul selectat.</div></div></section></div>
+</section>
+<p class="program-note reveal">
         Programul poate suferi modificări. Urmărește canalele oficiale Overthink Film Fest pentru eventuale actualizări.
       </p>
-    </div>
-  </section>
-
-  <footer>
-    <div class="footer-shell">
-      <div class="footer-brand">
-        <img src="Foto/LOGO Overthink 2 (1).svg" alt="Logo Overthink Film Fest">
-
-        <h3>Overthink Film Fest</h3>
-
-        <p>
+</div>
+</section>
+<footer>
+<div class="footer-shell">
+<div class="footer-brand">
+<img alt="Logo Overthink Film Fest" src="Foto/LOGO Overthink 2 (1).svg"/>
+<h3>Overthink Film Fest</h3>
+<p>
           Festival de film independent organizat de Clubul de Film Overthink.
           Prima ediție: 7–9 august 2026, Insula de Agrement Bacău.
         </p>
-      </div>
-
-      <div class="footer-col">
-        <h3>Linkuri</h3>
-        <a href="program.html">Program</a>
-        <a href="inscriere.html">Înscrie-te</a>
-      </div>
-
-      <div class="footer-col">
-        <h3>Contact</h3>
-        <p>Email: office@overthink-jr.com</p>
-        <p>Telefon: 0773 746 372</p>
-        <a href="https://www.instagram.com/overthink.jr" target="_blank" rel="noopener noreferrer">Instagram: @overthink.jr</a>
-      </div>
-    </div>
-
-    <div class="copyright">
+</div>
+<div class="footer-col">
+<h3>Linkuri</h3>
+<a href="program.html">Program</a>
+<a href="inscriere.html">Înscrie-te</a>
+</div>
+<div class="footer-col">
+<h3>Contact</h3>
+<p>Email: office@overthink-jr.com</p>
+<p>Telefon: 0773 746 372</p>
+<a href="https://www.instagram.com/overthink.jr" rel="noopener noreferrer" target="_blank">Instagram: @overthink.jr</a>
+</div>
+</div>
+<div class="copyright">
       © 2026 Overthink Film Fest. Toate drepturile rezervate.
     </div>
-  </footer>
-
-  <script>
+</footer>
+<script>
     // DROPDOWN MENU
     const menuWrapper = document.getElementById("menuWrapper");
     const menuToggle = document.getElementById("menuToggle");
@@ -1050,7 +791,46 @@
         document.getElementById(targetDay).classList.add("active");
       });
     });
-  </script>
+  
 
+    // INTERVALE PLIABILE
+    document.querySelectorAll(".group-toggle").forEach((button) => {
+      button.addEventListener("click", () => {
+        const group = button.closest(".schedule-group");
+        const isOpen = group.classList.toggle("open");
+        button.setAttribute("aria-expanded", String(isOpen));
+      });
+    });
+
+    // FILTRARE DUPĂ LOCAȚIE
+    const locationFilters = document.querySelectorAll(".location-filter");
+    function matchesLocation(locationText, selected){
+      if(selected === "all") return true;
+      const value = locationText.toLowerCase();
+      if(selected === "insula") return value.includes("insula");
+      if(selected === "teatrul") return value.includes("teatrul");
+      if(selected === "orizont") return value.includes("orizont");
+      if(selected === "apostu") return value.includes("apostu");
+      return true;
+    }
+    locationFilters.forEach((button) => {
+      button.addEventListener("click", () => {
+        locationFilters.forEach(btn => btn.classList.remove("active"));
+        button.classList.add("active");
+        const selected = button.dataset.location;
+        const activeDay = document.querySelector(".festival-day.active");
+        if(!activeDay) return;
+        activeDay.querySelectorAll(".schedule-group").forEach((group) => {
+          let visibleCount = 0;
+          group.querySelectorAll(".compact-event").forEach((event) => {
+            const visible = matchesLocation(event.dataset.location || "", selected);
+            event.classList.toggle("hidden", !visible);
+            if(visible) visibleCount += 1;
+          });
+          group.classList.toggle("no-results", visibleCount === 0);
+        });
+      });
+    });
+</script>
 </body>
 </html>
