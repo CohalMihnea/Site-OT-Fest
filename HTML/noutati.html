@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Noutăți | Overthink Film Fest</title>
+  <title>Activități | Overthink Film Fest</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -471,7 +471,7 @@
 
       <nav class="dropdown-menu" id="dropdownMenu">
         <a href="index.html">Acasă</a>
-        <a href="noutati.html" class="active">Noutăți</a>
+        <a href="noutati.html" class="active">Activități</a>
         <a href="program.html">Program</a>
         <a href="contact.html">Contact</a>
         <a href="cont.html">Cont</a>
@@ -483,8 +483,8 @@
   <section class="hero">
     <div class="hero-content">
       <div class="hero-label">OVERTHINK FILM FEST</div>
-      <h1>Noutăți</h1>
-      <p>Anunțuri, update-uri și informații importante despre festival, înscrieri, program, parteneri și activități.</p>
+      <h1>Activități</h1>
+      <p>Descoperă activitățile din cadrul Overthink Film Fest: ateliere, spectacole, proiecții, întâlniri și evenimente speciale.</p>
     </div>
   </section>
 
@@ -500,13 +500,13 @@
           <button class="filter-btn" type="button" data-category="Concurs">Concurs</button>
         </div>
 
-        <input class="search-box" id="searchInput" type="search" placeholder="Caută noutăți...">
+        <input class="search-box" id="searchInput" type="search" placeholder="Caută activități...">
       </div>
 
       <article class="featured-card" id="featuredCard"></article>
 
-      <div class="loading-state" id="loadingState">Se încarcă noutățile...</div>
-      <div class="empty-state" id="emptyState">Momentan nu există noutăți publicate.</div>
+      <div class="loading-state" id="loadingState">Se încarcă activitățile...</div>
+      <div class="empty-state" id="emptyState">Momentan nu există activități publicate.</div>
       <div class="news-grid" id="newsGrid"></div>
     </div>
   </main>
@@ -528,7 +528,7 @@
 
       <div class="footer-col">
         <h3>Linkuri</h3>
-        <a href="noutati.html">Noutăți</a>
+        <a href="noutati.html">Activități</a>
         <a href="program.html">Program</a>
         <a href="inscriere.html">Înscrie-te</a>
         <a href="contact.html">Contact</a>
@@ -705,7 +705,7 @@
       featuredCard.innerHTML = `
         <div class="featured-image">${imageHtml(featured.cover_image_url, featured.title)}</div>
         <div class="featured-content">
-          <span class="pill">Noutate principală · ${escapeHtml(featured.category || "Anunț")}</span>
+          <span class="pill">Activitate principală · ${escapeHtml(featured.category || "Anunț")}</span>
           <div class="news-date">${escapeHtml(formatDate(getPublishedDate(featured)))}</div>
           <h2>${escapeHtml(featured.title)}</h2>
           <p>${escapeHtml(featured.summary || "")}</p>
@@ -781,7 +781,7 @@
         const data = await response.json();
 
         if(!response.ok){
-          throw new Error(data.detail || "Nu am putut încărca noutățile.");
+          throw new Error(data.detail || "Nu am putut încărca activitățile.");
         }
 
         allNews = normalizeNews(data).filter(post => post.is_published !== false);
@@ -789,7 +789,7 @@
       }catch(error){
         console.error(error);
         allNews = [];
-        emptyState.textContent = "Noutățile nu au putut fi încărcate momentan.";
+        emptyState.textContent = "Activitățile nu au putut fi încărcate momentan.";
         emptyState.classList.add("visible");
       }finally{
         loadingState.style.display = "none";
