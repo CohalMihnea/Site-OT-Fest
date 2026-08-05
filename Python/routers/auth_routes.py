@@ -52,7 +52,6 @@ def get_last_email_verification_code(
     email: str
 ):
     normalized_email = normalize_email(email)
-
     return (
         db.query(EmailVerificationCode)
         .filter(EmailVerificationCode.email == normalized_email)
@@ -89,12 +88,16 @@ def register(
             detail="Există deja un cont cu această adresă de email."
         )
 
+    # IMPORTANT:
+    # Formularul public nu are voie să seteze roluri interne precum "voluntar" sau "admin".
+    # Rolul de voluntar se obține doar prin /api/volunteer/join, cu cod generat de admin,
+    # unde se creează și profilul cu departamente.
     user = User(
         name=name.strip(),
         email=normalized_email,
         phone=phone.strip(),
         password_hash=hash_password(password),
-        role=role.strip() or "participant",
+        role="participant",
         is_admin=False,
         is_verified=False,
         marketing_consent=marketing_consent
@@ -108,7 +111,6 @@ def register(
     db.refresh(user)
 
     verification_code = generate_code()
-
     save_email_verification_code(
         db=db,
         email=normalized_email,
@@ -138,7 +140,6 @@ def resend_verification_code(
     normalized_email = normalize_email(email)
 
     user = db.query(User).filter(User.email == normalized_email).first()
-
     if not user:
         raise HTTPException(
             status_code=404,
@@ -170,7 +171,6 @@ def resend_verification_code(
             )
 
     verification_code = generate_code()
-
     save_email_verification_code(
         db=db,
         email=normalized_email,
@@ -234,7 +234,6 @@ def verify_email(
         )
 
     user.is_verified = True
-
     db.query(EmailVerificationCode).filter(
         EmailVerificationCode.email == normalized_email
     ).delete()
@@ -255,7 +254,6 @@ def login(
     normalized_email = normalize_email(email)
 
     user = db.query(User).filter(User.email == normalized_email).first()
-
     if not user:
         raise HTTPException(
             status_code=401,
@@ -306,7 +304,6 @@ def forgot_password(
     normalized_email = normalize_email(email)
 
     user = db.query(User).filter(User.email == normalized_email).first()
-
     if not user:
         raise HTTPException(
             status_code=404,
@@ -344,6 +341,7 @@ def forgot_password(
     return {
         "detail": "Codul de resetare a fost trimis pe email."
     }
+
 
 @router.post("/reset-password")
 def reset_password(
