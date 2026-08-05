@@ -24,8 +24,8 @@ ADMINS = [
         "email": "elisei.mateiandrei@gmail.com",
         "phone": "0742415898",
         "password": "MateiAdmin1"
-    }
-{
+    },
+    {
         "name": "Cosmin",
         "email": "boostzillaa@gmail.com",
         "phone": "0756925078",
