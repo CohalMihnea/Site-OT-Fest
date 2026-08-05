@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Noutăți | Overthink Film Fest</title>
+  <title>Activități | Overthink Film Fest</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -104,7 +104,7 @@
       right:0;
       min-width:230px;
       padding:10px;
-      border-radius:14px;
+      border-radius:18px;
       background:rgba(15,15,15,0.94);
       backdrop-filter:blur(18px);
       border:1px solid rgba(255,255,255,0.12);
@@ -253,24 +253,50 @@
 
     .featured-card{
       display:none;
-      margin-bottom:22px;
+      margin-bottom:28px;
       overflow:hidden;
-      border-radius:22px;
+      border-radius:26px;
     }
 
     .featured-card.visible{display:block;}
 
+    .featured-heading{
+      margin-bottom:16px;
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:18px;
+      flex-wrap:wrap;
+    }
+
+    .featured-heading h2{
+      font-family:'Bebas Neue', Impact, sans-serif;
+      font-size:clamp(2.2rem, 4.5vw, 3.7rem);
+      line-height:1;
+      letter-spacing:0.06em;
+      text-transform:uppercase;
+      text-shadow:0 0 20px rgba(146,4,4,0.28);
+    }
+
+    .featured-heading p{
+      max-width:520px;
+      color:#cfcfcf;
+      line-height:1.6;
+      font-size:0.92rem;
+      font-weight:700;
+    }
+
     .featured-marquee{
       width:100%;
       overflow:hidden;
-      border-radius:22px;
+      border-radius:30px;
       -webkit-mask-image:linear-gradient(90deg, transparent 0, #000 5%, #000 95%, transparent 100%);
       mask-image:linear-gradient(90deg, transparent 0, #000 5%, #000 95%, transparent 100%);
     }
 
     .featured-track{
       display:flex;
-      gap:11px;
+      gap:14px;
       width:max-content;
       animation:featuredScroll var(--featured-duration, 42s) linear infinite;
       will-change:transform;
@@ -281,15 +307,15 @@
 
     .featured-slide{
       flex:0 0 auto;
-      width:min(460px, calc(100vw - 42px));
+      width:min(615px, calc(100vw - 58px));
       display:grid;
       grid-template-columns:0.88fr 1.12fr;
       gap:0;
       overflow:hidden;
-      border-radius:17px;
+      border-radius:24px;
       background:rgba(255,255,255,0.05);
       border:1px solid rgba(255,255,255,0.09);
-      box-shadow:0 10px 30px rgba(0,0,0,0.40),0 0 20px rgba(146,4,4,0.10);
+      box-shadow:0 14px 44px rgba(0,0,0,0.42),0 0 28px rgba(146,4,4,0.12);
       cursor:pointer;
       transition:0.25s ease;
     }
@@ -299,38 +325,43 @@
       border-color:rgba(146,4,4,0.35);
     }
 
-    .featured-track.single .featured-slide{width:min(460px, 100%);}
+    .featured-track.single .featured-slide{width:min(615px, 100%);}
 
     .featured-image{
       width:100%;
       aspect-ratio:4 / 3;
       min-height:0;
-      padding:18px;
       display:flex;
       align-items:center;
       justify-content:center;
-      background:radial-gradient(circle at center, rgba(146,4,4,0.24), transparent 48%), rgba(0,0,0,0.35);
+      padding:16px;
+      background:radial-gradient(circle at center, rgba(146,4,4,0.30), transparent 52%), rgba(0,0,0,0.35);
     }
 
-    .featured-image img{width:100%;height:100%;max-width:78%;max-height:78%;object-fit:contain;opacity:0.96;margin:auto;}
+    .featured-image img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      opacity:0.96;
+    }
 
-    .featured-content{padding:18px;display:flex;flex-direction:column;justify-content:center;}
+    .featured-content{padding:24px 26px;display:flex;flex-direction:column;justify-content:center;}
 
     .pill{
       width:max-content;
       max-width:100%;
       display:inline-flex;
       align-items:center;
-      padding:6px 9px;
+      padding:8px 12px;
       border-radius:999px;
       background:rgba(146,4,4,0.22);
       border:1px solid rgba(146,4,4,0.42);
       color:#fff;
-      font-size:0.68rem;
+      font-size:0.76rem;
       font-weight:900;
       letter-spacing:0.08em;
       text-transform:uppercase;
-      margin-bottom:10px;
+      margin-bottom:14px;
     }
 
     .featured-content h2,
@@ -342,30 +373,32 @@
       text-shadow:0 0 20px rgba(146,4,4,0.28);
     }
 
-    .featured-content h2{font-size:clamp(1.35rem, 2.9vw, 2.1rem);margin-bottom:9px;}
+    .featured-content h2{font-size:clamp(1.8rem, 3.2vw, 2.65rem);margin-bottom:12px;}
 
-    .news-date{color:#aaa;font-size:0.70rem;font-weight:900;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px;}
+    .news-date{color:#aaa;font-size:0.82rem;font-weight:900;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:12px;}
 
     .featured-content p,
     .news-card p{
       color:#d8d8d8;
-      line-height:1.48;
-      font-size:0.78rem;
+      line-height:1.7;
+      font-size:0.98rem;
     }
+
+    .featured-content p{font-size:0.9rem;line-height:1.6;}
 
     .news-grid{
       display:grid;
-      grid-template-columns:repeat(5, 1fr);
-      gap:11px;
+      grid-template-columns:repeat(3, 1fr);
+      gap:18px;
     }
 
     .news-card{
       position:relative;
       overflow:hidden;
-      border-radius:14px;
+      border-radius:24px;
       background:rgba(255,255,255,0.045);
       border:1px solid rgba(255,255,255,0.08);
-      box-shadow:0 9px 27px rgba(0,0,0,0.34);
+      box-shadow:0 16px 48px rgba(0,0,0,0.38);
       cursor:pointer;
       transition:0.28s ease;
     }
@@ -375,24 +408,20 @@
     .card-image{
       width:100%;
       aspect-ratio:4 / 3;
-      padding:16px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background:radial-gradient(circle at center, rgba(146,4,4,0.20), transparent 46%), rgba(0,0,0,0.35);
+      background:radial-gradient(circle at center, rgba(146,4,4,0.38), transparent 46%), rgba(0,0,0,0.35);
     }
-    .card-image img{width:100%;height:100%;max-width:78%;max-height:78%;object-fit:contain;opacity:0.96;margin:auto;}
+    .card-image img{width:100%;height:100%;object-fit:cover;opacity:0.92;}
 
-    .card-content{padding:12px;}
-    .news-card h3{font-size:1.15rem;margin-bottom:7px;}
+    .card-content{padding:22px;}
+    .news-card h3{font-size:2rem;margin-bottom:12px;}
 
     .read-more{
-      margin-top:10px;
+      margin-top:18px;
       display:inline-flex;
       font-weight:900;
       color:#fff;
       border-bottom:2px solid rgba(211,7,7,0.85);
-      padding-bottom:3px;
+      padding-bottom:4px;
     }
 
     .empty-state,
@@ -425,7 +454,7 @@
     .modal-overlay.visible{display:flex;}
 
     .modal-card{
-      width:min(640px, 100%);
+      width:min(850px, 100%);
       max-height:88vh;
       overflow:auto;
       border-radius:28px;
@@ -437,14 +466,13 @@
     .modal-image{
       width:100%;
       aspect-ratio:4 / 3;
-      padding:16px;
-      background:radial-gradient(circle at center, rgba(146,4,4,0.30), transparent 48%), #050505;
+      background:radial-gradient(circle at center, rgba(146,4,4,0.42), transparent 48%), #050505;
     }
-    .modal-image img{width:100%;height:100%;max-width:82%;max-height:82%;object-fit:contain;margin:auto;}
+    .modal-image img{width:100%;height:100%;object-fit:cover;}
 
-    .modal-content{padding:23px;}
-    .modal-content h2{font-family:'Bebas Neue', Impact, sans-serif;font-size:clamp(1.9rem, 4.5vw, 3rem);line-height:1;letter-spacing:0.06em;margin-bottom:10px;text-transform:uppercase;}
-    .modal-text{white-space:pre-wrap;color:#e0e0e0;line-height:1.68;font-size:0.92rem;margin-top:14px;}
+    .modal-content{padding:30px;}
+    .modal-content h2{font-family:'Bebas Neue', Impact, sans-serif;font-size:clamp(2.4rem, 6vw, 4rem);line-height:1;letter-spacing:0.06em;margin-bottom:12px;text-transform:uppercase;}
+    .modal-text{white-space:pre-wrap;color:#e0e0e0;line-height:1.75;font-size:1rem;margin-top:18px;}
     .external-link-btn{display:inline-flex;align-items:center;justify-content:center;margin-top:22px;padding:13px 18px;border-radius:999px;background:rgba(146,4,4,0.95);border:1px solid rgba(255,255,255,0.14);color:#fff;font-weight:900;box-shadow:0 0 24px rgba(146,4,4,0.25);transition:0.25s ease;}
     .external-link-btn:hover{background:#c00606;transform:translateY(-2px);}
 
@@ -467,7 +495,7 @@
     /* ---------- FOOTER ---------- */
     footer{background:#0d0d0d;border-top:1px solid rgba(255,255,255,0.07);padding:46px 20px 24px;}
     .footer-shell{max-width:1250px;margin:0 auto;display:grid;grid-template-columns:1.1fr 1fr 1fr;gap:28px;align-items:start;}
-    .footer-brand img{height:48px;width:auto;margin-bottom:10px;filter:drop-shadow(0 0 18px rgba(146,4,4,0.25));}
+    .footer-brand img{height:48px;width:auto;margin-bottom:14px;filter:drop-shadow(0 0 18px rgba(146,4,4,0.25));}
     .footer-brand h3,.footer-col h3{font-family:'Bebas Neue', Impact, sans-serif;font-size:1.6rem;letter-spacing:0.08em;margin-bottom:12px;}
     .footer-brand p,.footer-col p,.footer-col a{color:#d0d0d0;line-height:1.75;font-size:0.95rem;}
     .footer-col a{display:block;transition:0.25s ease;}
@@ -481,7 +509,7 @@
       to{transform:translateX(-50%);}
     }
 
-    @media(max-width:1050px){.news-grid{grid-template-columns:repeat(4, 1fr);}.footer-shell{grid-template-columns:1fr 1fr;}.featured-slide{grid-template-columns:1fr;width:min(345px, calc(100vw - 44px));}}
+    @media(max-width:1050px){.news-grid{grid-template-columns:repeat(2, 1fr);}.footer-shell{grid-template-columns:1fr 1fr;}.featured-slide{grid-template-columns:1fr;width:min(460px, calc(100vw - 44px));}.featured-track.single .featured-slide{width:min(460px, 100%);}}
 
     @media(max-width:768px){
       .topbar{min-height:58px;padding:8px 12px;grid-template-columns:auto 1fr auto;gap:10px;}
@@ -496,21 +524,16 @@
       .toolbar{align-items:stretch;}
       .filters,.search-box{width:100%;}
       .filter-btn{flex:1;}
-      .featured-content{padding:15px 12px;}
+      .featured-heading{align-items:flex-start;}
+      .featured-heading p{font-size:0.86rem;}
+      .featured-content{padding:20px 18px;}
       .featured-marquee{margin-left:-14px;margin-right:-14px;border-radius:0;}
-      .featured-track{gap:10px;}
-      .featured-slide{width:min(78vw, 315px);border-radius:14px;}
-      .news-grid{grid-template-columns:repeat(2, 1fr);gap:10px;}
+      .featured-track{gap:12px;}
+      .featured-slide{width:min(78vw, 330px);border-radius:22px;}
+      .featured-image{padding:14px;}
+      .news-grid{grid-template-columns:1fr;}
       .footer-shell{grid-template-columns:1fr;}
       .modal-content{padding:24px 18px;}
-    }
-
-
-    @media(max-width:600px){
-      .news-grid{grid-template-columns:1fr;}
-      .card-image{padding:18px;}
-      .card-content{padding:12px;}
-      .featured-image{padding:18px;}
     }
 
     @media(max-width:520px){.topbar-title{max-width:145px;white-space:normal;line-height:1;}footer{line-height:1.8;}}
@@ -532,7 +555,7 @@
 
       <nav class="dropdown-menu" id="dropdownMenu">
         <a href="index.html">Acasă</a>
-        <a href="noutati.html" class="active">Noutăți</a>
+        <a href="noutati.html" class="active">Activități</a>
         <a href="program.html">Program</a>
         <a href="contact.html">Contact</a>
         <a href="cont.html">Cont</a>
@@ -544,8 +567,8 @@
   <section class="hero">
     <div class="hero-content">
       <div class="hero-label">OVERTHINK FILM FEST</div>
-      <h1>Noutăți</h1>
-      <p>Anunțuri, update-uri și informații importante despre festival, înscrieri, program, parteneri și activități.</p>
+      <h1>Activități</h1>
+      <p>Activități, parteneri, sponsori și informații importante despre tot ce se întâmplă în cadrul festivalului.</p>
     </div>
   </section>
 
@@ -561,13 +584,13 @@
           <button class="filter-btn" type="button" data-category="Concurs">Concurs</button>
         </div>
 
-        <input class="search-box" id="searchInput" type="search" placeholder="Caută noutăți...">
+        <input class="search-box" id="searchInput" type="search" placeholder="Caută activități...">
       </div>
 
       <article class="featured-card" id="featuredCard"></article>
 
-      <div class="loading-state" id="loadingState">Se încarcă noutățile...</div>
-      <div class="empty-state" id="emptyState">Momentan nu există noutăți publicate.</div>
+      <div class="loading-state" id="loadingState">Se încarcă activitățile...</div>
+      <div class="empty-state" id="emptyState">Momentan nu există activități publicate.</div>
       <div class="news-grid" id="newsGrid"></div>
     </div>
   </main>
@@ -589,7 +612,7 @@
 
       <div class="footer-col">
         <h3>Linkuri</h3>
-        <a href="noutati.html">Noutăți</a>
+        <a href="noutati.html">Activități</a>
         <a href="program.html">Program</a>
         <a href="inscriere.html">Înscrie-te</a>
         <a href="contact.html">Contact</a>
@@ -759,11 +782,11 @@
         <article class="featured-slide" data-featured-index="${index}">
           <div class="featured-image">${imageHtml(post.cover_image_url, post.title)}</div>
           <div class="featured-content">
-            <span class="pill">Activitate principală · ${escapeHtml(post.category || "Anunț")}</span>
+            <span class="pill">Partener / activitate principală · ${escapeHtml(post.category || "Anunț")}</span>
             <div class="news-date">${escapeHtml(formatDate(getPublishedDate(post)))}</div>
             <h2>${escapeHtml(post.title)}</h2>
             <p>${escapeHtml(post.summary || "")}</p>
-            <span class="read-more">${post.external_url ? escapeHtml(post.external_button_label || "Deschide linkul") : "Citește mai mult"}</span>
+            <span class="read-more">${post.external_url ? escapeHtml(post.external_button_label || "Deschide linkul") : "Vezi detalii"}</span>
           </div>
         </article>
       `;
@@ -783,6 +806,13 @@
       const duration = Math.max(26, featuredPosts.length * 9);
 
       featuredCard.innerHTML = `
+        <div class="featured-heading">
+          <div>
+            <span class="pill">Sponsori / Parteneri</span>
+            <h2>Parteneri și activități principale</h2>
+          </div>
+          <p>Aici apar sponsorii, partenerii și activitățile importante ale festivalului. Cardurile rulează automat.</p>
+        </div>
         <div class="featured-marquee">
           <div class="featured-track ${shouldScroll ? "" : "single"}" style="--featured-duration:${duration}s">
             ${trackPosts.map((post, index) => featuredSlideHtml(post, index % featuredPosts.length)).join("")}
@@ -835,7 +865,7 @@
             <div class="news-date">${escapeHtml(formatDate(getPublishedDate(post)))}</div>
             <h3>${escapeHtml(post.title)}</h3>
             <p>${escapeHtml(post.summary || "")}</p>
-            <span class="read-more">${post.external_url ? escapeHtml(post.external_button_label || "Deschide linkul") : "Citește mai mult"}</span>
+            <span class="read-more">${post.external_url ? escapeHtml(post.external_button_label || "Deschide linkul") : "Vezi detalii"}</span>
           </div>
         `;
 
@@ -864,7 +894,7 @@
         const data = await response.json();
 
         if(!response.ok){
-          throw new Error(data.detail || "Nu am putut încărca noutățile.");
+          throw new Error(data.detail || "Nu am putut încărca activitățile.");
         }
 
         allNews = normalizeNews(data).filter(post => post.is_published !== false);
@@ -872,7 +902,7 @@
       }catch(error){
         console.error(error);
         allNews = [];
-        emptyState.textContent = "Noutățile nu au putut fi încărcate momentan.";
+        emptyState.textContent = "Activitățile nu au putut fi încărcate momentan.";
         emptyState.classList.add("visible");
       }finally{
         loadingState.style.display = "none";
