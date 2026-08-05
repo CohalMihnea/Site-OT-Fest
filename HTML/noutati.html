@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Activități | Overthink Film Fest</title>
+  <title>Noutăți | Overthink Film Fest</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -253,17 +253,53 @@
 
     .featured-card{
       display:none;
+      margin-bottom:28px;
+      overflow:hidden;
+      border-radius:30px;
+    }
+
+    .featured-card.visible{display:block;}
+
+    .featured-marquee{
+      width:100%;
+      overflow:hidden;
+      border-radius:30px;
+      -webkit-mask-image:linear-gradient(90deg, transparent 0, #000 5%, #000 95%, transparent 100%);
+      mask-image:linear-gradient(90deg, transparent 0, #000 5%, #000 95%, transparent 100%);
+    }
+
+    .featured-track{
+      display:flex;
+      gap:18px;
+      width:max-content;
+      animation:featuredScroll var(--featured-duration, 42s) linear infinite;
+      will-change:transform;
+    }
+
+    .featured-card:hover .featured-track{animation-play-state:paused;}
+    .featured-track.single{width:100%;animation:none;}
+
+    .featured-slide{
+      flex:0 0 auto;
+      width:min(820px, calc(100vw - 58px));
+      display:grid;
       grid-template-columns:0.95fr 1.05fr;
       gap:0;
-      margin-bottom:28px;
-      border-radius:30px;
       overflow:hidden;
+      border-radius:30px;
       background:rgba(255,255,255,0.05);
       border:1px solid rgba(255,255,255,0.09);
       box-shadow:0 18px 60px rgba(0,0,0,0.44),0 0 36px rgba(146,4,4,0.13);
+      cursor:pointer;
+      transition:0.25s ease;
     }
 
-    .featured-card.visible{display:grid;}
+    .featured-slide:hover{
+      transform:translateY(-4px);
+      border-color:rgba(146,4,4,0.35);
+    }
+
+    .featured-track.single .featured-slide{width:100%;}
 
     .featured-image{
       width:100%;
@@ -431,7 +467,12 @@
 
     @keyframes fadeUp{from{opacity:0;transform:translateY(28px) scale(0.98);}to{opacity:1;transform:translateY(0) scale(1);}}
 
-    @media(max-width:1050px){.news-grid{grid-template-columns:repeat(2, 1fr);}.footer-shell{grid-template-columns:1fr 1fr;}.featured-card{grid-template-columns:1fr;}}
+    @keyframes featuredScroll{
+      from{transform:translateX(0);}
+      to{transform:translateX(-50%);}
+    }
+
+    @media(max-width:1050px){.news-grid{grid-template-columns:repeat(2, 1fr);}.footer-shell{grid-template-columns:1fr 1fr;}.featured-slide{grid-template-columns:1fr;width:min(620px, calc(100vw - 44px));}}
 
     @media(max-width:768px){
       .topbar{min-height:58px;padding:8px 12px;grid-template-columns:auto 1fr auto;gap:10px;}
@@ -447,6 +488,9 @@
       .filters,.search-box{width:100%;}
       .filter-btn{flex:1;}
       .featured-content{padding:26px 20px;}
+      .featured-marquee{margin-left:-14px;margin-right:-14px;border-radius:0;}
+      .featured-track{gap:12px;}
+      .featured-slide{width:min(86vw, 420px);border-radius:24px;}
       .news-grid{grid-template-columns:1fr;}
       .footer-shell{grid-template-columns:1fr;}
       .modal-content{padding:24px 18px;}
@@ -471,7 +515,7 @@
 
       <nav class="dropdown-menu" id="dropdownMenu">
         <a href="index.html">Acasă</a>
-        <a href="noutati.html" class="active">Activități</a>
+        <a href="noutati.html" class="active">Noutăți</a>
         <a href="program.html">Program</a>
         <a href="contact.html">Contact</a>
         <a href="cont.html">Cont</a>
@@ -483,8 +527,8 @@
   <section class="hero">
     <div class="hero-content">
       <div class="hero-label">OVERTHINK FILM FEST</div>
-      <h1>Activități</h1>
-      <p>Descoperă activitățile din cadrul Overthink Film Fest: ateliere, spectacole, proiecții, întâlniri și evenimente speciale.</p>
+      <h1>Noutăți</h1>
+      <p>Anunțuri, update-uri și informații importante despre festival, înscrieri, program, parteneri și activități.</p>
     </div>
   </section>
 
@@ -500,13 +544,13 @@
           <button class="filter-btn" type="button" data-category="Concurs">Concurs</button>
         </div>
 
-        <input class="search-box" id="searchInput" type="search" placeholder="Caută activități...">
+        <input class="search-box" id="searchInput" type="search" placeholder="Caută noutăți...">
       </div>
 
       <article class="featured-card" id="featuredCard"></article>
 
-      <div class="loading-state" id="loadingState">Se încarcă activitățile...</div>
-      <div class="empty-state" id="emptyState">Momentan nu există activități publicate.</div>
+      <div class="loading-state" id="loadingState">Se încarcă noutățile...</div>
+      <div class="empty-state" id="emptyState">Momentan nu există noutăți publicate.</div>
       <div class="news-grid" id="newsGrid"></div>
     </div>
   </main>
@@ -528,7 +572,7 @@
 
       <div class="footer-col">
         <h3>Linkuri</h3>
-        <a href="noutati.html">Activități</a>
+        <a href="noutati.html">Noutăți</a>
         <a href="program.html">Program</a>
         <a href="inscriere.html">Înscrie-te</a>
         <a href="contact.html">Contact</a>
@@ -693,28 +737,50 @@
       }
     });
 
-    function renderFeatured(posts){
-      const featured = posts.find(post => post.is_featured);
+    function featuredSlideHtml(post, index){
+      return `
+        <article class="featured-slide" data-featured-index="${index}">
+          <div class="featured-image">${imageHtml(post.cover_image_url, post.title)}</div>
+          <div class="featured-content">
+            <span class="pill">Activitate principală · ${escapeHtml(post.category || "Anunț")}</span>
+            <div class="news-date">${escapeHtml(formatDate(getPublishedDate(post)))}</div>
+            <h2>${escapeHtml(post.title)}</h2>
+            <p>${escapeHtml(post.summary || "")}</p>
+            <span class="read-more">${post.external_url ? escapeHtml(post.external_button_label || "Deschide linkul") : "Citește mai mult"}</span>
+          </div>
+        </article>
+      `;
+    }
 
-      if(!featured){
+    function renderFeatured(posts){
+      const featuredPosts = posts.filter(post => post.is_featured);
+
+      if(!featuredPosts.length){
         featuredCard.classList.remove("visible");
         featuredCard.innerHTML = "";
         return;
       }
 
+      const shouldScroll = featuredPosts.length > 1;
+      const trackPosts = shouldScroll ? [...featuredPosts, ...featuredPosts] : featuredPosts;
+      const duration = Math.max(26, featuredPosts.length * 9);
+
       featuredCard.innerHTML = `
-        <div class="featured-image">${imageHtml(featured.cover_image_url, featured.title)}</div>
-        <div class="featured-content">
-          <span class="pill">Activitate principală · ${escapeHtml(featured.category || "Anunț")}</span>
-          <div class="news-date">${escapeHtml(formatDate(getPublishedDate(featured)))}</div>
-          <h2>${escapeHtml(featured.title)}</h2>
-          <p>${escapeHtml(featured.summary || "")}</p>
-          <span class="read-more">${featured.external_url ? escapeHtml(featured.external_button_label || "Deschide linkul") : "Citește mai mult"}</span>
+        <div class="featured-marquee">
+          <div class="featured-track ${shouldScroll ? "" : "single"}" style="--featured-duration:${duration}s">
+            ${trackPosts.map((post, index) => featuredSlideHtml(post, index % featuredPosts.length)).join("")}
+          </div>
         </div>
       `;
 
       featuredCard.classList.add("visible");
-      featuredCard.onclick = () => openModal(featured);
+
+      featuredCard.querySelectorAll(".featured-slide").forEach(slide => {
+        slide.addEventListener("click", () => {
+          const index = Number(slide.dataset.featuredIndex || 0);
+          openModal(featuredPosts[index]);
+        });
+      });
     }
 
     function renderNews(){
@@ -781,7 +847,7 @@
         const data = await response.json();
 
         if(!response.ok){
-          throw new Error(data.detail || "Nu am putut încărca activitățile.");
+          throw new Error(data.detail || "Nu am putut încărca noutățile.");
         }
 
         allNews = normalizeNews(data).filter(post => post.is_published !== false);
@@ -789,7 +855,7 @@
       }catch(error){
         console.error(error);
         allNews = [];
-        emptyState.textContent = "Activitățile nu au putut fi încărcate momentan.";
+        emptyState.textContent = "Noutățile nu au putut fi încărcate momentan.";
         emptyState.classList.add("visible");
       }finally{
         loadingState.style.display = "none";

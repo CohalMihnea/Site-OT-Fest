@@ -185,9 +185,6 @@ def create_news_post(
     slug = generate_unique_slug(db, payload.title)
     now = datetime.utcnow()
 
-    if payload.is_featured:
-        db.query(NewsPost).update({NewsPost.is_featured: False})
-
     news_post = NewsPost(
         title=payload.title.strip(),
         slug=slug,
@@ -262,9 +259,6 @@ def update_news_post(
             news_post.published_at = None
 
     if payload.is_featured is not None:
-        if payload.is_featured:
-            db.query(NewsPost).filter(NewsPost.id != news_post.id).update({NewsPost.is_featured: False})
-
         news_post.is_featured = payload.is_featured
 
     db.commit()

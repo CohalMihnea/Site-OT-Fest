@@ -337,8 +337,8 @@
 
       <nav class="dropdown-menu" id="dropdownMenu">
         <a href="admin.html">Admin</a>
-        <a href="noutati-admin.html" class="active">Admin noutăți</a>
-        <a href="noutati.html">Noutăți publice</a>
+        <a href="noutati-admin.html" class="active">Admin activități</a>
+        <a href="noutati.html">Activități publice</a>
         <a href="cont.html">Cont</a>
         <a href="index.html">Acasă</a>
       </nav>
@@ -360,13 +360,13 @@
         <div class="page-header">
           <div>
             <div class="eyebrow">Panou admin</div>
-            <h1>Noutăți</h1>
-            <p>Creează, editează, publică sau ascunde noutățile afișate pe pagina publică a festivalului.</p>
+            <h1>Activități</h1>
+            <p>Creează, editează, publică sau ascunde activitățile afișate pe pagina publică a festivalului.</p>
           </div>
 
           <div class="header-actions">
             <a href="noutati.html" class="btn btn-secondary">Vezi pagina publică</a>
-            <button type="button" class="btn btn-primary" id="newPostBtn">Noutate nouă</button>
+            <button type="button" class="btn btn-primary" id="newPostBtn">Activitate nouă</button>
           </div>
         </div>
 
@@ -374,15 +374,15 @@
 
         <div class="admin-grid">
           <section class="panel">
-            <h2 id="formTitle">Creează noutate</h2>
-            <p class="panel-note">Poți salva noutatea ca draft sau o poți publica direct pe site.</p>
+            <h2 id="formTitle">Creează activitate</h2>
+            <p class="panel-note">Poți salva activitatea ca draft sau o poți publica direct pe site.</p>
 
             <form id="newsForm">
               <input type="hidden" id="newsId">
 
               <div class="input-group">
                 <label for="title">Titlu</label>
-                <input id="title" name="title" type="text" required placeholder="ex: Înscrierile sunt deschise">
+                <input id="title" name="title" type="text" required placeholder="ex: Atelier de fotografie pe film">
               </div>
 
               <div class="input-group">
@@ -435,9 +435,13 @@
 
                 <label class="check-card">
                   <input id="isFeatured" name="is_featured" type="checkbox">
-                  <span>Noutate principală</span>
+                  <span>Activitate principală / apare în slider</span>
                 </label>
               </div>
+
+              <p class="panel-note" style="margin-top:-4px;">
+                Poți bifa această opțiune la mai multe activități. Toate activitățile principale vor rula automat în sliderul de pe pagina publică.
+              </p>
 
               <div class="form-actions">
                 <button type="submit" class="btn btn-primary" id="saveBtn">Salvează noutatea</button>
@@ -447,8 +451,8 @@
           </section>
 
           <section class="panel">
-            <h2>Noutăți existente</h2>
-            <p class="panel-note">Aici apar toate noutățile, inclusiv drafturile.</p>
+            <h2>Activități existente</h2>
+            <p class="panel-note">Aici apar toate activitățile, inclusiv drafturile. Poți bifa mai multe ca principale; toate vor apărea în sliderul automat de pe pagina publică.</p>
             <div id="newsList" class="news-list"></div>
           </section>
         </div>
@@ -650,7 +654,7 @@
     function resetForm(){
       newsForm.reset();
       fields.id.value = "";
-      formTitle.textContent = "Creează noutate";
+      formTitle.textContent = "Creează activitate";
     }
 
     function fillForm(post){
@@ -665,7 +669,7 @@
       fields.content.value = post.content || "";
       fields.isPublished.checked = Boolean(post.is_published);
       fields.isFeatured.checked = Boolean(post.is_featured);
-      formTitle.textContent = "Editează noutate";
+      formTitle.textContent = "Editează activitate";
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
@@ -691,7 +695,7 @@
       newsList.innerHTML = "";
 
       if(allNews.length === 0){
-        newsList.innerHTML = `<div class="empty-state">Nu există încă noutăți create.</div>`;
+        newsList.innerHTML = `<div class="empty-state">Nu există încă activități create.</div>`;
         return;
       }
 
@@ -733,7 +737,7 @@
       const result = await adminFetch("/api/admin/news");
 
       if(!result.response.ok){
-        newsList.innerHTML = `<div class="empty-state">Noutățile nu au putut fi încărcate.</div>`;
+        newsList.innerHTML = `<div class="empty-state">Activitățile nu au putut fi încărcate.</div>`;
         return;
       }
 
@@ -747,7 +751,7 @@
       const payload = getPayload();
 
       if(!payload.title || !payload.content){
-        showMessage("Completează titlul și conținutul noutății.");
+        showMessage("Completează titlul și conținutul activității.");
         return;
       }
 
@@ -760,11 +764,11 @@
       });
 
       if(!result.response.ok){
-        showMessage(result.data.detail || "Noutatea nu a putut fi salvată.");
+        showMessage(result.data.detail || "Activitatea nu a putut fi salvată.");
         return;
       }
 
-      showMessage(isEdit ? "Noutatea a fost actualizată." : "Noutatea a fost creată.", true);
+      showMessage(isEdit ? "Activitatea a fost actualizată." : "Activitatea a fost creată.", true);
       resetForm();
       await loadNews();
     });
@@ -781,7 +785,7 @@
       const post = allNews.find(item => Number(item.id) === id);
 
       if(!post){
-        showMessage("Noutatea nu a fost găsită.");
+        showMessage("Activitatea nu a fost găsită.");
         return;
       }
 
@@ -800,17 +804,17 @@
         });
 
         if(!result.response.ok){
-          showMessage(result.data.detail || "Statusul noutății nu a putut fi modificat.");
+          showMessage(result.data.detail || "Statusul activității nu a putut fi modificat.");
           return;
         }
 
-        showMessage(post.is_published ? "Noutatea a fost ascunsă." : "Noutatea a fost publicată.", true);
+        showMessage(post.is_published ? "Activitatea a fost ascunsă." : "Activitatea a fost publicată.", true);
         await loadNews();
         return;
       }
 
       if(action === "delete"){
-        const confirmed = confirm(`Sigur vrei să ștergi noutatea „${post.title}”?`);
+        const confirmed = confirm(`Sigur vrei să ștergi activitatea „${post.title}”?`);
 
         if(!confirmed){
           return;
@@ -821,11 +825,11 @@
         });
 
         if(!result.response.ok){
-          showMessage(result.data.detail || "Noutatea nu a putut fi ștearsă.");
+          showMessage(result.data.detail || "Activitatea nu a putut fi ștearsă.");
           return;
         }
 
-        showMessage("Noutatea a fost ștearsă.", true);
+        showMessage("Activitatea a fost ștearsă.", true);
         await loadNews();
       }
     });
