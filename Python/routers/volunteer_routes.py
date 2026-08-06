@@ -1,6 +1,6 @@
 import json
 import secrets
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import or_
@@ -87,6 +87,28 @@ def sync_role_from_profile(db: Session, user: User):
 
 def generate_code():
     return secrets.token_hex(3).upper()
+
+
+def normalize_work_date(value):
+    if isinstance(value, datetime):
+        return value.date()
+
+    if isinstance(value, date):
+        return value
+
+    if isinstance(value, str):
+        clean_value = value.strip()
+
+        for fmt in ("%Y-%m-%d", "%d.%m.%Y", "%d/%m/%Y"):
+            try:
+                return datetime.strptime(clean_value[:10], fmt).date()
+            except ValueError:
+                pass
+
+    raise HTTPException(
+        status_code=400,
+        detail="Data trebuie să fie în format valid, de exemplu 2026-08-07."
+    )
 
 
 def event_label(event_type: str):
@@ -405,7 +427,7 @@ def create_manual_volunteer_hours(
         user_id=current_user.id,
         event_type=payload.event_type.value,
         task=payload.task,
-        work_date=payload.work_date,
+        work_date=normalize_work_date(payload.work_date),
         hours=payload.hours,
         mentions=payload.mentions,
         status="in_asteptare",
@@ -445,7 +467,7 @@ def create_volunteer_hours_with_code(
         user_id=current_user.id,
         event_type=hour_code.event_type,
         task=hour_code.task,
-        work_date=hour_code.work_date,
+        work_date=normalize_work_date(hour_code.work_date),
         hours=hour_code.hours,
         mentions=hour_code.mentions,
         status="acceptata",
@@ -547,7 +569,7 @@ def generate_volunteer_hour_code(
         code=code,
         event_type=payload.event_type.value,
         task=payload.task,
-        work_date=payload.work_date,
+        work_date=normalize_work_date(payload.work_date),
         hours=payload.hours,
         mentions=payload.mentions,
         created_by_admin_id=admin.id,
