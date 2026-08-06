@@ -3,6 +3,7 @@ import secrets
 from datetime import datetime, timedelta
 
 from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
 from database import get_db
@@ -49,8 +50,39 @@ CLUB_DEPARTMENTS = [
 ]
 
 
+def normalized_role(user: User):
+    return str(user.role or "").strip().lower()
+
+
 def is_volunteer(user: User):
-    return user.role == "voluntar" or user.is_admin
+    return normalized_role(user) == "voluntar" or user.is_admin
+
+
+def user_has_volunteer_profile(db: Session, user: User):
+    if not user or not getattr(user, "id", None):
+        return False
+
+    return (
+        db.query(VolunteerProfile.id)
+        .filter(VolunteerProfile.user_id == user.id)
+        .first()
+        is not None
+    )
+
+
+def is_volunteer_account(db: Session, user: User):
+    # Acceptăm și conturile care au profil de voluntar, chiar dacă rolul a rămas
+    # greșit ca participant după repararea problemei de la register.
+    return is_volunteer(user) or user_has_volunteer_profile(db, user)
+
+
+def sync_role_from_profile(db: Session, user: User):
+    # Dacă utilizatorul are profil de voluntar, dar rolul nu mai este voluntar,
+    # reparăm rolul automat, ca vechii voluntari să nu primească 403.
+    if user and not user.is_admin and normalized_role(user) != "voluntar" and user_has_volunteer_profile(db, user):
+        user.role = "voluntar"
+        db.commit()
+        db.refresh(user)
 
 
 def generate_code():
@@ -314,11 +346,12 @@ def get_my_volunteer_profile(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    if not is_volunteer(current_user):
+    if not is_volunteer_account(db, current_user):
         raise HTTPException(
             status_code=403,
             detail="Această secțiune este disponibilă doar pentru voluntari."
         )
+    sync_role_from_profile(db, current_user)
 
     profile = (
         db.query(VolunteerProfile)
@@ -354,11 +387,12 @@ def create_manual_volunteer_hours(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    if not is_volunteer(current_user):
+    if not is_volunteer_account(db, current_user):
         raise HTTPException(
             status_code=403,
             detail="Doar conturile de voluntar pot introduce ore de voluntariat."
         )
+    sync_role_from_profile(db, current_user)
 
     validate_task_for_manual_entry(
         db=db,
@@ -398,11 +432,12 @@ def create_volunteer_hours_with_code(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    if not is_volunteer(current_user):
+    if not is_volunteer_account(db, current_user):
         raise HTTPException(
             status_code=403,
             detail="Doar conturile de voluntar pot introduce ore de voluntariat."
         )
+    sync_role_from_profile(db, current_user)
 
     hour_code = get_valid_hour_code(db, payload.code)
 
@@ -442,11 +477,12 @@ def get_my_volunteer_hours(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    if not is_volunteer(current_user):
+    if not is_volunteer_account(db, current_user):
         raise HTTPException(
             status_code=403,
             detail="Această secțiune este disponibilă doar pentru voluntari."
         )
+    sync_role_from_profile(db, current_user)
 
     entries = (
         db.query(VolunteerHourEntry)
@@ -540,9 +576,16 @@ def get_all_volunteers(
     db: Session = Depends(get_db),
     admin: User = Depends(require_admin)
 ):
+    profile_user_ids = [row[0] for row in db.query(VolunteerProfile.user_id).all()]
+
     volunteers = (
         db.query(User)
-        .filter(User.role == "voluntar")
+        .filter(
+            or_(
+                User.role == "voluntar",
+                User.id.in_(profile_user_ids) if profile_user_ids else False,
+            )
+        )
         .order_by(User.created_at.desc())
         .all()
     )
@@ -593,7 +636,7 @@ def remove_user_volunteer(
             detail="Utilizatorul nu a fost găsit."
         )
 
-    if user.role != "voluntar":
+    if normalized_role(user) != "voluntar" and not user_has_volunteer_profile(db, user):
         raise HTTPException(
             status_code=400,
             detail="Acest cont nu este voluntar."
