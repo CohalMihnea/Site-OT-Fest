@@ -70,6 +70,41 @@ def user_has_volunteer_profile(db: Session, user: User):
     )
 
 
+def ensure_default_volunteer_profile(db: Session, user: User):
+    """Creează profil complet pentru conturile făcute manual voluntar în DB/admin."""
+    profile = (
+        db.query(VolunteerProfile)
+        .filter(VolunteerProfile.user_id == user.id)
+        .first()
+    )
+
+    changed = False
+
+    if not profile:
+        profile = VolunteerProfile(user_id=user.id)
+        db.add(profile)
+        changed = True
+
+    if not profile.festival_departments or not parse_departments(profile.festival_departments):
+        profile.festival_departments = json.dumps(FESTIVAL_DEPARTMENTS, ensure_ascii=False)
+        changed = True
+
+    if not profile.club_departments or not parse_departments(profile.club_departments):
+        profile.club_departments = json.dumps(CLUB_DEPARTMENTS, ensure_ascii=False)
+        changed = True
+
+    if not user.is_admin and normalized_role(user) != "voluntar":
+        user.role = "voluntar"
+        changed = True
+
+    if changed:
+        db.commit()
+        db.refresh(user)
+        db.refresh(profile)
+
+    return profile
+
+
 def is_volunteer_account(db: Session, user: User):
     # Acceptăm și conturile care au profil de voluntar, chiar dacă rolul a rămas
     # greșit ca participant după repararea problemei de la register.
@@ -222,11 +257,20 @@ def get_volunteer_profile_or_404(db: Session, user: User):
         .first()
     )
 
+    if not profile and normalized_role(user) == "voluntar":
+        return ensure_default_volunteer_profile(db, user)
+
     if not profile:
         raise HTTPException(
             status_code=400,
             detail="Contul de voluntar nu are departamente completate."
         )
+
+    if (
+        (not profile.festival_departments or not parse_departments(profile.festival_departments))
+        and normalized_role(user) == "voluntar"
+    ):
+        return ensure_default_volunteer_profile(db, user)
 
     return profile
 
@@ -375,11 +419,14 @@ def get_my_volunteer_profile(
         )
     sync_role_from_profile(db, current_user)
 
-    profile = (
-        db.query(VolunteerProfile)
-        .filter(VolunteerProfile.user_id == current_user.id)
-        .first()
-    )
+    if normalized_role(current_user) == "voluntar":
+        profile = ensure_default_volunteer_profile(db, current_user)
+    else:
+        profile = (
+            db.query(VolunteerProfile)
+            .filter(VolunteerProfile.user_id == current_user.id)
+            .first()
+        )
 
     profile_data = serialize_profile(profile)
 
@@ -598,28 +645,25 @@ def get_all_volunteers(
     db: Session = Depends(get_db),
     admin: User = Depends(require_admin)
 ):
-    profile_user_ids = [row[0] for row in db.query(VolunteerProfile.user_id).all()]
+    profile_user_ids = {row[0] for row in db.query(VolunteerProfile.user_id).all()}
 
-    volunteers = (
-        db.query(User)
-        .filter(
-            or_(
-                User.role == "voluntar",
-                User.id.in_(profile_user_ids) if profile_user_ids else False,
-            )
-        )
-        .order_by(User.created_at.desc())
-        .all()
-    )
+    all_users = db.query(User).order_by(User.created_at.desc()).all()
+    volunteers = [
+        user for user in all_users
+        if normalized_role(user) == "voluntar" or user.id in profile_user_ids
+    ]
 
     result = []
 
     for volunteer in volunteers:
-        profile = (
-            db.query(VolunteerProfile)
-            .filter(VolunteerProfile.user_id == volunteer.id)
-            .first()
-        )
+        if normalized_role(volunteer) == "voluntar":
+            profile = ensure_default_volunteer_profile(db, volunteer)
+        else:
+            profile = (
+                db.query(VolunteerProfile)
+                .filter(VolunteerProfile.user_id == volunteer.id)
+                .first()
+            )
 
         entries = (
             db.query(VolunteerHourEntry)
