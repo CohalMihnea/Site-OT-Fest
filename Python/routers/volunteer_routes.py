@@ -742,6 +742,148 @@ def get_all_volunteer_hours(
         "entries": [serialize_volunteer_hour(entry) for entry in entries],
     }
 
+@router.post("/api/admin/volunteer-hours/approve-safe")
+def approve_safe_volunteer_hours(
+    db: Session = Depends(get_db),
+    admin: User = Depends(require_admin)
+):
+    pending_entries = (
+        db.query(VolunteerHourEntry)
+        .filter(VolunteerHourEntry.status == "in_asteptare")
+        .order_by(
+            VolunteerHourEntry.user_id,
+            VolunteerHourEntry.work_date
+        )
+        .all()
+    )
+
+    approved_count = 0
+
+    skipped = {
+        "duplicate_day": 0,
+        "over_12_hours": 0,
+        "invalid_hours": 0,
+        "missing_description": 0,
+        "exact_duplicate": 0,
+    }
+
+    # Grupăm toate înregistrările pending după voluntar + zi
+    grouped = {}
+
+    for entry in pending_entries:
+        key = (entry.user_id, entry.work_date)
+
+        if key not in grouped:
+            grouped[key] = []
+
+        grouped[key].append(entry)
+
+    for (user_id, work_date), day_entries in grouped.items():
+
+        # -----------------------------------------------------
+        # 1. Ore invalide
+        # -----------------------------------------------------
+        invalid = False
+
+        for entry in day_entries:
+            if entry.hours is None or entry.hours <= 0:
+                invalid = True
+                break
+
+        if invalid:
+            skipped["invalid_hours"] += len(day_entries)
+            continue
+
+        # -----------------------------------------------------
+        # 2. Mai multe pontaje în aceeași zi
+        # -----------------------------------------------------
+        if len(day_entries) > 1:
+            skipped["duplicate_day"] += len(day_entries)
+            continue
+
+        entry = day_entries[0]
+
+        # -----------------------------------------------------
+        # 3. Există deja altă înregistrare în aceeași zi
+        # -----------------------------------------------------
+        other_same_day = (
+            db.query(VolunteerHourEntry)
+            .filter(
+                VolunteerHourEntry.user_id == entry.user_id,
+                VolunteerHourEntry.work_date == entry.work_date,
+                VolunteerHourEntry.id != entry.id,
+            )
+            .first()
+        )
+
+        if other_same_day:
+            skipped["duplicate_day"] += 1
+            continue
+
+        # -----------------------------------------------------
+        # 4. Peste 12 ore
+        # -----------------------------------------------------
+        if entry.hours > 12:
+            skipped["over_12_hours"] += 1
+            continue
+
+        # -----------------------------------------------------
+        # 5. Fără descriere / mențiuni
+        # -----------------------------------------------------
+        if not entry.mentions or not entry.mentions.strip():
+            skipped["missing_description"] += 1
+            continue
+
+        # -----------------------------------------------------
+        # 6. Duplicat exact
+        # -----------------------------------------------------
+        exact_duplicate = (
+            db.query(VolunteerHourEntry)
+            .filter(
+                VolunteerHourEntry.user_id == entry.user_id,
+                VolunteerHourEntry.work_date == entry.work_date,
+                VolunteerHourEntry.event_type == entry.event_type,
+                VolunteerHourEntry.task == entry.task,
+                VolunteerHourEntry.hours == entry.hours,
+                VolunteerHourEntry.id != entry.id,
+            )
+            .first()
+        )
+
+        if exact_duplicate:
+            skipped["exact_duplicate"] += 1
+            continue
+
+        # -----------------------------------------------------
+        # A trecut toate verificările -> aprobăm
+        # -----------------------------------------------------
+        entry.status = "acceptata"
+        entry.admin_feedback = None
+        entry.approval_type = "bulk_admin"
+        entry.approved_by_admin_id = admin.id
+        entry.reviewed_at = datetime.utcnow()
+
+        approved_count += 1
+
+    db.commit()
+
+    skipped_count = sum(skipped.values())
+
+    return {
+        "detail": (
+            f"Au fost aprobate automat {approved_count} înregistrări. "
+            f"{skipped_count} au rămas pentru verificare manuală."
+        ),
+        "approved": approved_count,
+        "skipped": skipped_count,
+        "reasons": {
+            "duplicate_day": skipped["duplicate_day"],
+            "over_12_hours": skipped["over_12_hours"],
+            "invalid_hours": skipped["invalid_hours"],
+            "missing_description": skipped["missing_description"],
+            "exact_duplicate": skipped["exact_duplicate"],
+        },
+    }
 
 @router.patch("/api/admin/volunteer-hours/{entry_id}/status")
 def update_volunteer_hour_status(

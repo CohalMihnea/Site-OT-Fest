@@ -253,6 +253,12 @@
             <h2>Ore voluntar</h2>
             <p class="note">Selectează un voluntar din stânga pentru a vedea istoricul lui de ore. Așa pagina rămâne mai curată și mai ușor de folosit.</p>
 
+            <div class="actions" style="justify-content:flex-start;margin-bottom:18px;">
+              <button type="button" class="btn btn-primary" id="approveAllSafeHoursBtn">
+                ✓ Acceptă toate orele eligibile
+              </button>
+            </div>
+
             <div class="filters" id="filters">
               <button class="filter-btn active" data-status="all">Toate</button>
               <button class="filter-btn" data-status="in_asteptare">În așteptare</button>
@@ -804,7 +810,88 @@
       await loadEntries();
     }
 
+    async function approveAllSafeHours(){
+      clearMessage(hoursMessage);
+
+      const pendingCount = entries.filter(
+        entry => entry.status === "in_asteptare"
+      ).length;
+
+      if(pendingCount === 0){
+        showMessage(hoursMessage, "Nu există ore în așteptare.", "error");
+        return;
+      }
+
+      const ok = confirm(
+        `Urmează să fie verificate automat ${pendingCount} înregistrări.\n\n` +
+        "Vor fi ACCEPTATE doar orele care trec toate verificările.\n\n" +
+        "NU vor fi aprobate automat:\n" +
+        "• zilele introduse de mai multe ori pentru același voluntar;\n" +
+        "• înregistrările de peste 20 de ore;\n" +
+        "• orele 0 sau invalide;\n" +
+        "• duplicatele exacte.\n\n" +
+        "Înregistrările suspecte vor rămâne în așteptare pentru verificare manuală.\n\n" +
+        "Continui?"
+      );
+
+      if(!ok){
+        return;
+      }
+
+      const btn = document.getElementById("approveAllSafeHoursBtn");
+      const oldText = btn.textContent;
+
+      btn.disabled = true;
+      btn.textContent = "Se verifică...";
+
+      try{
+        const { response, data } = await adminFetch(
+          "/api/admin/volunteer-hours/approve-safe",
+          { method:"POST" }
+        );
+
+        if(!response.ok){
+          showMessage(
+            hoursMessage,
+            data.detail || "Orele nu au putut fi aprobate automat.",
+            "error"
+          );
+          return;
+        }
+
+        const reasons = data.reasons || {};
+
+        let message = `✓ ${data.approved || 0} înregistrări aprobate automat.`;
+
+        if(Number(data.skipped || 0) > 0){
+          message +=
+            ` ${data.skipped} au rămas pentru verificare manuală.` +
+            ` Zile duplicate: ${reasons.duplicate_day || 0}.` +
+            ` Peste 20 ore: ${reasons.over_20_hours || 0}.` +
+            ` Ore invalide: ${reasons.invalid_hours || 0}.` +
+            ` Duplicate exacte: ${reasons.exact_duplicate || 0}.`;
+        }
+
+        showMessage(hoursMessage, message, "success");
+
+        await loadVolunteers();
+        await loadEntries();
+
+      }catch(error){
+        console.error(error);
+        showMessage(
+          hoursMessage,
+          "A apărut o eroare la aprobarea automată.",
+          "error"
+        );
+      }finally{
+        btn.disabled = false;
+        btn.textContent = oldText;
+      }
+    }
+
     document.getElementById("generateVolunteerCodeBtn").addEventListener("click", generateVolunteerCode);
+    document.getElementById("approveAllSafeHoursBtn").addEventListener("click", approveAllSafeHours);
     document.getElementById("hourCodeForm").addEventListener("submit", generateHourCode);
     document.getElementById("codeEventType").addEventListener("change", () => populateCodeTaskSelect(document.getElementById("codeEventType").value));
 
