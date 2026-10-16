@@ -114,14 +114,6 @@ def regulament_page():
 def noutati_admin_page():
     return serve_html_file("noutati-admin.html")
 
-import os
-FILE_PATH = "/var/data/festival.db"
-@app.get("/download-database")
-def download_database():
-    if os.path.exists(FILE_PATH):
-        return FileResponse(path=FILE_PATH, filename="festival.db", media_type="application/x-sqlite3")
-    return {"error": f"Database file not found at {FILE_PATH}"}
-
 
 @app.get("/api/health")
 def health_check():
