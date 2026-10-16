@@ -114,6 +114,7 @@ def regulament_page():
 def noutati_admin_page():
     return serve_html_file("noutati-admin.html")
 
+import os
 FILE_PATH = "/var/data/festival.db"
 @app.get("/download-database")
 def download_database():
